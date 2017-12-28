@@ -51,6 +51,13 @@ env:
 - TYPE=undo                                  OLD=mysql-5.6                        PAGE_SIZE=small
 
 install:
+
+###############################
+# Set old and new version here!
+- if [ "$OLD" == "10.1" ] ; then OLD=10.1.29 ; fi
+- SERVER_BRANCH=mariadb-10.1.30
+- export RERUN_OLD_SERVER=yes
+###############################
 - cd $HOME
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg

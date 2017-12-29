@@ -61,7 +61,6 @@ script:
 - perl $RQG_HOME/runall-new.pl $RQG_COMMON_OPTIONS $TEST_OPTIONS --rpl-mode=mixed --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
 - perl $RQG_HOME/runall-new.pl $RQG_COMMON_OPTIONS $TEST_OPTIONS --mysqld=--innodb-flush-log-at-trx-commit=0 --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
 - perl $RQG_HOME/runall-new.pl $RQG_COMMON_OPTIONS $TEST_OPTIONS --mysqld=--loose-innodb-sync-debug --vardir=$HOME/logs/vardir1_5 2>&1 | tee $HOME/logs/trial5.log
-- perl $RQG_HOME/runall-new.pl $RQG_COMMON_OPTIONS $TEST_OPTIONS --mysqld=--innodb-compression-default=1 --vardir=$HOME/logs/vardir1_6 2>&1 | tee $HOME/logs/trial6.log
 
 - cd $HOME
 - . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs

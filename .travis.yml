@@ -52,7 +52,7 @@ install:
 script:
 
 - cd $HOME
-- . $SCRIPT_DIR/scripts/build_if_not_cached.sh
+- . $SCRIPT_DIR/build_if_not_cached.sh
 - cd $RQG_HOME
 - mkdir $HOME/logs
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --vardir=$HOME/logs/vardir1_1 2>&1 | tee $HOME/logs/trial1.log
@@ -62,5 +62,5 @@ script:
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --engine=RocksDB --mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --vardir=$HOME/logs/vardir1_5 2>&1 | tee $HOME/logs/trial5.log
 
 - cd $HOME
-- . $SCRIPT_DIR/scripts/collect_failure_info.sh $HOME/logs
+- . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs
 - if [ ! -e $BASEDIR/test_result ] ; then echo $? > $BASEDIR/test_result ; fi

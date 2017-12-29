@@ -1,0 +1,64 @@
+language: perl
+dist: jessie
+
+sudo: enabled
+
+cache:
+  directories:
+    - $HOME/server
+
+before_cache:
+  rm -rf $HOME/server/mysql-test
+
+before_install:
+- cpanm -n DBI DBD::mysql
+- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb
+
+env:
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/mariadb/optimizer.yy --gendata=conf/mariadb/optimizer.zz"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/mariadb/optimizer.yy --gendata"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/mariadb/optimizer.yy --gendata --notnull"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/mariadb/optimizer.yy --skip-gendata --mysqld=--init-file=\$RQG_HOME/conf/mariadb/world.sql"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/mariadb/optimizer.yy --skip-gendata --gendata-advanced"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/optimizer/optimizer_access_exp.yy"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/optimizer/optimizer_access_exp.yy --notnull"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/optimizer/optimizer_access_exp.yy --gendata=conf/optimizer/range_access.zz"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/optimizer/optimizer_access_exp.yy --skip-gendata --gendata-advanced"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/optimizer/optimizer_access_exp.yy --notnull --gendata"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/optimizer/optimizer_access_exp.yy --skip-gendata --mysqld=--init-file=\$RQG_HOME/conf/mariadb/world.sql"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/optimizer/range_access2.yy --gendata=conf/optimizer/range_access2.zz"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/optimizer/range_access.yy --gendata=conf/optimizer/range_access.zz"
+- RQG_OPTIONS="--validators=TransformerLight --grammar=conf/optimizer/outer_join.yy --gendata=conf/optimizer/outer_join.zz"
+- RQG_OPTIONS="--validators=TransformerNoComparator --grammar=conf/mariadb/multi_update.yy --gendata=conf/mariadb/multi_update.zz"
+- RQG_OPTIONS="--validators=TransformerNoComparator --grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
+
+install:
+- cd $HOME
+- export BASEDIR=$HOME/server
+- export RQG_HOME=$HOME/rqg
+- export SCRIPT_DIR=$HOME/mariadb-tests/scripts
+- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
+# SERVER_BRANCH can be redefined in build variables
+- if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.3 ; else SERVER=$SERVER_BRANCH ; fi
+- git clone https://github.com/elenst/rqg --branch experimental rqg
+- git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
+- git clone https://github.com/elenst/mariadb-tests mariadb-tests
+- mkdir $HOME/logs
+- cd $RQG_HOME && git log -1
+- cd $SCRIPT_DIR && git log -1
+- export COMMON_RQG_OPTIONS="--mysqld=--max-statement-time=30 --seed=time --threads=4 --duration=400 --reporters=Backtrace,ErrorLog,Deadlock --transformers=ExecuteAsIntersect,ExecuteAsExcept"
+
+script:
+- ce $HOME
+- . $SCRIPT_DIR/scripts/build_if_not_cached.sh
+
+- cd $RQG_HOME
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=InnoDB --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_1 > $HOME/logs/test1.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=MyISAM --mysqld=--default-storage-engine=MyISAM --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_2 > $HOME/logs/test2.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=Aria --mysqld=--default-storage-engine=Aria --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_3 > $HOME/logs/test3.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=RocksDB --mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_4 > $HOME/logs/test4.log
+
+- cd $HOME
+- . $SCRIPT_DIR/scripts/collect_failure_info.sh $HOME/logs
+- perl $SCRIPT_DIR/scripts/mismatch_filter.pl --nodiffs $HOME/logs/test*log
+- if [ ! -e $BASEDIR/test_result ] ; then echo $? > $BASEDIR/test_result ; fi

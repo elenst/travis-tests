@@ -49,7 +49,7 @@ install:
 - export COMMON_RQG_OPTIONS="--mysqld=--max-statement-time=30 --seed=time --threads=4 --duration=400 --reporters=Backtrace,ErrorLog,Deadlock --transformers=ExecuteAsIntersect,ExecuteAsExcept"
 
 script:
-- ce $HOME
+- cd $HOME
 - . $SCRIPT_DIR/scripts/build_if_not_cached.sh
 
 - cd $RQG_HOME

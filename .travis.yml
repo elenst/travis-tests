@@ -37,6 +37,7 @@ install:
 - cd $HOME
 - export RERUN_OLD_SERVER=yes
 - export BASEDIR=$HOME/server
+- export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
 - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 - if [ -z "$SERVER_BRANCH" ] ; then SERVER=bb-10.3-temporal ; else SERVER=$SERVER_BRANCH ; fi
@@ -58,6 +59,7 @@ script:
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --engine=InnoDB --vardir=$HOME/logs/vardir1_2 2>&1 | tee $HOME/logs/trial2.log
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --engine=MyISAM --mysqld=--default-storage-engine=MyISAM --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --engine=Aria --mysqld=--default-storage-engine=Aria --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --mysqld=--system-versioning-force --vardir=$HOME/logs/vardir1_5 2>&1 | tee $HOME/logs/trial5.log
 
 - cd $HOME
 - . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs

@@ -34,6 +34,7 @@ env:
 
 install:
 - cd $HOME
+- export RERUN_OLD_SERVER=yes
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts

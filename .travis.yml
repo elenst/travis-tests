@@ -59,7 +59,7 @@ script:
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --engine=InnoDB --vardir=$HOME/logs/vardir1_2 2>&1 | tee $HOME/logs/trial2.log
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --engine=MyISAM --mysqld=--default-storage-engine=MyISAM --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --engine=Aria --mysqld=--default-storage-engine=Aria --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --engine=RocksDB --mysqld=--default-storage-engine=RocksDB --vardir=$HOME/logs/vardir1_5 2>&1 | tee $HOME/logs/trial5.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --engine=RocksDB --mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --vardir=$HOME/logs/vardir1_5 2>&1 | tee $HOME/logs/trial5.log
 
 - cd $HOME
 - . $SCRIPT_DIR/scripts/collect_failure_info.sh $HOME/logs

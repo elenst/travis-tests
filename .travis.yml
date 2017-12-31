@@ -12,7 +12,7 @@ before_cache:
 
 before_install:
 - cpanm -n DBI DBD::mysql
-- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb gcc-4.9
+- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb
 
 env:
 - RQG_OPTIONS="--validators=TransformerLight --grammar=conf/mariadb/optimizer.yy --gendata=conf/mariadb/optimizer.zz"
@@ -38,7 +38,7 @@ install:
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
-- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
+- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 # SERVER_BRANCH can be redefined in build variables
 - if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.3 ; else SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/elenst/rqg --branch experimental rqg
@@ -57,7 +57,7 @@ script:
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=InnoDB --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_1 > $HOME/logs/trial1.log
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=MyISAM --mysqld=--default-storage-engine=MyISAM --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_2 > $HOME/logs/trial2.log
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=Aria --mysqld=--default-storage-engine=Aria --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_3 > $HOME/logs/trial3.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=RocksDB --mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_4 > $HOME/logs/trial4.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS  --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_4 > $HOME/logs/trial4.log
 
 - cd $HOME
 - . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs

@@ -47,17 +47,17 @@ install:
 - mkdir $HOME/logs
 - cd $RQG_HOME && git log -1
 - cd $SCRIPT_DIR && git log -1
-- export COMMON_RQG_OPTIONS="--mysqld=--max-statement-time=30 --seed=time --threads=4 --duration=400 --reporters=Backtrace,ErrorLog,Deadlock --transformers=ExecuteAsIntersect,ExecuteAsExcept"
+- export COMMON_RQG_OPTIONS="--mysqld=--max-statement-time=30 --seed=time --threads=4 --duration=350 --reporters=Backtrace,ErrorLog,Deadlock --transformers=ExecuteAsIntersect,ExecuteAsExcept"
 
 script:
 - cd $HOME
 - . $SCRIPT_DIR/build_if_not_cached.sh
 
 - cd $RQG_HOME
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=InnoDB --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_1 > $HOME/logs/trial1.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=MyISAM --mysqld=--default-storage-engine=MyISAM --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_2 > $HOME/logs/trial2.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=Aria --mysqld=--default-storage-engine=Aria --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_3 > $HOME/logs/trial3.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS  --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_4 > $HOME/logs/trial4.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=InnoDB --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_1 2>&1 | tee $HOME/logs/trial1.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=MyISAM --mysqld=--default-storage-engine=MyISAM --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_2 2>&1 | tee $HOME/logs/trial2.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS --engine=Aria --mysqld=--default-storage-engine=Aria --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $RQG_OPTIONS  --basedir1=$BASEDIR --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
 
 - cd $HOME
 - . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs

@@ -14,6 +14,7 @@ before_install:
 - cpanm -n DBI DBD::mysql
 - sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
 
+# Crash-upgrade from 10.1 and earlier will not be supported
 env:
 - TYPE=recovery      ENCRYPTION=on                     COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=recovery                                        COMPRESSION=none,zlib  PAGE_SIZE=all

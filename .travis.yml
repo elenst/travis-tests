@@ -78,8 +78,8 @@ install:
 
 ###############################
 # Set old and new version here!
-- if [ "$OLD" == "10.2" ] ; then OLD=10.2.10 ; fi
-- SERVER_BRANCH=mariadb-10.2.11
+- if [ "$OLD" == "10.2" ] ; then OLD=10.2.11 ; fi
+- SERVER_BRANCH=mariadb-10.2.12
 - export RERUN_OLD_SERVER=yes
 ###############################
 - cd $HOME

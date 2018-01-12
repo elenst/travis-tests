@@ -22,6 +22,12 @@ env:
 - TYPE=downgrade                                OLD=10.2.10   COMPRESSION=zlib  PAGE_SIZE=all
 - TYPE=downgrade                                OLD=10.2.11   COMPRESSION=zlib  PAGE_SIZE=all
 - TYPE=downgrade                                OLD=10.2.12   COMPRESSION=zlib  PAGE_SIZE=all
+- TYPE=downgrade SERVER_BRANCH=mariadb-10.2.7   OLD=10.2.6    COMPRESSION=zlib  PAGE_SIZE=all
+- TYPE=downgrade SERVER_BRANCH=mariadb-10.2.8   OLD=10.2.7    COMPRESSION=zlib  PAGE_SIZE=all
+- TYPE=downgrade SERVER_BRANCH=mariadb-10.2.9   OLD=10.2.8    COMPRESSION=zlib  PAGE_SIZE=all
+- TYPE=downgrade SERVER_BRANCH=mariadb-10.2.10  OLD=10.2.9    COMPRESSION=zlib  PAGE_SIZE=all
+- TYPE=downgrade SERVER_BRANCH=mariadb-10.2.11  OLD=10.2.10   COMPRESSION=zlib  PAGE_SIZE=all
+- TYPE=downgrade SERVER_BRANCH=mariadb-10.2.12  OLD=10.2.11   COMPRESSION=zlib  PAGE_SIZE=all
 
 install:
 - cd $HOME

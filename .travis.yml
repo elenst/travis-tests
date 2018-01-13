@@ -54,10 +54,10 @@ env:
 - TYPE=downgrade                               OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=crash-downgrade ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=crash-downgrade                         OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=downgrade       ENCRYPTION=on           OLD=10.1.13   COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=downgrade                               OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=crash-downgrade ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=crash-downgrade                         OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=downgrade       ENCRYPTION=on           OLD=10.1.21   COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=downgrade                               OLD=10.1.21   COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=crash-downgrade ENCRYPTION=on           OLD=10.1.21   COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=crash-downgrade                         OLD=10.1.21   COMPRESSION=none,zlib  PAGE_SIZE=all
 
 install:
 - cd $HOME

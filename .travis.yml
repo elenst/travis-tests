@@ -14,6 +14,7 @@ before_install:
 - cpanm -n DBI DBD::mysql
 - sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
 
+# Crash-upgrade from 10.1 and earlier will not be supported
 env:
 - TYPE=recovery      ENCRYPTION=on                     COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=recovery                                        COMPRESSION=none,zlib  PAGE_SIZE=all
@@ -33,16 +34,16 @@ env:
 
 - TYPE=normal        ENCRYPTION=on       OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=normal                            OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-#- TYPE=crash         ENCRYPTION=on       OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-#- TYPE=crash                             OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=crash         ENCRYPTION=on       OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=crash                             OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=undo          ENCRYPTION=on       OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
 - TYPE=undo                              OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
 - TYPE=undo          ENCRYPTION=on       OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
 - TYPE=undo                              OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
 - TYPE=normal        ENCRYPTION=on       OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=normal                            OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
-#- TYPE=crash         ENCRYPTION=on       OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
-#- TYPE=crash                             OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=crash         ENCRYPTION=on       OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=crash                             OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=undo          ENCRYPTION=on       OLD=10.2.6    COMPRESSION=none       PAGE_SIZE=all
 - TYPE=undo                              OLD=10.2.6    COMPRESSION=none       PAGE_SIZE=all
 - TYPE=undo          ENCRYPTION=on       OLD=10.2.6    COMPRESSION=zlib       PAGE_SIZE=all

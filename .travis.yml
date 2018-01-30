@@ -1,6 +1,6 @@
 language: cpp
 dist: trusty
-
+compiler: gcc
 sudo: enabled
 
 cache:
@@ -37,6 +37,11 @@ env:
 - TEST_OPTIONS="--grammar=conf/mariadb/functions.yy --gendata-advanced --skip-gendata"
 - TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
 - TEST_OPTIONS="--grammar=conf/optimizer/range_access.yy --gendata=conf/optimizer/range_access.zz"
+
+addons:
+  packages:
+    gcc-6
+    g++-6
 
 install:
 - cd $HOME

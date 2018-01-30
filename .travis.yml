@@ -23,13 +23,16 @@ env:
 - TYPE=normal,crash           OLD=mysql-5.6 PAGE_SIZE=small
 - TYPE=undo                   OLD=mysql-5.6 PAGE_SIZE=small
 
+- TYPE=downgrade,crash-downgrade OLD=10.0      PAGE_SIZE=small
+- TYPE=downgrade,crash-downgrade OLD=10.0.14   PAGE_SIZE=small
+
 install:
 
 
 ###############################
 # Set old and new version here!
-- if [ "$OLD" == "10.0" ] ; then OLD=10.0.32 ; fi
-- SERVER_BRANCH=mariadb-10.0.33
+- if [ "$OLD" == "10.0" ] ; then OLD=10.0.33 ; fi
+- SERVER_BRANCH=mariadb-10.0.34
 - export RERUN_OLD_SERVER=yes
 ###############################
 - cd $HOME

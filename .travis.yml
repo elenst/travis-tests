@@ -93,10 +93,13 @@ install:
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
-#- export ASAN_OPTIONS=abort_on_error=1
-- export CMAKE_OPTIONS="-DWITH_ASAN=ON -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
+- export ASAN_OPTIONS=abort_on_error=1
+- export CMAKE_OPTIONS="-DWITH_ASAN=ON -DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 - if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.3 ; else SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
+- cd src
+- patch -p 1 < $TRAVIS_BUILD_DIR/asan.patch
+- cd $HOME
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests
 - git clone https://github.com/elenst/rqg --branch experimental rqg
 - cd $RQG_HOME && git log -1

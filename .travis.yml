@@ -46,9 +46,43 @@ addons:
       - llvm-toolchain-trusty-4.0
       - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
     packages:
+      - gcc-5
+      - g++-5
       - gcc-6
       - g++-6
+      - clang-4.0
+      - llvm-4.0-dev
+      - clang-5.0
+      - llvm-5.0-dev
       - libasan0
+      - bison
+      - chrpath
+      - cmake
+      - gdb
+      - libaio-dev
+      - libboost-dev
+      - libcurl3-dev
+      - libdbd-mysql
+      - libjudy-dev
+      - libncurses5-dev
+      - libpam0g-dev
+      - libpcre3-dev
+      - libreadline-gplv2-dev
+      - libstemmer-dev
+      - libssl-dev
+      - libnuma-dev
+      - libxml2-dev
+      - lsb-release
+      - perl
+      - psmisc
+      - zlib1g-dev
+      - libcrack2-dev
+      - cracklib-runtime
+      - libjemalloc-dev
+      - libsnappy-dev
+      - liblzma-dev
+      - libzmq-dev
+      - uuid-dev
 
 install:
 - cd $HOME
@@ -59,8 +93,8 @@ install:
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
-- export ASAN_OPTIONS=abort_on_error=1
-- export CMAKE_OPTIONS="-DWITH_ASAN=YES -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
+#- export ASAN_OPTIONS=abort_on_error=1
+- export CMAKE_OPTIONS="-DWITH_ASAN=ON -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 - if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.3 ; else SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests

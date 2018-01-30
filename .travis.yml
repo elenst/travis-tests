@@ -4,12 +4,13 @@ compiler: gcc
 sudo: enabled
 
 cache:
+  apt: true
   directories:
     - $HOME/server
 
 before_install:
 - cpanm -n DBI DBD::mysql
-- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1 binutils gcc-6 g++-6
+- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
 
 env:
 - TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
@@ -37,6 +38,16 @@ env:
 - TEST_OPTIONS="--grammar=conf/mariadb/functions.yy --gendata-advanced --skip-gendata"
 - TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
 - TEST_OPTIONS="--grammar=conf/optimizer/range_access.yy --gendata=conf/optimizer/range_access.zz"
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-trusty-4.0
+      - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
+    packages:
+      - gcc-6
+      - g++-6
 
 install:
 - cd $HOME

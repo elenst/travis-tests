@@ -13,7 +13,7 @@ before_install:
 - sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
 
 env:
-- TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
+- GCC_VERSION=6 TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
 - TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy  --mysqld=--performance-schema"
 - TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy  --mysqld=--performance-schema --gendata-advanced --skip-gendata"
 - TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy"

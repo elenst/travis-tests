@@ -48,8 +48,6 @@ addons:
     packages:
       - gcc-5
       - g++-5
-      - gcc-6
-      - g++-6
       - clang-4.0
       - llvm-4.0-dev
       - clang-5.0
@@ -86,8 +84,8 @@ addons:
 
 install:
 - cd $HOME
-- export CC=gcc-6
-- export CXX=g++-6
+- export CC=gcc-5
+- export CXX=g++-5
 - export REBUILD_OLD_SERVER=yes
 - export RERUN_OLD_SERVER=yes
 - export BASEDIR=$HOME/server

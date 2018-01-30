@@ -51,6 +51,8 @@ addons:
 
 install:
 - cd $HOME
+- export CC=gcc-6
+- export CXX=g++-6
 - export RERUN_OLD_SERVER=yes
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg

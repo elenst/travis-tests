@@ -48,6 +48,7 @@ addons:
     packages:
       - gcc-6
       - g++-6
+      - libasan0
 
 install:
 - cd $HOME

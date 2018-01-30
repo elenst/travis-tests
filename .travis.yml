@@ -84,8 +84,8 @@ addons:
 
 install:
 - cd $HOME
-- export CC=gcc-5
-- export CXX=g++-5
+#- export CC=gcc-5
+#- export CXX=g++-5
 - export REBUILD_OLD_SERVER=yes
 - export RERUN_OLD_SERVER=yes
 - export BASEDIR=$HOME/server

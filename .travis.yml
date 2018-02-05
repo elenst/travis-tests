@@ -60,7 +60,7 @@ install:
 - cd $RQG_HOME && git log -1
 - cd $SCRIPT_DIR && git log -1
 #  --mysqld=--slave-skip-errors=1049,1305,1539,1505,1317 --rpl_mode=mixed-nosync
-- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --mysqld=--log_output=FILE --views --vcols --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/hidden_columns.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/xa.yy --basedir=$BASEDIR --mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--max-statement-time=30 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --mysqld=--log_output=FILE --views --vcols --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/xa.yy --basedir=$BASEDIR --mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--max-statement-time=30 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
 script:
 

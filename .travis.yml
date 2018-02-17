@@ -4,6 +4,7 @@ dist: jessie
 sudo: enabled
 
 cache:
+  apt: true
   directories:
     - $HOME/server
 

@@ -55,7 +55,7 @@ install:
 - cd $RQG_HOME && git log -1
 - cd $SCRIPT_DIR && git log -1
 #  --mysqld=--slave-skip-errors=all --rpl_mode=mixed-nosync
-- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --mysqld=--log_output=FILE --views --vcols --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --basedir=$BASEDIR --mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--max-statement-time=30 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--table-open-cache=8 --rpl_mode=row-nosync --mysqld=--slave-skip-errors=all"
+- export COMMON_RQG_OPTIONS="--duration=350 --threads=8 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --mysqld=--log_output=FILE --views --vcols --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --basedir=$BASEDIR --mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--max-statement-time=30 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--table-open-cache=10 --rpl_mode=row-nosync --mysqld=--slave-skip-errors=all --redefine=conf/mariadb/show_create.yy"
 
 script:
 
@@ -63,6 +63,8 @@ script:
 - . $SCRIPT_DIR/build_if_not_cached.sh
 - cd $RQG_HOME
 - mkdir $HOME/logs
+- echo "query_add:" >> conf/mariadb/show_create.yy
+- echo "  SHOW CREATE TABLE _table;" >> conf/mariadb/show_create.yy
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --vardir=$HOME/logs/vardir1_1 2>&1 | tee $HOME/logs/trial1.log
 - . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs
 - rm -rf $HOME/logs/vardir1_1 $HOME/logs/trial1.log

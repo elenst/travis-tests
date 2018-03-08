@@ -41,7 +41,7 @@ env:
 
 install:
 - cd $HOME
-- export SERVER_BRANCH=mariadb-10.2.12
+- export SERVER_BRANCH=10.2
 - export RERUN_OLD_SERVER=yes
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg

@@ -15,32 +15,16 @@ before_install:
 - sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
 
 env:
-- TYPE=recovery      ENCRYPTION=on                     COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=recovery                                        COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=undo-recovery                                   COMPRESSION=none       PAGE_SIZE=all
-- TYPE=undo-recovery ENCRYPTION=on                     COMPRESSION=zlib       PAGE_SIZE=all
-
-- TYPE=normal        ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=normal                                OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=crash         ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=crash                                 OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=undo          ENCRYPTION=on           OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
-- TYPE=undo                                  OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
-
-- TYPE=normal        ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=normal                                OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-- TYPE=undo                                  OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
-- TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
-- TYPE=normal        ENCRYPTION=turn_on,off  OLD=10.0                             PAGE_SIZE=small
-- TYPE=undo                                  OLD=10.0                             PAGE_SIZE=small
-
+- TYPE=normal  OLD=5.5.52      COMPRESSION=none,zlib  PAGE_SIZE=all CMAKE_BUILD_TYPE=Debug
+- TYPE=normal  OLD=5.5.52      COMPRESSION=none,zlib  PAGE_SIZE=all CMAKE_BUILD_TYPE=RelWithDebInfo
 
 install:
 - cd $HOME
+- export SERVER_BRANCH=mariadb-10.2.12
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
-- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
+- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 # SERVER_BRANCH can be redefined in build variables
 - if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.2 ; else SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/elenst/rqg --branch experimental rqg

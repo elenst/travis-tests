@@ -16,12 +16,6 @@ env:
 - TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
-- TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
-
-- TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/information_schema.yy" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
-
 - TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
@@ -37,10 +31,6 @@ env:
 - TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/partitioning/partitions.yy"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/partitioning/partitions.yy" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
-- TEST_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
-
 - TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
@@ -50,20 +40,6 @@ env:
 - TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
-- TEST_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
-
-- TEST_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
-
-- TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/optimizer.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/optimizer.yy" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
-
-- TEST_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
-
 - TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
@@ -71,11 +47,6 @@ env:
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
-
-- TEST_OPTIONS="--grammar=conf/mariadb/functions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/functions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/functions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/functions.yy" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
@@ -106,10 +77,14 @@ script:
 - . $SCRIPT_DIR/build_if_not_cached.sh
 - cd $RQG_HOME
 - mkdir $HOME/logs
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$HOME/logs/vardir1_1 2>&1 | tee $HOME/logs/trial1.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$HOME/logs/vardir1_2  2>&1 | tee $HOME/logs/trial2.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --ps-protocol --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice  --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--slave-skip-errors=1049,1305,1539,1505,1317 --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS --rpl-mode=default-nosync --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
+
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=default-nosync --use-gtid=current_pos --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$HOME/logs/vardir1_1 2>&1 | tee $HOME/logs/trial1.log
+
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=default-nosync --use-gtid=current_pos --mysqld=--slave-parallel-threads=8 --skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$HOME/logs/vardir1_2  2>&1 | tee $HOME/logs/trial2.log
+
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=default-nosync --use-gtid=current_pos --mysqld=--rpl_semi_sync_master_enabled=1 --mysqld=--rpl_semi_sync_slave_enabled=1 --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice  --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
+
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=row-nosync --use-gtid=current_pos --mysqld=--binlog-row-image=minimal --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
 
 - cd $HOME
 - . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs

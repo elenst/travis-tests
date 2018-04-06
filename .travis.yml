@@ -34,28 +34,6 @@ env:
 - SERVER_BRANCH=10.2 BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz --duration=300"
 - SERVER_BRANCH=10.2 BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz --duration=300"
 
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy  --mysqld=--performance-schema"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/partitioning/partitions.yy"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy --gendata-advanced --skip-gendata"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/mariadb/functions.yy"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
-- SERVER_BRANCH=10.3 TEST_OPTIONS="--grammar=conf/optimizer/range_access.yy --gendata=conf/optimizer/range_access.zz"
-- SERVER_BRANCH=10.3 BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy --gendata --duration=300"
-- SERVER_BRANCH=10.3 BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz --duration=300"
-- SERVER_BRANCH=10.3 BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz --duration=300"
-
 install:
 - cd $HOME
 - export RERUN_OLD_SERVER=yes

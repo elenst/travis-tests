@@ -12,27 +12,27 @@ before_install:
 - sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
 
 env:
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy  --mysqld=--performance-schema"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/partitioning/partitions.yy"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy --gendata-advanced --skip-gendata"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/mariadb/functions.yy"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
-- SERVER_BRANCH=10.2 TEST_OPTIONS="--grammar=conf/optimizer/range_access.yy --gendata=conf/optimizer/range_access.zz"
-- SERVER_BRANCH=10.2 BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy --gendata --duration=300"
-- SERVER_BRANCH=10.2 BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz --duration=300"
-- SERVER_BRANCH=10.2 BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz --duration=300"
+- TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
+- TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy  --mysqld=--performance-schema"
+- TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy"
+- TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
+- TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
+- TEST_OPTIONS="--grammar=conf/partitioning/partitions.yy"
+- TEST_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
+- TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
+- TEST_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
+- TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
+- TEST_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
+- TEST_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
+- TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy --gendata-advanced --skip-gendata"
+- TEST_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
+- TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
+- TEST_OPTIONS="--grammar=conf/mariadb/functions.yy"
+- TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
+- TEST_OPTIONS="--grammar=conf/optimizer/range_access.yy --gendata=conf/optimizer/range_access.zz"
+- BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy --gendata --duration=300"
+- BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz --duration=300"
+- BUILD_OPTIONS="-DWITH_ASAN=YES" TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz --duration=300"
 
 install:
 - cd $HOME
@@ -43,7 +43,7 @@ install:
 - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 - export RQG_COMMON_OPTIONS="--duration=350 --threads=6 --redefine=conf/mariadb/alter_table.yy --reporters=Backtrace,ErrorLog,Deadlock --engine=InnoDB --seed=time --basedir=$BASEDIR --mysqld=--max-statement-time=30 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 # SERVER_BRANCH can be redefined in build variables
-- if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.3 ; else SERVER=$SERVER_BRANCH ; fi
+- if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.2 ; else SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/elenst/rqg --branch experimental rqg
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests

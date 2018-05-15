@@ -46,7 +46,6 @@ install:
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
-- export ASAN_OPTIONS=abort_on_error=1
 - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 - if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.3 ; else SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
@@ -54,7 +53,7 @@ install:
 - git clone https://github.com/elenst/rqg --branch experimental rqg
 - cd $RQG_HOME && git log -1
 - cd $SCRIPT_DIR && git log -1
-- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --engine=InnoDB --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --mysqld=--log_output=FILE --views --vcols --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --basedir=$BASEDIR --mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--max-statement-time=10 --mysqld=--lock-wait-timeout=20 --mysqld=--innodb-lock-wait-timeout=15 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --engine=InnoDB --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --transformers=ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice,ExecuteAsTrigger --redefine=conf/mariadb/general-workarounds.yy --mysqld=--log_output=FILE --views --vcols --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --basedir=$BASEDIR --mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--max-statement-time=10 --mysqld=--lock-wait-timeout=20 --mysqld=--innodb-lock-wait-timeout=15 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
 script:
 
@@ -63,9 +62,9 @@ script:
 - cd $RQG_HOME
 - mkdir $HOME/logs
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --vardir=$HOME/logs/vardir1_1 2>&1 | tee $HOME/logs/trial1.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--loose-innodb-sync-debug $TEST_OPTIONS --vardir=$HOME/logs/vardir1_2 2>&1 | tee $HOME/logs/trial2.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --scenario=Restart --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log-bin --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log-bin --mysqld=--log_bin_trust_function_creators=1 --mysqld=--loose-innodb-sync-debug $TEST_OPTIONS --vardir=$HOME/logs/vardir1_2 2>&1 | tee $HOME/logs/trial2.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --scenario=Restart --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --scenario=Restart --scenario-type=crash --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
 
 - cd $HOME
 - . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs

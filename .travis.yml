@@ -55,21 +55,22 @@ env:
 
 install:
 - cd $HOME
-#- export REBUILD_OLD_SERVER=yes
+- export REBUILD_OLD_SERVER=yes
 - export RERUN_OLD_SERVER=yes
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
-- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
+- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=RelWithDebInfo -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
 - if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.3 ; else SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests
-- git clone https://github.com/elenst/rqg --branch experimental rqg
+- git clone https://github.com/elenst/rqg --branch travis-workarounds rqg
 - cd $RQG_HOME && git log -1
 - cd $SCRIPT_DIR && git log -1
 
 # --redefine=conf/mariadb/xa.yy
-- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --basedir=$BASEDIR --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--slave-skip-errors=1049,1305,1539,1505,1317 --mysqld=--log_bin_trust_function_creators=1"
+# --mysqld=--max-statement-time=30
+- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --basedir=$BASEDIR --mysqld=--log_output=FILE  --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--slave-skip-errors=1049,1305,1539,1505,1317 --mysqld=--log_bin_trust_function_creators=1"
 
 script:
 

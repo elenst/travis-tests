@@ -60,7 +60,7 @@ install:
 
 # --redefine=conf/mariadb/xa.yy
 # --mysqld=--max-statement-time=30
-- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --basedir=$BASEDIR --mysqld=--log_output=FILE  --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--slave-skip-errors=1049,1305,1539,1505,1317 --mysqld=--log_bin_trust_function_creators=1"
+- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views  --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --basedir=$BASEDIR --mysqld=--log_output=FILE  --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--slave-skip-errors=1049,1305,1539,1505,1317 --mysqld=--log_bin_trust_function_creators=1"
 
 script:
 
@@ -70,18 +70,16 @@ script:
 - mkdir $HOME/logs
 
 # Default binlog format, no parallel replication, no GTID
-# Switching to RBR to avoid MDEV-16234
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=row-nosync --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$HOME/logs/vardir1_1 2>&1 | tee $HOME/logs/trial1.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=default-nosync --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/versioning.yy --vardir=$HOME/logs/vardir1_1 2>&1 | tee $HOME/logs/trial1.log
 
 # GTID, default binlog format, parallel replication
-# Switching to RBR to avoid MDEV-16234
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=row-nosync --use-gtid=current_pos --mysqld=--slave-parallel-threads=8 --skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$HOME/logs/vardir1_2  2>&1 | tee $HOME/logs/trial2.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=default-nosync --use-gtid=current_pos --mysqld=--slave-parallel-threads=8 --skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/versioning.yy --vardir=$HOME/logs/vardir1_2  2>&1 | tee $HOME/logs/trial2.log
 
 # GTID, default binlog format, semisync
-# Switching to RBR to avoid MDEV-16234
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=row-nosync --use-gtid=current_pos --mysqld=--rpl_semi_sync_master_enabled=1 --mysqld=--rpl_semi_sync_slave_enabled=1 --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice  --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=default-nosync --use-gtid=current_pos --mysqld=--rpl_semi_sync_master_enabled=1 --mysqld=--rpl_semi_sync_slave_enabled=1 --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice --redefine=conf/mariadb/versioning.yy  --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
 
 # GTID, RBR, minimal binlog_row_image
+# Skipping versioning.yy to avoid MDEV-16252
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --rpl-mode=row-nosync --use-gtid=current_pos --mysqld=--binlog-row-image=minimal --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
 
 - cd $HOME

@@ -13,17 +13,6 @@ before_install:
 - sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
 
 env:
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/partitioning/partitions.yy"  SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz" SERVER_BRANCH=10.2
-
 - TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz --redefine=conf/mariadb/versioning.yy" SERVER_BRANCH=10.3
 - TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz --redefine=conf/mariadb/versioning.yy" SERVER_BRANCH=10.3
 - TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz --redefine=conf/mariadb/versioning.yy" SERVER_BRANCH=10.3

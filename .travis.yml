@@ -13,16 +13,16 @@ before_install:
 - sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
 
 env:
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/partitioning/partitions.yy"  SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz" SERVER_BRANCH=10.2
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz" SERVER_BRANCH=10.2
+- TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
+- TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
+- TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
+- TEST_OPTIONS="--grammar=conf/partitioning/partitions.yy"
+- TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
+- TEST_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
+- TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
+- TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
+- TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
+- TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
 
 install:
 - cd $HOME
@@ -32,7 +32,7 @@ install:
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
 - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=RelWithDebInfo -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=DYNAMIC -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
-- if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.3 ; else SERVER=$SERVER_BRANCH ; fi
+- if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.2 ; else SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests
 - git clone https://github.com/elenst/rqg --branch travis-workarounds rqg
@@ -41,7 +41,7 @@ install:
 
 # --redefine=conf/mariadb/xa.yy
 # --mysqld=--max-statement-time=30
-- export COMMON_RQG_OPTIONS="--basedir=$BASEDIR --duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE  --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--slave-skip-errors=1049,1305,1539,1505,1317 --mysqld=--log_bin_trust_function_creators=1"
+- export COMMON_RQG_OPTIONS="--basedir=$BASEDIR --duration=350 --threads=6 --seed=time --engine=RocksDB --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE  --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--slave-skip-errors=1049,1305,1539,1505,1317 --mysqld=--log_bin_trust_function_creators=1 --mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row"
 
 script:
 

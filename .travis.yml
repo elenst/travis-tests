@@ -1,0 +1,16 @@
+language: cpp
+dist: trusty
+compiler: gcc
+sudo: enabled
+
+before_install:
+- cpanm -n DBI DBD::mysql
+- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
+
+script:
+
+- df -kT
+- top -n 1
+- cat /proc/cpuinfo
+- uname -a
+- dpkg -l

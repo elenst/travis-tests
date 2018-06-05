@@ -5,7 +5,7 @@ sudo: enabled
 
 before_install:
 - cpanm -n DBI DBD::mysql
-- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1 mariadb-client
+- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
 
 script:
 
@@ -16,5 +16,7 @@ script:
 - dpkg -l
 
 - printenv
+- wget http://hasky.askmonty.org/archive/10.3/build-20509/kvm-bintar-trusty-amd64/mariadb-10.3.8-linux-x86_64.tar.gz
+- tar zxf mariadb-10.3.8-linux-x86_64.tar.gz
 - TRAVIS_JOB=`echo $TRAVIS_JOB_NUMBER | sed -e 's/.*\.//'`
-- mysql -utravis -p$TRV -e "INSERT INTO travis.result (build_id, job_id, trial_id, result) VALUES ($TRAVIS_BUILD_NUMBER, $TRAVIS_JOB, 1, 'PASS')" 
+- mariadb-10.3.8-linux-x86_64/bin/mysql -utravis -p$TRV -e "INSERT INTO travis.result (build_id, job_id, trial_id, result) VALUES ($TRAVIS_BUILD_NUMBER, $TRAVIS_JOB, 1, 'PASS')" 

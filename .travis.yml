@@ -5,7 +5,7 @@ sudo: enabled
 
 before_install:
 - cpanm -n DBI DBD::mysql
-- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
+- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1 mysql
 
 script:
 
@@ -16,3 +16,5 @@ script:
 - dpkg -l
 
 - printenv
+- TRAVIS_JOB=`echo $TRAVIS_JOB_NUMBER | sed -e 's/.*\.//'`
+- mysql -utravis -p$TRV -e "INSERT INTO travis.result (build_id, job_id, trial_id, result) VALUES ($TRAVIS_BUILD_NUMBER, $TRAVIS_JOB, 1, 'PASS')" 

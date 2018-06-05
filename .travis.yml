@@ -90,11 +90,13 @@ install:
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
 - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
-- if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.3 ; else SERVER=$SERVER_BRANCH ; fi
+- if [ -z "$TEST_BRANCH" ] ; then export TEST_BRANCH=experimental; fi
+- if [ -z "$SERVER_BRANCH" ] ; then export SERVER=10.3 ; else export SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests
-- git clone https://github.com/elenst/rqg --branch experimental rqg
-- cd $RQG_HOME && git log -1
+- git clone https://github.com/elenst/rqg --branch $TEST_BRANCH rqg
+- cd $RQG_HOME
+- export TEST_REVISION=`git log -1 --pretty="%H"`
 - cd $SCRIPT_DIR && git log -1
 
 # --redefine=conf/mariadb/xa.yy
@@ -105,12 +107,19 @@ script:
 - cd $HOME
 - . $SCRIPT_DIR/build_if_not_cached.sh
 - cd $RQG_HOME
-- mkdir $HOME/logs
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$HOME/logs/vardir1_1 2>&1 | tee $HOME/logs/trial1.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$HOME/logs/vardir1_2  2>&1 | tee $HOME/logs/trial2.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --ps-protocol --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice  --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
+- export LOGDIR=$HOME/logs
+- mkdir $LOGDIR
 
-- cd $HOME
-- . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$LOGDIR/vardir > $LOGDIR/trial.log 2>&1
+- . $SCRIPT_DIR/collect_single_failure_info.sh
+
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$LOGDIR/vardir > $LOGDIR/trial.log 2>&1
+- . $SCRIPT_DIR/collect_single_failure_info.sh
+
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --ps-protocol --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice  --vardir=$LOGDIR/vardir > $LOGDIR/trial.log 2>&1
+- . $SCRIPT_DIR/collect_single_failure_info.sh
+
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --vardir=$LOGDIR/vardir > $LOGDIR/trial.log 2>&1
+- . $SCRIPT_DIR/collect_single_failure_info.sh
+
 - if [ ! -e $BASEDIR/test_result ] ; then echo $? > $BASEDIR/test_result ; fi

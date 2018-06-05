@@ -19,4 +19,4 @@ script:
 - wget http://hasky.askmonty.org/archive/10.3/build-20509/kvm-bintar-trusty-amd64/mariadb-10.3.8-linux-x86_64.tar.gz
 - tar zxf mariadb-10.3.8-linux-x86_64.tar.gz
 - TRAVIS_JOB=`echo $TRAVIS_JOB_NUMBER | sed -e 's/.*\.//'`
-- mariadb-10.3.8-linux-x86_64/bin/mysql -utravis -p$TRV -e "INSERT INTO travis.result (build_id, job_id, trial_id, result) VALUES ($TRAVIS_BUILD_NUMBER, $TRAVIS_JOB, 1, 'PASS')" 
+- mariadb-10.3.8-linux-x86_64/bin/mysql --host=$DB_HOST --port=$DB_PORT -u$DB_USER -p$DBP -e "INSERT INTO travis.result (build_id, job_id, trial_id, result) VALUES ($TRAVIS_BUILD_NUMBER, $TRAVIS_JOB, 1, 'PASS')" 

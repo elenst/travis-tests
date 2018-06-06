@@ -14,73 +14,95 @@ before_install:
 
 env:
 - TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
-- TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy  --mysqld=--performance-schema"
-- TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy  --mysqld=--performance-schema --gendata-advanced --skip-gendata"
+
+- TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
+
 - TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy"
-- TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy --gendata-advanced --skip-gendata"
+
 - TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
+
 - TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
+
 - TEST_OPTIONS="--grammar=conf/partitioning/partitions.yy"
-- TEST_OPTIONS="--grammar=conf/partitioning/partitions.yy --gendata-advanced --skip-gendata"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partitions.yy"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/partitioning/partitions.yy"
+
 - TEST_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
+
 - TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
+
 - TEST_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
+
 - TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
+
 - TEST_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
+
 - TEST_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-- TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy --gendata-advanced --skip-gendata"
-- TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy --gendata"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
+
+- TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/optimizer.yy"
+
 - TEST_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
+
 - TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
-- TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata-advanced --skip-gendata"
+
 - TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
+
 - TEST_OPTIONS="--grammar=conf/mariadb/functions.yy"
-- TEST_OPTIONS="--grammar=conf/mariadb/functions.yy --gendata-advanced --skip-gendata"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/functions.yy"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/functions.yy"
+
 - TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
-- TEST_OPTIONS="--grammar=conf/optimizer/range_access.yy --gendata=conf/optimizer/range_access.zz"
+- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
+
 
 install:
 - cd $HOME
-#- export CC=clang-5.0
-#- export CXX=clang++-5.0
 #- export REBUILD_OLD_SERVER=yes
 - export RERUN_OLD_SERVER=yes
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
-- export ASAN_OPTIONS=abort_on_error=1
-- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
-- if [ -z "$SERVER_BRANCH" ] ; then SERVER=10.2 ; else SERVER=$SERVER_BRANCH ; fi
+- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
+- if [ -z "$TEST_BRANCH" ] ; then export TEST_BRANCH=experimental; fi
+- if [ -z "$SERVER_BRANCH" ] ; then export SERVER=10.2 ; else export SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
-#- cd src
-#- patch -p 1 < $TRAVIS_BUILD_DIR/asan.patch
-#- cd $HOME
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests
-- git clone https://github.com/elenst/rqg --branch experimental rqg
-- cd $RQG_HOME && git log -1
+- git clone https://github.com/elenst/rqg --branch $TEST_BRANCH rqg
+- cd $RQG_HOME
+- export TEST_REVISION=`git log -1 --pretty="%H"`
 - cd $SCRIPT_DIR && git log -1
-# --mysqld=--slave-skip-errors=1049,1305,1539,1505,1317 --rpl_mode=mixed-nosync
-# --redefine=conf/mariadb/xa.yy 
-- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --mysqld=--log_output=FILE --views --vcols --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --basedir=$BASEDIR --mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--max-statement-time=30 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+
+# --redefine=conf/mariadb/xa.yy
+- export COMMON_RQG_OPTIONS="--duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --basedir=$BASEDIR --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
 script:
 
 - cd $HOME
 - . $SCRIPT_DIR/build_if_not_cached.sh
 - cd $RQG_HOME
-- mkdir $HOME/logs
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --vardir=$HOME/logs/vardir1_1 2>&1 | tee $HOME/logs/trial1.log
-- . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs
-- rm -rf $HOME/logs/vardir1_1 $HOME/logs/trial1.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --engine=InnoDB --vardir=$HOME/logs/vardir1_2 2>&1 | tee $HOME/logs/trial2.log
-- . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs
-- rm -rf $HOME/logs/vardir1_2 $HOME/logs/trial2.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --mysqld=--default-storage-engine=MyISAM --engine=MyISAM --vardir=$HOME/logs/vardir1_3 2>&1 | tee $HOME/logs/trial3.log
-- . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs
-- rm -rf $HOME/logs/vardir1_3 $HOME/logs/trial3.log
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=ROW --mysqld=--default-storage-engine=RocksDB --engine=RocksDB --vardir=$HOME/logs/vardir1_4 2>&1 | tee $HOME/logs/trial4.log
-- . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs
+- export LOGDIR=$HOME/logs
+- mkdir $LOGDIR
 
-- cd $HOME
-#- . $SCRIPT_DIR/collect_failure_info.sh $HOME/logs
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$LOGDIR/vardir > $LOGDIR/trial.log 2>&1
+- . $SCRIPT_DIR/collect_single_failure_info.sh
+
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --vardir=$LOGDIR/vardir > $LOGDIR/trial.log 2>&1
+- . $SCRIPT_DIR/collect_single_failure_info.sh
+
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --ps-protocol --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice  --vardir=$LOGDIR/vardir > $LOGDIR/trial.log 2>&1
+- . $SCRIPT_DIR/collect_single_failure_info.sh
+
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --vardir=$LOGDIR/vardir > $LOGDIR/trial.log 2>&1
+- . $SCRIPT_DIR/collect_single_failure_info.sh
+
 - if [ ! -e $BASEDIR/test_result ] ; then echo $? > $BASEDIR/test_result ; fi

@@ -13,16 +13,23 @@ before_install:
 - sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
 
 env:
-- TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz --redefine=conf/mariadb/versioning.yy"
-- TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz --redefine=conf/mariadb/versioning.yy"
-- TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz --redefine=conf/mariadb/versioning.yy"
+- TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
+- TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
+- TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
 - TEST_OPTIONS="--grammar=conf/partitioning/partitions.yy"
-- TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz --redefine=conf/mariadb/versioning.yy"
-- TEST_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz --redefine=conf/mariadb/versioning.yy"
-- TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz --redefine=conf/mariadb/versioning.yy"
-- TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz --redefine=conf/mariadb/versioning.yy"
-- TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz --redefine=conf/mariadb/versioning.yy"
-- TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz --redefine=conf/mariadb/versioning.yy"
+- TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
+- TEST_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
+- TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
+- TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
+- TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
+- TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
+
+- TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
+- TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy"
+- TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
+- TEST_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
+- TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy"
+- TEST_OPTIONS="--grammar=conf/mariadb/functions.yy"
 
 install:
 - cd $HOME
@@ -32,7 +39,7 @@ install:
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
 - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
-- if [ -z "$TEST_BRANCH" ] ; then export TEST_BRANCH=experimental; fi
+- if [ -z "$TEST_BRANCH" ] ; then export TEST_BRANCH=travis-workarounds; fi
 - if [ -z "$SERVER_BRANCH" ] ; then export SERVER=10.3 ; else export SERVER=$SERVER_BRANCH ; fi
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests
@@ -44,7 +51,7 @@ install:
 - export LOGDIR=$HOME/logs
 - mkdir $LOGDIR
 
-- export COMMON_RQG_OPTIONS="--basedir=$BASEDIR --vardir=$LOGDIR/vardir --engine=RocksDB --duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE  --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb"
+- export COMMON_RQG_OPTIONS="--basedir=$BASEDIR --vardir=$LOGDIR/vardir --engine=RocksDB --duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/versioning.yy --mysqld=--log_output=FILE  --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb"
 
 script:
 

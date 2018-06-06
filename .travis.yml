@@ -14,72 +14,55 @@ before_install:
 
 env:
 - TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/information_schema.yy" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/partitioning/partitions.yy"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partitions.yy"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/partitioning/partitions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/partitioning/partitions.yy" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/optimizer.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/optimizer.yy" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
 
 - TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/mariadb/functions.yy"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/functions.yy"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/functions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/mariadb/functions.yy" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 - TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
 - TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb --mysqld=--binlog-format=row --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz" CMAKE_EXTRA_OPTIONS="-DPLUGIN_ROCKSDB=DYNAMIC"
 
 
 install:

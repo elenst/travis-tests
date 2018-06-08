@@ -8,9 +8,15 @@ cache:
   directories:
     - $HOME/server
 
-before_install:
-- cpanm -n DBI DBD::mysql
-- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
+addons:
+  apt:
+    packages:
+      - libaio1
+      - libaio-dev
+      - libjemalloc1
+      - gdb
+      - libnuma1
+      - libdbd-mysql-perl
 
 env:
 - TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"

@@ -64,6 +64,7 @@ install:
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests
 - git clone https://github.com/elenst/rqg --branch $TEST_BRANCH rqg
+- . $SCRIPT_DIR/get_old_version.sh $OLD
 - cd $RQG_HOME
 - export TEST_REVISION=`git log -1 --pretty="%H"`
 - cd $SCRIPT_DIR && git log -1

@@ -1,6 +1,6 @@
-language: perl
-dist: jessie
-
+language: cpp
+dist: trusty
+compiler: gcc
 sudo: enabled
 
 cache:

@@ -51,31 +51,41 @@ env:
 - TYPE=normal        ENCRYPTION=turn_on,off  OLD=10.0                         PAGE_SIZE=small
 - TYPE=undo                                  OLD=10.0                         PAGE_SIZE=small
 
+
 install:
-- cd $HOME
-#- export RERUN_OLD_SERVER=yes
+
+#### Notes:
+# - TEST_BRANCH (a.k.a RQG branch) can be redefined in travis settings, currently only globally (for all branches)
+# - SERVER_BRANCH can be redefined in  in travis settings, currently only globally (for all branches)
+# - export RERUN_OLD_SERVER=yes if tests should be run always, regardless whether they were run on the same revision or not
+
+#### Settings generally unique per branch
+- if [ -z "$SERVER_BRANCH" ] ; then export SERVER=10.3 ; else export SERVER=$SERVER_BRANCH ; fi
+- if [ -z "$TEST_BRANCH" ] ; then export TEST_BRANCH=travis-workarounds; fi
+- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
+
+#### Settings and actions common for all test branches
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
-- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
-# TEST_BRANCH and SERVER_BRANCH can be redefined in build variables
-- if [ -z "$TEST_BRANCH" ] ; then export TEST_BRANCH=travis-workarounds; fi
-- if [ -z "$SERVER_BRANCH" ] ; then export SERVER=10.3 ; else export SERVER=$SERVER_BRANCH ; fi
+
+- cd $HOME
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests
 - git clone https://github.com/elenst/rqg --branch $TEST_BRANCH rqg
-- . $SCRIPT_DIR/get_old_version.sh $OLD
 - cd $RQG_HOME
 - export TEST_REVISION=`git log -1 --pretty="%H"`
 - cd $SCRIPT_DIR && git log -1
 - export LOGDIR=$HOME/logs
 
+#### Settings and actions common for this type of tests
+- . $SCRIPT_DIR/get_old_version.sh $OLD
+- . $SCRIPT_DIR/build_if_not_cached.sh
+
 script:
 
-- cd $HOME
-- . $SCRIPT_DIR/build_if_not_cached.sh
+# Dry run will just create a list of combinations, then piped works will re-format it into proper command lines, and run.sh will run them
 - cd $RQG_HOME
-
 - perl $RQG_HOME/combinations.pl --new --config=$SCRIPT_DIR/travis_combinations.cc --run-all-combinations-once --force --workdir=$LOGDIR --dry-run | grep perl | sed -e 's/.*\(perl .*\)/\1/g' | perl -e '$num=0; while(<>) {$num++; print; print "\nTRIAL=$num TRIAL_LOG=$ENV{LOGDIR}/trial${num}.log VARDIR=$ENV{LOGDIR}/current1_1 . $ENV{SCRIPT_DIR}/collect_single_failure_info.sh\n\n";}' > $HOME/run.sh
 - . $HOME/run.sh
 

@@ -68,7 +68,9 @@ script:
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --ps-protocol --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice  > $LOGDIR/trial.log 2>&1
 - . $SCRIPT_DIR/collect_single_failure_info.sh
 
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log_bin_trust_function_creators=1 --mysqld=--slave_parallel_mode=optimistic --mysqld=--slave-parallel-threads=8 $TEST_OPTIONS  --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --rpl-mode=row-nosync --use-gtid=current_pos > $LOGDIR/trial.log 2>&1
+# Parallel replication disabled due to MDEV-16428, MDEV-16242
+# --mysqld=--slave_parallel_mode=optimistic --mysqld=--slave-parallel-threads=8 
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS  --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --rpl-mode=row-nosync --use-gtid=current_pos > $LOGDIR/trial.log 2>&1
 - . $SCRIPT_DIR/collect_single_failure_info.sh
 
 - if [ ! -e $BASEDIR/test_result ] ; then echo $? > $BASEDIR/test_result ; fi

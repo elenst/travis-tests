@@ -87,9 +87,9 @@ export RERUN_OLD_SERVER=yes
 - SERVER="${SERVER_BRANCH:-10.3}"
 - TEST_BRANCH="${TEST_BRANCH:-travis-workarounds}"
 
-- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
+- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=RelWithDebInfo -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
 
-- export COMMON_RQG_OPTIONS="--vardir=$LOGDIR/vardir --basedir=$BASEDIR  --duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+- export COMMON_RQG_OPTIONS="--vardir=$LOGDIR/vardir --basedir=$BASEDIR  --duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5"
 
 #### Settings and actions common for all test branches
 - export BASEDIR=$HOME/server

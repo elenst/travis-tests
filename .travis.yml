@@ -70,6 +70,7 @@ install:
 - export TEST_REVISION=`git log -1 --pretty="%H"`
 - cd $SCRIPT_DIR && git log -1
 - export LOGDIR=$HOME/logs
+- mkdir $LOGDIR
 
 #### Settings and actions common for this type of tests
 - . $SCRIPT_DIR/build_if_not_cached.sh

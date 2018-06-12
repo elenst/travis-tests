@@ -1,11 +1,28 @@
+dist:
+- trusty
+- jessie
+
 language: cpp
-dist: trusty
 compiler: gcc
 sudo: enabled
 
-before_install:
-- cpanm -n DBI DBD::mysql
-- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
+cache:
+  apt: true
+  directories:
+    - $HOME/server
+
+before_cache:
+  rm -rf $HOME/server/mysql-test
+
+addons:
+  apt:
+    packages:
+      - libaio1
+      - libaio-dev
+      - libjemalloc1
+      - gdb
+      - libnuma1
+      - libdbd-mysql-perl
 
 script:
 
@@ -14,9 +31,4 @@ script:
 - cat /proc/cpuinfo
 - uname -a
 - dpkg -l
-
 - printenv
-- wget http://hasky.askmonty.org/archive/10.3/build-20509/kvm-bintar-trusty-amd64/mariadb-10.3.8-linux-x86_64.tar.gz
-- tar zxf mariadb-10.3.8-linux-x86_64.tar.gz
-- TRAVIS_JOB=`echo $TRAVIS_JOB_NUMBER | sed -e 's/.*\.//'`
-- mariadb-10.3.8-linux-x86_64/bin/mysql --host=$DB_HOST --port=$DB_PORT -u$DB_USER -p$DBP -e "INSERT INTO travis.result (build_id, job_id, trial_id, result) VALUES ($TRAVIS_BUILD_NUMBER, $TRAVIS_JOB, 1, 'PASS')" 

@@ -8,9 +8,18 @@ cache:
   directories:
     - $HOME/server
 
-before_install:
-- cpanm -n DBI DBD::mysql
-- sudo apt-get install libaio1 libaio-dev libjemalloc1 gdb libnuma1
+before_cache:
+  rm -rf $HOME/server/mysql-test
+
+addons:
+  apt:
+    packages:
+      - libaio1
+      - libaio-dev
+      - libjemalloc1
+      - gdb
+      - libnuma1
+      - libdbd-mysql-perl
 
 env:
 - TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
@@ -31,34 +40,46 @@ env:
 - TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy"
 - TEST_OPTIONS="--grammar=conf/mariadb/functions.yy"
 
+
 install:
-- cd $HOME
-#- export REBUILD_OLD_SERVER=yes
-- export RERUN_OLD_SERVER=yes
+
+#### Notes:
+# - TEST_BRANCH (a.k.a RQG branch) can be redefined in travis settings, currently only globally (for all branches)
+# - SERVER_BRANCH can be redefined in  in travis settings, currently only globally (for all branches)
+# - export RERUN_OLD_SERVER=yes if tests should be run always, regardless whether they were run on the same revision or not
+
+export RERUN_OLD_SERVER=yes
+
+#### Settings generally unique per branch
+- SERVER="${SERVER_BRANCH:-10.2}"
+- TEST_BRANCH="${TEST_BRANCH:-travis-workarounds}"
+
+- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
+
+- export COMMON_RQG_OPTIONS="--basedir=$BASEDIR --vardir=$LOGDIR/vardir --engine=RocksDB --duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE  --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb"
+
+#### Settings and actions common for all test branches
 - export BASEDIR=$HOME/server
 - export RQG_HOME=$HOME/rqg
 - export SCRIPT_DIR=$HOME/mariadb-tests/scripts
-- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
-- if [ -z "$TEST_BRANCH" ] ; then export TEST_BRANCH=travis-workarounds; fi
-- if [ -z "$SERVER_BRANCH" ] ; then export SERVER=10.2 ; else export SERVER=$SERVER_BRANCH ; fi
+
+- cd $HOME
 - git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
 - git clone https://github.com/elenst/mariadb-tests mariadb-tests
 - git clone https://github.com/elenst/rqg --branch $TEST_BRANCH rqg
 - cd $RQG_HOME
 - export TEST_REVISION=`git log -1 --pretty="%H"`
 - cd $SCRIPT_DIR && git log -1
-
 - export LOGDIR=$HOME/logs
-- mkdir $LOGDIR
 
-- export COMMON_RQG_OPTIONS="--basedir=$BASEDIR --vardir=$LOGDIR/vardir --engine=RocksDB --duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE  --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb"
+#### Settings and actions common for this type of tests
+- . $SCRIPT_DIR/build_if_not_cached.sh
+
 
 script:
 
-- cd $HOME
-- . $SCRIPT_DIR/build_if_not_cached.sh
-
 - cd $RQG_HOME
+
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice > $LOGDIR/trial.log 2>&1
 - . $SCRIPT_DIR/collect_single_failure_info.sh
 

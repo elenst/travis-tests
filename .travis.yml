@@ -1,7 +1,4 @@
-dist:
-- trusty
-- jessie
-
+dist: trusty
 language: cpp
 compiler: gcc
 sudo: enabled

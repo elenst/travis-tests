@@ -48,26 +48,26 @@ env:
 
 - TYPE=normal        ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=normal                                OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-#- TYPE=crash         ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-#- TYPE=crash                                 OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
+# - TYPE=crash         ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
+# - TYPE=crash                                 OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
 - TYPE=undo                                  OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
 - TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
 - TYPE=undo                                  OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
 - TYPE=normal        ENCRYPTION=on           OLD=10.1.13   COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=normal                                OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
-#- TYPE=crash         ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none,zlib  PAGE_SIZE=all
-#- TYPE=crash                                 OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
+# - TYPE=crash         ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none,zlib  PAGE_SIZE=all
+# - TYPE=crash                                 OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
 - TYPE=undo          ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none       PAGE_SIZE=all
 - TYPE=undo                                  OLD=10.1.22   COMPRESSION=none       PAGE_SIZE=all
 - TYPE=undo          ENCRYPTION=on           OLD=10.1.22   COMPRESSION=zlib       PAGE_SIZE=all
 - TYPE=undo                                  OLD=10.1.22   COMPRESSION=zlib       PAGE_SIZE=all
 - TYPE=normal        ENCRYPTION=turn_on,off  OLD=10.0                             PAGE_SIZE=small
-#- TYPE=crash         ENCRYPTION=turn_on,off  OLD=10.0                             PAGE_SIZE=small
+# - TYPE=crash         ENCRYPTION=turn_on,off  OLD=10.0                             PAGE_SIZE=small
 - TYPE=undo          ENCRYPTION=turn_on      OLD=10.0                             PAGE_SIZE=small
 - TYPE=undo                                  OLD=10.0                             PAGE_SIZE=small
 - TYPE=normal        ENCRYPTION=turn_on,off  OLD=10.0.14                          PAGE_SIZE=small
-#- TYPE=crash         ENCRYPTION=turn_on,off  OLD=10.0.14                          PAGE_SIZE=small
+# - TYPE=crash         ENCRYPTION=turn_on,off  OLD=10.0.14                          PAGE_SIZE=small
 - TYPE=undo          ENCRYPTION=turn_on      OLD=10.0.18                          PAGE_SIZE=small
 - TYPE=undo                                  OLD=10.0.18                          PAGE_SIZE=small
 
@@ -77,7 +77,7 @@ env:
 - TYPE=undo                                  OLD=mysql-5.7                        PAGE_SIZE=all
 
 - TYPE=normal        ENCRYPTION=turn_on,off  OLD=mysql-5.6                        PAGE_SIZE=small
-#- TYPE=crash         ENCRYPTION=turn_on,off  OLD=mysql-5.6                        PAGE_SIZE=small
+# - TYPE=crash         ENCRYPTION=turn_on,off  OLD=mysql-5.6                        PAGE_SIZE=small
 - TYPE=undo          ENCRYPTION=turn_on      OLD=mysql-5.6                        PAGE_SIZE=small
 - TYPE=undo                                  OLD=mysql-5.6                        PAGE_SIZE=small
 
@@ -99,7 +99,7 @@ install:
 # - export RERUN_OLD_SERVER=yes if tests should be run always, regardless whether they were run on the same revision or not
 
 #### Settings generally unique per branch
-- SERVER="${SERVER_BRANCH:-bb-10.2-marko}"
+- SERVER="${SERVER_BRANCH:-10.2}"
 - TEST_BRANCH="${TEST_BRANCH:-travis-workarounds}"
 - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 
@@ -130,7 +130,7 @@ script:
 - . $HOME/run.sh
 
 - cd $HOME
-#- perl $TRAVIS_BUILD_DIR/scripts/parse_upgrade_logs.pl --mode=jira --nowarnings $LOGDIR/trial*
+# - perl $TRAVIS_BUILD_DIR/scripts/parse_upgrade_logs.pl --mode=jira --nowarnings $LOGDIR/trial*
 - perl $SCRIPT_DIR/parse_upgrade_logs.pl --mode=kb --nowarnings $LOGDIR/trial*
 - perl $SCRIPT_DIR/parse_upgrade_logs.pl --mode=text --nowarnings $LOGDIR/trial*
 - if [ ! -e $BASEDIR/test_result ] ; then echo $? > $BASEDIR/test_result ; fi

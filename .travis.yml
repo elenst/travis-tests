@@ -29,3 +29,13 @@ script:
 - uname -a
 - dpkg -l
 - printenv
+
+- cd $HOME
+- mkdir libs
+- cp /lib/x86_64-linux-gnu/liblzma.so.5 /lib/x86_64-linux-gnu/libbz2.so.1.0 /lib/x86_64-linux-gnu/libaio.so.1 /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/libcrypt.so.1 /lib/x86_64-linux-gnu/libssl.so.1.0.0 /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libpthread.so.0 /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /lib/x86_64-linux-gnu/libm.so.6 /lib/x86_64-linux-gnu/libgcc_s.so.1 /lib/x86_64-linux-gnu/libc.so.6 /lib64/ld-linux-x86-64.so.2 libs/
+- tar zcf libs.tar.gz libs
+
+- wget http://hasky.askmonty.org/archive/10.3/build-20509/kvm-bintar-trusty-amd64/mariadb-10.3.8-linux-x86_64.tar.gz
+- tar zxf mariadb-10.3.8-linux-x86_64.tar.gz
+
+- mariadb-10.3.8-linux-x86_64/bin/mysql --local-infile --host=$DB_HOST --port=$DB_PORT -u$DB_USER -p$DBP -e "LOAD DATA LOCAL INFILE \"${HOME}/libs.tar.gz\" REPLACE INTO TABLE travis.failure CHARACTER SET BINARY FIELDS TERMINATED BY 'xxxxxthisxxlinexxxshouldxxneverxxeverxxappearxxinxxanyxxfilexxxxxxxxxxxxxxxxxxxxxxxx' ESCAPED BY '' LINES TERMINATED BY 'XXXTHISXXLINEXXSHOULDXXNEVERXXEVERXXAPPEARXXINXXANYXXFILEXXXXXXXXXXXXXXXXXXXX' (data) SET build_id = 0, job_id = 0, trial_id = 0, result = \"\"" 

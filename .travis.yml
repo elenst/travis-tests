@@ -51,7 +51,7 @@ install:
 - export RERUN_OLD_SERVER=yes
 
 #### Settings generally unique per branch
-- SERVER="${SERVER_BRANCH:-10.2}"
+- SERVER="${SERVER_BRANCH:-'bb-10.2-mdev16428'}"
 - TEST_BRANCH="${TEST_BRANCH:-travis-workarounds}"
 
 - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
@@ -90,9 +90,7 @@ script:
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --ps-protocol --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice  > $LOGDIR/trial.log 2>&1
 - . $SCRIPT_DIR/collect_single_failure_info.sh
 
-# Parallel replication disabled due to MDEV-16428, MDEV-16242
-# --mysqld=--slave_parallel_mode=optimistic --mysqld=--slave-parallel-threads=8 
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS  --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --rpl-mode=row-nosync --use-gtid=current_pos > $LOGDIR/trial.log 2>&1
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS  --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --rpl-mode=row-nosync --use-gtid=current_pos --mysqld=--slave_parallel_mode=optimistic --mysqld=--slave-parallel-threads=8 > $LOGDIR/trial.log 2>&1
 - . $SCRIPT_DIR/collect_single_failure_info.sh
 
 - if [ ! -e $BASEDIR/test_result ] ; then echo $? > $BASEDIR/test_result ; fi

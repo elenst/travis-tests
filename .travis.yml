@@ -77,6 +77,8 @@ install:
 
 script:
 
+- sh -c " while [ ! -e $HOME/stopit ] ; do sleep 5; echo 'Heartbeat'; done" &
+
 - cd $RQG_HOME
 
 - export COMMON_RQG_OPTIONS="--basedir=$BASEDIR --vardir=$LOGDIR/vardir --engine=RocksDB --duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE  --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--default-storage-engine=RocksDB --mysqld=--plugin-load-add=ha_rocksdb"
@@ -92,5 +94,7 @@ script:
 
 - perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS  --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --rpl-mode=row-nosync --use-gtid=current_pos --mysqld=--slave_parallel_mode=optimistic --mysqld=--slave-parallel-threads=8 > $LOGDIR/trial.log 2>&1
 - . $SCRIPT_DIR/collect_single_failure_info.sh
+
+- touch $HOME/stopit
 
 - if [ ! -e $BASEDIR/test_result ] ; then echo $? > $BASEDIR/test_result ; fi

@@ -77,7 +77,7 @@ install:
 
 script:
 
-- sh -c " while [ ! -e $HOME/stopit ] ; do sleep 5; echo 'Heartbeat'; done" &
+- sh -c " while [ ! -e $HOME/stopit ] ; do sleep 120; echo 'Heartbeat'; done" &
 
 - cd $RQG_HOME
 

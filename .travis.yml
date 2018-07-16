@@ -48,7 +48,7 @@ install:
 # - SERVER_BRANCH can be redefined in  in travis settings, currently only globally (for all branches)
 # - export RERUN_OLD_SERVER=yes if tests should be run always, regardless whether they were run on the same revision or not
 
-- export RERUN_OLD_SERVER=yes
+- export RERUN_OLD_SERVER=no
 
 #### Settings generally unique per branch
 - SERVER="${SERVER_BRANCH:-bb-10.2-mdev16428}"

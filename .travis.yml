@@ -22,56 +22,12 @@ addons:
       - libdbd-mysql-perl
 
 env:
-- TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
-
-- TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
-
-- TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy"
-
-- TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-
-- TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-
-- TEST_OPTIONS="--grammar=conf/partitioning/partitions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partitions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/partitioning/partitions.yy"
-
-- TEST_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-
-- TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
-
-- TEST_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
-
-- TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
-
-- TEST_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-
-- TEST_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-
-- TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/optimizer.yy"
-
-- TEST_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
-
-- TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
-
-- TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-
-- TEST_OPTIONS="--grammar=conf/mariadb/functions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/functions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/functions.yy"
-
-- TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
+- BUG="MDEV-15376"
+  SERVER_BRANCH="10.1"
+  TEST_OPTIONS="--duration=350 --seed=1530946075 --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--log_bin_trust_function_creators=1 --mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz --mysqld=--log-bin --transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy"
+- BUG="MDEV-15376"
+  SERVER_BRANCH="10.3"
+  TEST_OPTIONS="--no-mask --queries=100M --duration=350 --seed=1519182172 --reporters=Backtrace,ErrorLog --validators=TransformerNoComparator --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --mysqld=--log_output=FILE --views --vcols --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/xa.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--loose-max-statement-time=30 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz --engine=InnoDB --mysqld=--lower-case-table-names=1"
 
 
 install:
@@ -84,8 +40,8 @@ install:
 - export RERUN_OLD_SERVER=yes
 
 #### Settings generally unique per branch
-- SERVER="${SERVER_BRANCH:-10.2}"
-- TEST_BRANCH="${TEST_BRANCH:-travis-workarounds}"
+- SERVER="${SERVER_BRANCH:-10.3}"
+- TEST_BRANCH="${TEST_BRANCH:-master}"
 
 - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
 
@@ -112,18 +68,18 @@ script:
 
 - cd $RQG_HOME
 
-- export COMMON_RQG_OPTIONS="--basedir=$BASEDIR --vardir=$LOGDIR/vardir  --duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+- export COMMON_RQG_OPTIONS="--basedir=$BASEDIR --vardir=$LOGDIR/vardir"
 
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice > $LOGDIR/trial.log 2>&1
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --threads=6 > $LOGDIR/trial.log 2>&1
 - . $SCRIPT_DIR/collect_single_failure_info.sh
 
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice > $LOGDIR/trial.log 2>&1
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --threads=4 > $LOGDIR/trial.log 2>&1
 - . $SCRIPT_DIR/collect_single_failure_info.sh
 
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --ps-protocol --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice > $LOGDIR/trial.log 2>&1
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --threads=2 > $LOGDIR/trial.log 2>&1
 - . $SCRIPT_DIR/collect_single_failure_info.sh
 
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy > $LOGDIR/trial.log 2>&1
+- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --threads=1 > $LOGDIR/trial.log 2>&1
 - . $SCRIPT_DIR/collect_single_failure_info.sh
 
 - if [ ! -e $BASEDIR/test_result ] ; then echo $? > $BASEDIR/test_result ; fi

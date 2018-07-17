@@ -35,6 +35,11 @@ env:
   TEST_BRANCH="mdev16745"
   TEST_OPTIONS="--duration=350 --seed=1531363536 --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--innodb-sync-debug --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz --ps-protocol --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice"
 
+- BUG="MDEV-16184"
+  SERVER_BRANCH="10.3"
+  TEST_BRANCH="mdev16184"
+  TEST_OPTIONS="--duration=350 --seed=1526328716 --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --transformers=ConvertSubqueriesToViews,ConvertTablesToDerived,Count,DisableOptimizations,Distinct,EnableOptimizations,ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsDerived,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsSelectItem,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsWhereSubquery,Having,InlineSubqueries,OrderBy,StraightJoin,ExecuteAsPreparedTwice,ExecuteAsTrigger,ExecuteAsSPTwice,ExecuteAsFunctionTwice --redefine=conf/mariadb/general-workarounds.yy --mysqld=--log_output=FILE --mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--max-statement-time=30 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --views --redefine=conf/mariadb/versioning.yy --grammar=conf/optimizer/range_access.yy --gendata=conf/optimizer/range_access.zz --engine=MyISAM --mysqld=--default-storage-engine=MyISAM"
+
 install:
 
 #### Notes:

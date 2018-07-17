@@ -24,11 +24,16 @@ addons:
 env:
 - BUG="MDEV-15376"
   SERVER_BRANCH="10.1"
+  TEST_BRANCH="mdev15376"
   TEST_OPTIONS="--duration=350 --seed=1530946075 --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--log_bin_trust_function_creators=1 --mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz --mysqld=--log-bin --transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy"
 - BUG="MDEV-15376"
   SERVER_BRANCH="10.3"
   TEST_OPTIONS="--no-mask --queries=100M --duration=350 --seed=1519182172 --reporters=Backtrace,ErrorLog --validators=TransformerNoComparator --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy --mysqld=--log_output=FILE --views --vcols --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/xa.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--loose-max-statement-time=30 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz --engine=InnoDB --mysqld=--lower-case-table-names=1"
 
+- BUG="MDEV-16745"
+  SERVER_BRANCH="10.3"
+  TEST_BRANCH="mdev16745"
+  TEST_OPTIONS="--duration=350 --seed=1531363536 --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--innodb-sync-debug --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz --ps-protocol --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice"
 
 install:
 

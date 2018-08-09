@@ -92,6 +92,16 @@ env:
 - TYPE=undo          ENCRYPTION=turn_on      OLD=mysql-5.6                        PAGE_SIZE=small
 - TYPE=undo                                  OLD=mysql-5.6                        PAGE_SIZE=small
 
+- TYPE=downgrade       ENCRYPTION=on     OLD=10.3      COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=downgrade                         OLD=10.3      COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=crash-downgrade ENCRYPTION=on     OLD=10.3      COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=crash-downgrade                   OLD=10.3      COMPRESSION=none,zlib  PAGE_SIZE=all
+
+- TYPE=downgrade       ENCRYPTION=on     OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=downgrade                         OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=crash-downgrade ENCRYPTION=on     OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+- TYPE=crash-downgrade                   OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+
 install:
 
 #### Notes:
@@ -100,7 +110,7 @@ install:
 # - export RERUN_OLD_SERVER=yes if tests should be run always, regardless whether they were run on the same revision or not
 
 #### Settings generally unique per branch
-- SERVER="${SERVER_BRANCH:-10.3}"
+- SERVER="${SERVER_BRANCH:-bb-10.4-marko}"
 - TEST_BRANCH="${TEST_BRANCH:-travis-workarounds}"
 - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 

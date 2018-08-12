@@ -8,9 +8,6 @@ cache:
   directories:
     - $HOME/server
 
-before_cache:
-  rm -rf $HOME/server/mysql-test
-
 addons:
   apt:
     packages:
@@ -122,6 +119,6 @@ script:
   - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 $JOB_RQG_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --redefine=conf/mariadb/general-workarounds.yy"
   - . $SCRIPT_DIR/run_single_test.sh
 
-after_script:
-  - . $SCRIPT_DIR/store_test_result.sh
-  - . $SCRIPT_DIR/stop_heartbeat.sh
+before_cache:
+  - rm -rf $HOME/server/mysql-test
+  - if [ ! -e $HOME/server/test_result ] ; then echo $TRAVIS_TEST_RESULT > $HOME/server/test_result; fi

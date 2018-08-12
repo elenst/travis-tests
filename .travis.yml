@@ -101,7 +101,7 @@ install:
   - export TOOLBOX_DIR=$HOME/mariadb-toolbox
   - if [ -n "$TOOLBOX_BRANCH" ] ; then TOOLBOX_BRANCH="--branch $TOOLBOX_BRANCH" ; fi
   - git clone https://github.com/elenst/mariadb-toolbox --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
-  - $TOOLBOX_DIR/travis/export_and_clone.sh
+  - . $TOOLBOX_DIR/travis/export_and_clone.sh
   - . $SCRIPT_DIR/build_if_not_cached.sh
 
 before_script:

@@ -41,7 +41,7 @@ env:
     - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DWITH_SPHINX_STORAGE_ENGINE=NO -DWITHOUT_SPHINX_STORAGE_ENGINE=YES -DWITH_TOKUDB_STORAGE_ENGINE=NO -DWITHOUT_TOKUDB_STORAGE_ENGINE=YES -DWITH_MROONGA_STORAGE_ENGINE=NO -DWITHOUT_MROONGA_STORAGE_ENGINE=YES -DWITH_FEDERATED_STORAGE_ENGINE=NO -DWITHOUT_FEDERATED_STORAGE_ENGINE=YES -DWITH_FEDERATEDX_STORAGE_ENGINE=NO -DWITHOUT_FEDERATEDX_STORAGE_ENGINE=YES -DWITH_CONNECT_STORAGE_ENGINE=NO -DWITHOUT_CONNECT_STORAGE_ENGINE=YES -DWITH_SPIDER_STORAGE_ENGINE=NO -DWITHOUT_SPIDER_STORAGE_ENGINE=YES -DWITH_OQGRAPH_STORAGE_ENGINE=NO -DWITHOUT_OQGRAPH_STORAGE_ENGINE=YES -DWITH_MARIABACKUP=OFF"
 
     - export TEST_DURATION=350
-    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
 
   matrix:
@@ -110,16 +110,16 @@ before_script:
 
 script:
 
-  - export TEST_RQG_OPTIONS="--transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice"
+  - export TEST_RQG_OPTIONS="--transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice"
+  - export TEST_RQG_OPTIONS="--skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--ps-protocol --transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice"
+  - export TEST_RQG_OPTIONS="--ps-protocol --transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 $JOB_RQG_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy"
+  - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 $JOB_RQG_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --redefine=conf/mariadb/general-workarounds.yy"
   - . $SCRIPT_DIR/run_single_test.sh
 
 after_script:

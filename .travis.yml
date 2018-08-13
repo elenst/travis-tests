@@ -1,15 +1,12 @@
 language: cpp
 dist: trusty
 compiler: gcc
-sudo: enabled
+sudo: false
 
 cache:
   apt: true
   directories:
     - $HOME/server
-
-before_cache:
-  rm -rf $HOME/server/mysql-test
 
 addons:
   apt:
@@ -22,107 +19,106 @@ addons:
       - libdbd-mysql-perl
 
 env:
-- TEST_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
 
-- TEST_OPTIONS="--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
+  global:
 
-- TEST_OPTIONS="--grammar=conf/runtime/information_schema.yy"
+    #### Notes:
+    # - SERVER_BRANCH and RQG_BRANCH can be redefined in travis settings, currently only globally (for all branches),
+    #   by SERVER_BRANCH_OVERRIDE and RQG_BRANCH_OVERRIDE correspondingly.
+    # - export RERUN_OLD_SERVER=yes if tests should be run always, regardless whether they were run on the same revision or not,
+    #   otherwise keep commented
+    # - -export REBUILD_OLD_SERVER=yes if the build needs to be done even if there is cached one (rarely needed),
+    #   otherwise keep commented
 
-- TEST_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
+    - export SERVER_BRANCH=10.3
+    - export RERUN_OLD_SERVER=yes
+    - export RQG_BRANCH=dev
+    #- export REBUILD_OLD_SERVER=yes
 
-- TEST_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
+    - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
 
-- TEST_OPTIONS="--grammar=conf/partitioning/partitions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partitions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/partitioning/partitions.yy"
+    - export TEST_DURATION=350
+    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
-- TEST_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
 
-- TEST_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
+  matrix:
+    - JOB_RQG_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
 
-- TEST_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
+    - JOB_RQG_OPTIONS="--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
 
-- TEST_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
+    - JOB_RQG_OPTIONS="--grammar=conf/runtime/information_schema.yy"
 
-- TEST_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
+    - JOB_RQG_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
 
-- TEST_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
+    - JOB_RQG_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
 
-- TEST_OPTIONS="--grammar=conf/mariadb/optimizer.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/optimizer.yy"
+    - JOB_RQG_OPTIONS="--grammar=conf/partitioning/partitions.yy"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partitions.yy"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/partitioning/partitions.yy"
 
-- TEST_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
+    - JOB_RQG_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
 
-- TEST_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
+    - JOB_RQG_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
 
-- TEST_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
+    - JOB_RQG_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
 
-- TEST_OPTIONS="--grammar=conf/mariadb/functions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/functions.yy"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/functions.yy"
+    - JOB_RQG_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
 
-- TEST_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
-- TEST_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
+    - JOB_RQG_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
+
+    - JOB_RQG_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
+
+    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/optimizer.yy"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/optimizer.yy"
+
+    - JOB_RQG_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
+
+    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
+
+    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
+
+    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/functions.yy"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/functions.yy"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/functions.yy"
+
+    - JOB_RQG_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
+    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
 
 
 install:
+  - export TOOLBOX_DIR=$HOME/mariadb-toolbox
+  - if [ -n "$TOOLBOX_BRANCH" ] ; then TOOLBOX_BRANCH="--branch $TOOLBOX_BRANCH" ; fi
+  - git clone https://github.com/elenst/mariadb-toolbox --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
+  - . $TOOLBOX_DIR/travis/export_and_clone.sh
+  - . $SCRIPT_DIR/build_if_not_cached.sh
 
-#### Notes:
-# - TEST_BRANCH (a.k.a RQG branch) can be redefined in travis settings, currently only globally (for all branches)
-# - SERVER_BRANCH can be redefined in  in travis settings, currently only globally (for all branches)
-# - export RERUN_OLD_SERVER=yes if tests should be run always, regardless whether they were run on the same revision or not
-
-- export RERUN_OLD_SERVER=yes
-
-#### Settings generally unique per branch
-- SERVER="${SERVER_BRANCH:-10.3}"
-- TEST_BRANCH="${TEST_BRANCH:-travis-workarounds}"
-
-- export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF $CMAKE_EXTRA_OPTIONS"
-
-#### Settings and actions common for all test branches
-- export BASEDIR=$HOME/server
-- export RQG_HOME=$HOME/rqg
-- export SCRIPT_DIR=$HOME/mariadb-tests/scripts
-
-- cd $HOME
-- git clone https://github.com/MariaDB/server --depth=1 --branch $SERVER src
-- git clone https://github.com/elenst/mariadb-tests mariadb-tests
-- git clone https://github.com/elenst/rqg --branch $TEST_BRANCH rqg
-- cd $RQG_HOME
-- export TEST_REVISION=`git log -1 --pretty="%H"`
-- cd $SCRIPT_DIR && git log -1
-- export LOGDIR=$HOME/logs
-- mkdir $LOGDIR
-
-#### Settings and actions common for this type of tests
-- . $SCRIPT_DIR/build_if_not_cached.sh
+before_script:
+  - . $SCRIPT_DIR/collect_system_info.sh
+  - . $SCRIPT_DIR/heartbeat.sh &
 
 script:
 
-- cd $RQG_HOME
+  - export TEST_RQG_OPTIONS="--transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice"
+  - . $SCRIPT_DIR/run_single_test.sh
 
-- export COMMON_RQG_OPTIONS="--vardir=$LOGDIR/vardir --basedir=$BASEDIR  --duration=350 --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+  - export TEST_RQG_OPTIONS="--skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice"
+  - . $SCRIPT_DIR/run_single_test.sh
 
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice > $LOGDIR/trial.log 2>&1
-- . $SCRIPT_DIR/collect_single_failure_info.sh
+  - export TEST_RQG_OPTIONS="--ps-protocol --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView"
+  - . $SCRIPT_DIR/run_single_test.sh
 
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice > $LOGDIR/trial.log 2>&1
-- . $SCRIPT_DIR/collect_single_failure_info.sh
+  - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 $JOB_RQG_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --redefine=conf/mariadb/general-workarounds.yy"
+  - . $SCRIPT_DIR/run_single_test.sh
 
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS $TEST_OPTIONS --ps-protocol --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsSPTwice > $LOGDIR/trial.log 2>&1
-- . $SCRIPT_DIR/collect_single_failure_info.sh
-
-- perl $RQG_HOME/runall-new.pl $COMMON_RQG_OPTIONS --mysqld=--log_bin_trust_function_creators=1 $TEST_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsCTE,ExecuteAsDeleteReturning,ExecuteAsExcept,ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsIntersect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice,ExecuteAsSPTwice --redefine=conf/mariadb/general-workarounds.yy > $LOGDIR/trial.log 2>&1
-- . $SCRIPT_DIR/collect_single_failure_info.sh
-
-- if [ ! -e $BASEDIR/test_result ] ; then echo $? > $BASEDIR/test_result ; fi
+before_cache:
+  - rm -rf $HOME/server/mysql-test
+  - if [ ! -e $HOME/server/test_result ] ; then echo $TRAVIS_TEST_RESULT > $HOME/server/test_result; fi

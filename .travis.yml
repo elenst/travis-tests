@@ -38,9 +38,6 @@ env:
 
     - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DWITH_SPHINX_STORAGE_ENGINE=OFF -DWITH_TOKUDB_STORAGE_ENGINE=OFF -DWITH_MROONGA_STORAGE_ENGINE=OFF -DWITH_FEDERATED_STORAGE_ENGINE=OFF -DWITH_FEDERATEDX_STORAGE_ENGINE=OFF -DWITH_CONNECT_STORAGE_ENGINE=OFF -DWITH_SPIDER_STORAGE_ENGINE=OFF -DWITHOUT_SPHINX_STORAGE_ENGINE=ON -DWITHOUT_TOKUDB_STORAGE_ENGINE=ON -DWITHOUT_MROONGA_STORAGE_ENGINE=ON -DWITHOUT_FEDERATED_STORAGE_ENGINE=ON -DWITHOUT_FEDERATEDX_STORAGE_ENGINE=ON -DWITHOUT_CONNECT_STORAGE_ENGINE=ON -DWITHOUT_SPIDER_STORAGE_ENGINE=ON"
 
-    - export TEST_DURATION=350
-    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
-
   matrix:
 
     - TYPE=recovery,undo-recovery               PAGE_SIZE=small

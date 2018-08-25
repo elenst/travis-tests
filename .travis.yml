@@ -25,6 +25,7 @@ env:
     #### Notes:
     # - SERVER_BRANCH and RQG_BRANCH can be redefined in travis settings, currently only globally (for all branches),
     #   by SERVER_BRANCH_OVERRIDE and RQG_BRANCH_OVERRIDE correspondingly.
+    # - if RQG_BRANCH_OVERRIDE and RQG_BRANCH are not defined, a default one chosen by the cloning script will be used.
     # - export RERUN_OLD_SERVER=yes if tests should be run always, regardless whether they were run on the same revision or not,
     #   otherwise keep commented
     # - -export REBUILD_OLD_SERVER=yes if the build needs to be done even if there is cached one (rarely needed),
@@ -32,7 +33,7 @@ env:
 
     - export SERVER_BRANCH=10.0
     - export RERUN_OLD_SERVER=yes
-    - export RQG_BRANCH=dev
+    #- export RQG_BRANCH=elenst-dev
     #- export REBUILD_OLD_SERVER=yes
 
     - export CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DWITH_SPHINX_STORAGE_ENGINE=OFF -DWITH_TOKUDB_STORAGE_ENGINE=OFF -DWITH_MROONGA_STORAGE_ENGINE=OFF -DWITH_FEDERATED_STORAGE_ENGINE=OFF -DWITH_FEDERATEDX_STORAGE_ENGINE=OFF -DWITH_CONNECT_STORAGE_ENGINE=OFF -DWITH_SPIDER_STORAGE_ENGINE=OFF -DWITHOUT_SPHINX_STORAGE_ENGINE=ON -DWITHOUT_TOKUDB_STORAGE_ENGINE=ON -DWITHOUT_MROONGA_STORAGE_ENGINE=ON -DWITHOUT_FEDERATED_STORAGE_ENGINE=ON -DWITHOUT_FEDERATEDX_STORAGE_ENGINE=ON -DWITHOUT_CONNECT_STORAGE_ENGINE=ON -DWITHOUT_SPIDER_STORAGE_ENGINE=ON"

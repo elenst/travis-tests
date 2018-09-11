@@ -30,7 +30,7 @@ env:
     # - -export REBUILD_OLD_SERVER=yes if the build needs to be done even if there is cached one (rarely needed),
     #   otherwise keep commented
 
-    - export SERVER_BRANCH=10.2
+    - export SERVER_BRANCH=bb-10.2-marko
     - export RERUN_OLD_SERVER=yes
     #- export RQG_BRANCH=dev
     #- export REBUILD_OLD_SERVER=yes

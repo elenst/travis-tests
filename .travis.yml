@@ -131,7 +131,7 @@ script:
 
   - cd $HOME
   #- perl $TRAVIS_BUILD_DIR/scripts/parse_upgrade_logs.pl --mode=jira --nowarnings $LOGDIR/trial*
-  - perl $SCRIPT_DIR/parse_upgrade_logs.pl --mode=kb --nowarnings $LOGDIR/trial*
+#  - perl $SCRIPT_DIR/parse_upgrade_logs.pl --mode=kb --nowarnings $LOGDIR/trial*
   - perl $SCRIPT_DIR/parse_upgrade_logs.pl --mode=text --nowarnings $LOGDIR/trial*
 
 before_cache:

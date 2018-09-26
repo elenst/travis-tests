@@ -65,30 +65,30 @@ env:
     - TYPE=undo          ENCRYPTION=on           OLD=10.2.6    COMPRESSION=zlib       PAGE_SIZE=all
     - TYPE=undo                                  OLD=10.2.6    COMPRESSION=zlib       PAGE_SIZE=all
 
-    - TYPE=normal        ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                                OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-    # - TYPE=crash         ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-    # - TYPE=crash                                 OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo                                  OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=undo                                  OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=normal        ENCRYPTION=on           OLD=10.1.13   COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                                OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
-    # - TYPE=crash         ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none,zlib  PAGE_SIZE=all
-    # - TYPE=crash                                 OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo                                  OLD=10.1.22   COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on           OLD=10.1.22   COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=undo                                  OLD=10.1.22   COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=10.0                             PAGE_SIZE=small
-    # - TYPE=crash         ENCRYPTION=turn_on,off  OLD=10.0                             PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=10.0                             PAGE_SIZE=small
-    - TYPE=undo                                  OLD=10.0                             PAGE_SIZE=small
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=10.0.14                          PAGE_SIZE=small
-    # - TYPE=crash         ENCRYPTION=turn_on,off  OLD=10.0.14                          PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=10.0.18                          PAGE_SIZE=small
-    - TYPE=undo                                  OLD=10.0.18                          PAGE_SIZE=small
+#    - TYPE=normal        ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=normal                                OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
+#    # - TYPE=crash         ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
+#    # - TYPE=crash                                 OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
+#    - TYPE=undo                                  OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
+#    - TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
+#    - TYPE=undo                                  OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
+#    - TYPE=normal        ENCRYPTION=on           OLD=10.1.13   COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=normal                                OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
+#    # - TYPE=crash         ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none,zlib  PAGE_SIZE=all
+#    # - TYPE=crash                                 OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=undo          ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none       PAGE_SIZE=all
+#    - TYPE=undo                                  OLD=10.1.22   COMPRESSION=none       PAGE_SIZE=all
+#    - TYPE=undo          ENCRYPTION=on           OLD=10.1.22   COMPRESSION=zlib       PAGE_SIZE=all
+#    - TYPE=undo                                  OLD=10.1.22   COMPRESSION=zlib       PAGE_SIZE=all
+#    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=10.0                             PAGE_SIZE=small
+#    # - TYPE=crash         ENCRYPTION=turn_on,off  OLD=10.0                             PAGE_SIZE=small
+#    - TYPE=undo          ENCRYPTION=turn_on      OLD=10.0                             PAGE_SIZE=small
+#    - TYPE=undo                                  OLD=10.0                             PAGE_SIZE=small
+#    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=10.0.14                          PAGE_SIZE=small
+#    # - TYPE=crash         ENCRYPTION=turn_on,off  OLD=10.0.14                          PAGE_SIZE=small
+#    - TYPE=undo          ENCRYPTION=turn_on      OLD=10.0.18                          PAGE_SIZE=small
+#    - TYPE=undo                                  OLD=10.0.18                          PAGE_SIZE=small
 
     - TYPE=normal        ENCRYPTION=turn_on,off  OLD=mysql-5.7                        PAGE_SIZE=all
     - TYPE=crash         ENCRYPTION=turn_on,off  OLD=mysql-5.7                        PAGE_SIZE=all
@@ -100,14 +100,14 @@ env:
     - TYPE=undo          ENCRYPTION=turn_on      OLD=mysql-5.6                        PAGE_SIZE=small
     - TYPE=undo                                  OLD=mysql-5.6                        PAGE_SIZE=small
 
-    - TYPE=downgrade        ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=downgrade                                OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=crash-downgrade  ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=crash-downgrade                          OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=downgrade        ENCRYPTION=on           OLD=10.2.7    COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=downgrade                                OLD=10.2.7    COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=crash-downgrade  ENCRYPTION=on           OLD=10.2.7    COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=crash-downgrade                          OLD=10.2.7    COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=downgrade        ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=downgrade                                OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=crash-downgrade  ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=crash-downgrade                          OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=downgrade        ENCRYPTION=on           OLD=10.2.7    COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=downgrade                                OLD=10.2.7    COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=crash-downgrade  ENCRYPTION=on           OLD=10.2.7    COMPRESSION=none,zlib  PAGE_SIZE=all
+#    - TYPE=crash-downgrade                          OLD=10.2.7    COMPRESSION=none,zlib  PAGE_SIZE=all
 
 install:
 
@@ -118,6 +118,9 @@ install:
   - . $SCRIPT_DIR/build_if_not_cached.sh
 
   - . $SCRIPT_DIR/get_old_version.sh $OLD
+  
+  # Have to remove TokuDB due to MDEV-17294
+  - rm -rf $HOME/old/lib/plugin/ha_tokudb.so
 
 before_script:
   - . $SCRIPT_DIR/collect_system_info.sh

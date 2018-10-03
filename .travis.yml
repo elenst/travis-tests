@@ -112,8 +112,8 @@ install:
 
   ###############################
   # Set old and new version here!
-  - if [ "$OLD" == "10.3" ] ; then OLD=10.3.8 ; fi
-  - SERVER_BRANCH=mariadb-10.3.9
+  - if [ "$OLD" == "10.3" ] ; then OLD=10.3.9 ; fi
+  - SERVER_BRANCH=mariadb-10.3.10
   ###############################
 
   - export TOOLBOX_DIR=$HOME/mariadb-toolbox

@@ -35,24 +35,17 @@ env:
     - export RERUN_OLD_SERVER=yes
     #- export RQG_BRANCH=elenst-dev
     #- export REBUILD_OLD_SERVER=yes
+    - export GLOBAL_RQG_OPTIONS="--mysqld=--innodb_flush_method=O_DIRECT --mysqld=--innodb_log_files_in_group=2 --mysqld=--innodb_log_file_size=256M --mysqld=--innodb_flush_log_at_trx_commit=1 --mysqld=--innodb_file_per_table=1 --mysqld=--innodb_buffer_pool_size=2G --mysqld=--innodb_data_file_path='ibdata1:1024M;ibdata2:10M:autoextend' --mysqld=--innodb_file_format=Barracuda --mysqld=--innodb_buffer_pool_instances=5"
 
     - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 
   matrix:
 
     - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=10.2
-    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=10.2
-    - TYPE=undo          ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=10.2
     - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=10.2
-    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=10.2
-    - TYPE=undo          ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=10.2
 
     - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=mariadb-10.2.12
-    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=mariadb-10.2.12
-    - TYPE=undo          ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=mariadb-10.2.12
     - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=mariadb-10.2.12
-    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=mariadb-10.2.12
-    - TYPE=undo          ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=mariadb-10.2.12
 
 
 install:

@@ -40,19 +40,19 @@ env:
 
   matrix:
 
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=10.2              PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5     SERVER_BRANCH=10.2              PAGE_SIZE=small
-    - TYPE=undo                                  OLD=5.5     SERVER_BRANCH=10.2              PAGE_SIZE=small
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=10.2              PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5.52  SERVER_BRANCH=10.2              PAGE_SIZE=small
-    - TYPE=undo                                  OLD=5.5.52  SERVER_BRANCH=10.2              PAGE_SIZE=small
+    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=10.2
+    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=10.2
+    - TYPE=undo          ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=10.2
+    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=10.2
+    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=10.2
+    - TYPE=undo          ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=10.2
 
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=mariadb-10.2.12   PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5     SERVER_BRANCH=mariadb-10.2.12   PAGE_SIZE=small
-    - TYPE=undo                                  OLD=5.5     SERVER_BRANCH=mariadb-10.2.12   PAGE_SIZE=small
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=mariadb-10.2.12   PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5.52  SERVER_BRANCH=mariadb-10.2.12   PAGE_SIZE=small
-    - TYPE=undo                                  OLD=5.5.52  SERVER_BRANCH=mariadb-10.2.12   PAGE_SIZE=small
+    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=mariadb-10.2.12
+    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=mariadb-10.2.12
+    - TYPE=undo          ENCRYPTION=turn_on,off  OLD=5.5     SERVER_BRANCH=mariadb-10.2.12
+    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=mariadb-10.2.12
+    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=mariadb-10.2.12
+    - TYPE=undo          ENCRYPTION=turn_on,off  OLD=5.5.52  SERVER_BRANCH=mariadb-10.2.12
 
 
 install:

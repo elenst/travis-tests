@@ -93,6 +93,11 @@ env:
     - JOB_RQG_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
     - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
 
+    - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy"
+    - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy --gendata=conf/partitioning/partition_pruning.zz"
+    - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy --mysqld=--default-storage-engine=MyISAM"
+    - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy --mysqld=--default-storage-engine=MyISAM --gendata=conf/partitioning/partition_pruning.zz"
+
 
 install:
   - export TOOLBOX_DIR=$HOME/mariadb-toolbox

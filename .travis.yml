@@ -128,13 +128,13 @@ script:
   - export TEST_RQG_OPTIONS="--mysqld=--loose-file-key-management-filename=$RQG_HOME/conf/mariadb/encryption_keys.txt --engine=InnoDB"
   - . $SCRIPT_DIR/run_single_test.sh
 
+  - export TEST_RQG_OPTIONS="--mysqld=--loose-file-key-management-filename=$RQG_HOME/conf/mariadb/encryption_keys.txt --engine=InnoDB --mysqld=--sql-mode= "
+  - . $SCRIPT_DIR/run_single_test.sh
+
+  - export TEST_RQG_OPTIONS="--mysqld=--loose-file-key-management-filename=$RQG_HOME/conf/mariadb/encryption_keys.txt --engine=InnoDB --mysqld=--log-bin"
+  - . $SCRIPT_DIR/run_single_test.sh
+
   - export TEST_RQG_OPTIONS="--mysqld=--loose-file-key-management-filename=$RQG_HOME/conf/mariadb/encryption_keys.txt"
-  - . $SCRIPT_DIR/run_single_test.sh
-
-  - export TEST_RQG_OPTIONS="--mysqld=--loose-file-key-management-filename=$RQG_HOME/conf/mariadb/encryption_keys.txt --mysqld=--sql-mode= "
-  - . $SCRIPT_DIR/run_single_test.sh
-
-  - export TEST_RQG_OPTIONS="--mysqld=--loose-file-key-management-filename=$RQG_HOME/conf/mariadb/encryption_keys.txt --mysqld=--log-bin"
   - . $SCRIPT_DIR/run_single_test.sh
 
 before_cache:

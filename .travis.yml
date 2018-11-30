@@ -99,6 +99,7 @@ install:
   - cd $HOME
   - wget -nv http://hasky.askmonty.org/archive/bb-10.2-compatibility/build-20620/kvm-bintar-centos6-amd64-debug/mariadb-10.2.14-linux-x86_64.tar.gz
   - tar zxf mariadb-10.2.14-linux-x86_64.tar.gz
+  - rm -rf server
   - mv mariadb-10.2.14-linux-x86_64 server
   - ls /home/travis/server/
   - /home/travis/server/bin/mysqld --version

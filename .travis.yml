@@ -77,9 +77,6 @@ script:
   - . $SCRIPT_DIR/run_single_test.sh
 
 
-$ENV{SCRIPT_DIR}/../data
-
-
 before_cache:
   - rm -rf $HOME/server/mysql-test
   - if [ ! -e $HOME/server/test_result ] ; then echo $TRAVIS_TEST_RESULT > $HOME/server/test_result; fi

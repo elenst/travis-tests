@@ -97,9 +97,11 @@ install:
 #  - . $SCRIPT_DIR/build_if_not_cached.sh
 # Using bb-10.2-compatibility-20620 for now
   - cd $HOME
-  - wget http://hasky.askmonty.org/archive/bb-10.2-compatibility/build-20620/kvm-bintar-centos6-amd64-debug/mariadb-10.2.14-linux-x86_64.tar.gz
+  - wget -nv http://hasky.askmonty.org/archive/bb-10.2-compatibility/build-20620/kvm-bintar-centos6-amd64-debug/mariadb-10.2.14-linux-x86_64.tar.gz
   - tar zxf mariadb-10.2.14-linux-x86_64.tar.gz
   - mv mariadb-10.2.14-linux-x86_64 server
+  - ls /home/travis/server/
+  - /home/travis/server/bin/mysqld --version
   - export SERVER_REVISION=bb-10.2-compatibility-20620
 
 before_script:

@@ -37,15 +37,15 @@ env:
 
     - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
 
-    - export TEST_DURATION=450
-    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock,CrashRestart --restart-timeout=20 --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=20 --mysqld=--lock-wait-timeout=5 --mysqld=--loose-innodb-lock-wait-timeout=3 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+    - export TEST_DURATION=250
+    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time  --scenario=CrashUpgrade --reporters=Backtrace,ErrorLog,Deadlock --views --redefine2=conf/mariadb/alter_table.yy --redefine=conf/mariadb/bulk_insert.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=20 --mysqld=--lock-wait-timeout=5 --mysqld=--loose-innodb-lock-wait-timeout=3 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --engine=Aria"
 
 
   matrix:
     - JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp-aria.zz"
     - JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp-aria.zz"
     - JOB_RQG_OPTIONS="--grammar=conf/mariadb/generic-dml.yy --gendata=conf/mariadb/oltp-aria.zz"
-    - JOB_RQG_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz --engine=Aria"
+    - JOB_RQG_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
 
 
 install:
@@ -69,6 +69,16 @@ script:
 
   - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 $JOB_RQG_OPTIONS --mysqld=--log-bin"
   - . $SCRIPT_DIR/run_single_test.sh
+
+  - export TEST_RQG_OPTIONS="--mysqld=--aria-encrypt-tables=1 $JOB_RQG_OPTIONS --mysqld=--plugin-load-add=file_key_management --mysqld=--file-key-management-filename=$SCRIPT_DIR/../data/keys.txt"
+  - . $SCRIPT_DIR/run_single_test.sh
+
+  - export TEST_RQG_OPTIONS="--mysqld=--aria_group_commit=hard --mysqld=--aria_group_commit_interval=1000000"
+  - . $SCRIPT_DIR/run_single_test.sh
+
+
+$ENV{SCRIPT_DIR}/../data
+
 
 before_cache:
   - rm -rf $HOME/server/mysql-test

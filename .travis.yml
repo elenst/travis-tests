@@ -38,30 +38,26 @@ env:
     - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
 
     - export TEST_DURATION=350
-    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=8 --mysqld=--lock-wait-timeout=5 --mysqld=--loose-innodb-lock-wait-timeout=3 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--character-set-server=utf8 --mysqld=--collation-server=utf8_general_ci --mysqld=--binlog-format=ROW --mysqld=--innodb-buffer-pool-size=2G --mysqld=--innodb_buffer_pool_instances=8 --mysqld=--innodb_page_cleaners=4 --mysqld=--innodb_print_all_deadlocks=ON --mysqld=--innodb_stats_sample_pages=32 --mysqld=--innodb_stats_transient_sample_pages=32 --mysqld=--join_buffer_size=4M --mysqld=--join_cache_level=6 --mysqld=--key_buffer_size=64M --mysqld=--log-bin --mysqld=--log_bin_trust_function_creators=ON --mysqld=--log_slow_verbosity=innodb,query_plan --mysqld=--lower_case_table_names=1 --mysqld=--optimizer_search_depth=0 --mysqld=--optimizer_switch=index_merge=on,index_merge_union=on,index_merge_sort_union=on,index_merge_intersection=on,index_merge_sort_intersection=off,engine_condition_pushdown=off,index_condition_pushdown=on,derived_merge=on,derived_with_keys=on,firstmatch=on,loosescan=on,materialization=on,in_to_exists=on,semijoin=on,partial_match_rowid_merge=on,partial_match_table_scan=on,subquery_cache=on,mrr=on,mrr_cost_based=on,mrr_sort_keys=off,outer_join_with_cache=on,semijoin_with_cache=on,join_cache_incremental=on,join_cache_hashed=on,join_cache_bka=on,optimize_join_buffer_size=on,table_elimination=on,extended_keys=on,exists_to_in=on,orderby_uses_equalities=on,condition_pushdown_for_derived=on,split_grouping_derived=on --mysqld=--transaction_isolation=READ-COMMITTED --mysqld=--use_stat_tables=PREFERABLY --mysqld=--userstat=ON"
 
 
   matrix:
     - JOB_RQG_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
 
     - JOB_RQG_OPTIONS="--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
+    - JOB_RQG_OPTIONS="--grammar=conf/runtime/performance_schema.yy --skip-gendata --gendata-advanced --vcols --mysqld=--performance-schema"
 
     - JOB_RQG_OPTIONS="--grammar=conf/runtime/information_schema.yy"
+    - JOB_RQG_OPTIONS="--grammar=conf/runtime/information_schema.yy --skip-gendata --gendata-advanced --vcols"
 
     - JOB_RQG_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
 
     - JOB_RQG_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
 
     - JOB_RQG_OPTIONS="--grammar=conf/partitioning/partitions.yy"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partitions.yy"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/partitioning/partitions.yy"
+    - JOB_RQG_OPTIONS="--grammar=conf/partitioning/partitions.yy --skip-gendata --gendata-advanced --vcols"
 
     - JOB_RQG_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
 
     - JOB_RQG_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
 
@@ -70,32 +66,27 @@ env:
     - JOB_RQG_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
 
     - JOB_RQG_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
 
     - JOB_RQG_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
 
     - JOB_RQG_OPTIONS="--grammar=conf/mariadb/optimizer.yy"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/optimizer.yy"
+    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/optimizer.yy --skip-gendata --gendata-advanced --vcols"
 
     - JOB_RQG_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
 
     - JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
+    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --skip-gendata --gendata-advanced --vcols"
 
     - JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
 
     - JOB_RQG_OPTIONS="--grammar=conf/mariadb/functions.yy"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/functions.yy"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/functions.yy"
+    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/functions.yy --skip-gendata --gendata-advanced --vcols"
 
     - JOB_RQG_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
 
     - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy"
+    - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy --skip-gendata --gendata-advanced --vcols"
     - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy --gendata=conf/partitioning/partition_pruning.zz"
-    - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy --mysqld=--default-storage-engine=MyISAM"
 
 
 install:
@@ -103,7 +94,13 @@ install:
   - if [ -n "$TOOLBOX_BRANCH" ] ; then TOOLBOX_BRANCH="--branch $TOOLBOX_BRANCH" ; fi
   - git clone https://github.com/elenst/mariadb-toolbox --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
   - . $TOOLBOX_DIR/travis/export_and_clone.sh
-  - . $SCRIPT_DIR/build_if_not_cached.sh
+#  - . $SCRIPT_DIR/build_if_not_cached.sh
+# Using bb-10.2-compatibility-20620 for now
+  - cd $HOME
+  - wget http://hasky.askmonty.org/archive/bb-10.2-compatibility/build-20620/kvm-bintar-centos6-amd64-debug/mariadb-10.2.14-linux-x86_64.tar.gz
+  - tar zxf mariadb-10.2.14-linux-x86_64.tar.gz
+  - mv mariadb-10.2.14-linux-x86_64 server
+  - export SERVER_REVISION=bb-10.2-compatibility-20620
 
 before_script:
   - . $SCRIPT_DIR/collect_system_info.sh
@@ -111,16 +108,16 @@ before_script:
 
 script:
 
-  - export TEST_RQG_OPTIONS="--transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice"
+  - export TEST_RQG_OPTIONS="--transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsUnion,ExecuteAsView,ExecuteAsPreparedTwice --mysqld=--sql_mode=STRICT_TRANS_TABLES"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice"
+  - export TEST_RQG_OPTIONS="--transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsUnion,ExecuteAsView,ExecuteAsPreparedTwice --mysqld=--sql_mode=STRICT_TRANS_TABLES,ORACLE"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--ps-protocol --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView"
+  - export TEST_RQG_OPTIONS="--ps-protocol --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsUnion,ExecuteAsView --mysqld=--sql_mode=STRICT_TRANS_TABLES"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 $JOB_RQG_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --redefine=conf/mariadb/general-workarounds.yy"
+  - export TEST_RQG_OPTIONS="--ps-protocol --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsUnion,ExecuteAsView --mysqld=--sql_mode="
   - . $SCRIPT_DIR/run_single_test.sh
 
 before_cache:

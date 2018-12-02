@@ -1,7 +1,7 @@
 language: cpp
-dist: trusty
+dist: xenial
 compiler: gcc
-sudo: false
+sudo: true
 
 cache:
   apt: true
@@ -35,75 +35,99 @@ env:
     #- export RQG_BRANCH=dev
     #- export REBUILD_OLD_SERVER=yes
 
-    - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
-
-    - export TEST_DURATION=350
-    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+    - export TEST_DURATION=500
+    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --vcols --views --grammar=conf/mariadb/generic-dml.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=10 --mysqld=--lock-wait-timeout=5 --mysqld=--loose-innodb-lock-wait-timeout=3 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
 
   matrix:
-    - JOB_RQG_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/runtime/information_schema.yy"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/partitioning/partitions.yy"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partitions.yy"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/partitioning/partitions.yy"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/partitioning/partition_pruning.yy --gendata=conf/partitioning/partition_pruning.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/replication/replication.yy --gendata=conf/replication/replication-5.1.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/replication/replication-ddl_sql.yy --gendata=conf/replication/replication-ddl_data.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/replication/replication-dml_sql.yy --gendata=conf/replication/replication-dml_data.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/optimizer.yy"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/optimizer.yy"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/optimizer/updateable_views.yy --mysqld=--init-file=\$RQG_HOME/conf/optimizer/updateable_views.init"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/mariadb/functions.yy"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/mariadb/functions.yy"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=Aria --grammar=conf/mariadb/functions.yy"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
-    - JOB_RQG_OPTIONS="--mysqld=--default-storage-engine=MyISAM --grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
-
-    - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy"
-    - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy --gendata=conf/partitioning/partition_pruning.zz"
-    - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy --mysqld=--default-storage-engine=MyISAM"
+    - JOB_RQG_OPTIONS=""
+    - JOB_RQG_OPTIONS="--skip-gendata --gendata-advanced"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/maria/maria.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/engine_stress.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/falcon/falcon_pagesize2K.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/falcon/falcon_backlog.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/falcon/falcon_data_types.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/falcon/falcon_pagesize32K.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/falcon/falcon_data_types_no_year_time.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/falcon/falcon_recovery.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/falcon/falcon_chill_thaw.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/falcon/falcon_blobs.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/falcon/falcon_replication.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/innodb/full_text_search.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/tiny_inserts.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/many_indexes.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/handler.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/engines/varchar.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/runtime/connect_kill_data.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/runtime/metadata_stability.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/runtime/WL5004_data.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/runtime/concurrency_1.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/runtime/alter_online.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/transactions/combinations.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/transactions/transactions.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/partitioning/partition_pruning.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/examples/example.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/dyncol/dyncol_dml.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona/translog_percona.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona/percona_no_blob.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona/many_indexes_percona.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona/percona.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona/outer_join_percona.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona/query_cache_strip_comments.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona/innodb_dict_size_limit.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona/bug826632.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/replication/replication-6.0.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/replication/replication-dml_data.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/replication/replication_single_engine_pk.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/replication/rpl_transactions.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/replication/replication-5.1.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/replication/WL5092_data.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/replication/replication_single_engine.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/replication/rpl_transactions_nopk.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/replication/replication-ddl_data.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/replication/replication_innodb_myisam.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona_qa/AL-19549/AL-19549.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona_qa/percona_qa.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona_qa/BT-16274/BT-16274.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/percona_qa/34411/34411.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/drizzle/translog_drizzle.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/drizzle/drizzle.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/drizzle/range_access_drizzle.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/drizzle/varchar_drizzle.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/drizzle/translog_ordering.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/drizzle/outer_join_drizzle.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/drizzle/drizzledump_migrate.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/drizzle/combinations_drizzle.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/drizzle/many_indexes_drizzle.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/temporal/temporal_functions-wl946.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/temporal/temporal_functions.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/temporal/temporal_ranges.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/temporal/current_timestamp.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/temporal/current_timestamp_6.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/mariadb/gtid_stress.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/mariadb/optimizer_basic.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/mariadb/innodb_upgrade_compression.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/mariadb/innodb_upgrade.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/mariadb/oltp-aria.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/mariadb/optimizer_no_indexes.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/mariadb/multi_update.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/mariadb/optimizer.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/mariadb/oltp.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/mariadb/innodb_compression_encryption.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/galera/galera_stress.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/optimizer/blobs.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/optimizer/range_access2.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/optimizer/outer_join.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/optimizer/range_access.zz"
+    - JOB_RQG_OPTIONS="--gendata=conf/backup/invariant.zz"
 
 
 install:
   - export TOOLBOX_DIR=$HOME/mariadb-toolbox
   - if [ -n "$TOOLBOX_BRANCH" ] ; then TOOLBOX_BRANCH="--branch $TOOLBOX_BRANCH" ; fi
   - git clone https://github.com/elenst/mariadb-toolbox --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
-  - . $TOOLBOX_DIR/travis/export_and_clone.sh
-  - . $SCRIPT_DIR/build_if_not_cached.sh
+  - . $TOOLBOX_DIR/travis/setup_environment.sh
+  - . $SCRIPT_DIR/get_latest_bintar.sh
 
 before_script:
   - . $SCRIPT_DIR/collect_system_info.sh
@@ -111,17 +135,15 @@ before_script:
 
 script:
 
-  - export TEST_RQG_OPTIONS="--transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice"
+  - export TEST_RQG_OPTIONS="$JOB_RQG_OPTIONS --mysqld=--log-bin --mysqld=--log_bin_trust_function_creators=1 --mysqld=--character-set-server=utf8 --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --redefine=conf/mariadb/general-workarounds.yy"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice"
+  - export TEST_RQG_OPTIONS="$JOB_RQG_OPTIONS --mysqld=--innodb_buffer_pool_size=2G --engine=InnoDB --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --redefine=conf/mariadb/general-workarounds.yy"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--ps-protocol --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView"
+  - export TEST_RQG_OPTIONS="--ps-protocol --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 $JOB_RQG_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --redefine=conf/mariadb/general-workarounds.yy"
-  - . $SCRIPT_DIR/run_single_test.sh
 
 before_cache:
   - rm -rf $HOME/server/mysql-test

@@ -127,7 +127,7 @@ install:
   - if [ -n "$TOOLBOX_BRANCH" ] ; then TOOLBOX_BRANCH="--branch $TOOLBOX_BRANCH" ; fi
   - git clone https://github.com/elenst/mariadb-toolbox --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
   - . $TOOLBOX_DIR/travis/setup_environment.sh
-  - . $SCRIPT_DIR/get_latest_bintar.sh
+  - . $SCRIPT_DIR/get_latest_bintar.sh $SERVER_BRANCH
 
 before_script:
   - . $SCRIPT_DIR/collect_system_info.sh

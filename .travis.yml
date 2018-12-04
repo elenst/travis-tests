@@ -31,7 +31,7 @@ env:
     #   otherwise keep commented
 
     - export SERVER_BRANCH=10.2
-    - export RERUN_OLD_SERVER=yes
+    - export RERUN_OLD_SERVER=no
     #- export RQG_BRANCH=dev
     #- export REBUILD_OLD_SERVER=yes
 

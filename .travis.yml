@@ -36,7 +36,7 @@ env:
     #- export REBUILD_OLD_SERVER=yes
 
     - export TEST_DURATION=500
-    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --vcols --views --grammar=conf/mariadb/generic-dml.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=10 --mysqld=--lock-wait-timeout=5 --mysqld=--loose-innodb-lock-wait-timeout=3 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --vcols --views --grammar=conf/mariadb/generic-dml.yy --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=10 --mysqld=--lock-wait-timeout=5 --mysqld=--loose-innodb-lock-wait-timeout=3 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--innodb-buffer-pool-size=2G"
 
 
   matrix:

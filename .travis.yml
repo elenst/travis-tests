@@ -38,7 +38,7 @@ env:
     - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
 
     - export TEST_DURATION=350
-    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/acl.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
 
   matrix:

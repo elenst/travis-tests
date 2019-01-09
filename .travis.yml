@@ -52,6 +52,26 @@ env:
     - JOB_RQG_OPTIONS="$ENCRYPTION --mysqld=--innodb-compression-algorithm=none --engine=InnoDB"
     - JOB_RQG_OPTIONS="$ENCRYPTION --mysqld=--innodb-compression-algorithm=zlib --engine=InnoDB"
 
+    - JOB_RQG_OPTIONS="--mysqld=--innodb-compression-algorithm=none --innodb-page-size=8K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="--mysqld=--innodb-compression-algorithm=zlib --innodb-page-size=8K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="$ENCRYPTION --mysqld=--innodb-compression-algorithm=none --innodb-page-size=8K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="$ENCRYPTION --mysqld=--innodb-compression-algorithm=zlib --innodb-page-size=8K --engine=InnoDB"
+
+    - JOB_RQG_OPTIONS="--mysqld=--innodb-compression-algorithm=none --innodb-page-size=4K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="--mysqld=--innodb-compression-algorithm=zlib --innodb-page-size=4K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="$ENCRYPTION --mysqld=--innodb-compression-algorithm=none --innodb-page-size=4K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="$ENCRYPTION --mysqld=--innodb-compression-algorithm=zlib --innodb-page-size=4K --engine=InnoDB"
+
+    - JOB_RQG_OPTIONS="--mysqld=--innodb-compression-algorithm=none --innodb-page-size=32K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="--mysqld=--innodb-compression-algorithm=zlib --innodb-page-size=32K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="$ENCRYPTION --mysqld=--innodb-compression-algorithm=none --innodb-page-size=32K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="$ENCRYPTION --mysqld=--innodb-compression-algorithm=zlib --innodb-page-size=32K --engine=InnoDB"
+
+    - JOB_RQG_OPTIONS="--mysqld=--innodb-compression-algorithm=none --innodb-page-size=64K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="--mysqld=--innodb-compression-algorithm=zlib --innodb-page-size=64K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="$ENCRYPTION --mysqld=--innodb-compression-algorithm=none --innodb-page-size=64K --engine=InnoDB"
+    - JOB_RQG_OPTIONS="$ENCRYPTION --mysqld=--innodb-compression-algorithm=zlib --innodb-page-size=64K --engine=InnoDB"
+
     - JOB_RQG_OPTIONS="--engine=MyISAM"
 
     - JOB_RQG_OPTIONS="--engine=Aria"
@@ -76,12 +96,17 @@ script:
   - export TEST_RQG_OPTIONS="--scenario=MariaBackupFull"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  # TODO: acl.yy temporarily disabled due to the number of problems
+  - export TEST_RQG_OPTIONS="--scenario=MariaBackupIncremental"
+  - . $SCRIPT_DIR/run_single_test.sh
 
   # DML/DDL test flow
+  # TODO: acl.yy temporarily disabled due to the number of problems
+
   - export TEST_RQG_OPTIONS="--scenario=MariaBackupFull --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy"
   - . $SCRIPT_DIR/run_single_test.sh
 
+  - export TEST_RQG_OPTIONS="--scenario=MariaBackupIncremental --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy"
+  - . $SCRIPT_DIR/run_single_test.sh
 
 before_cache:
   - rm -rf $HOME/server/mysql-test

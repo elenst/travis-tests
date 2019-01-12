@@ -35,7 +35,7 @@ env:
     #- export RQG_BRANCH=dev
     #- export REBUILD_OLD_SERVER=yes
 
-    - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF -DWITH_ASAN=YES"
+    - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
 
     - export TEST_DURATION=350
     - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --short-column-names --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --transformers=ExecuteAsExecuteImmediate,ExecuteAsInsertSelect,ExecuteAsUpdateDelete --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/redefine_temporary_tables.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --filter=$HOME/mariadb-toolbox/travis/10.4-combo-filter.ff --mysqld=--log_output=FILE --mysqld=--max-statement-time=15 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --mysqld=--innodb-buffer-pool-size=2G"
@@ -60,6 +60,24 @@ env:
     - JOB_RQG_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
     - JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy --gendata=conf/engines/innodb/full_text_search.zz"
 
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/runtime/performance_schema.yy --gendata=conf/mariadb/innodb.zz --mysqld=--performance-schema"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/runtime/information_schema.yy"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/runtime/information_schema.yy --gendata=conf/mariadb/innodb.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/engines/many_indexes.yy --gendata=conf/engines/many_indexes.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/engines/engine_stress.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/engines/engine_stress.yy --gendata=conf/mariadb/innodb.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/partitioning/partitions.yy"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/partitioning/partitions.yy --gendata=conf/mariadb/innodb.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/runtime/connect_kill_sql.yy --gendata=conf/runtime/connect_kill_data.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/runtime/WL5004_sql.yy --gendata=conf/runtime/WL5004_data.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp-transactional.yy --gendata=conf/mariadb/oltp.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/mariadb/oltp.yy --gendata=conf/mariadb/oltp.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/mariadb/generic-dml.yy --gendata=conf/mariadb/innodb.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/runtime/alter_online.yy --gendata=conf/runtime/alter_online.zz"
+    - JOB_CMAKE_OPTIONS="-DWITH_ASAN=YES" JOB_RQG_OPTIONS="--grammar=conf/engines/innodb/full_text_search.yy --gendata=conf/engines/innodb/full_text_search.zz"
+
 
 install:
   - export TOOLBOX_DIR=$HOME/mariadb-toolbox
@@ -83,7 +101,7 @@ script:
   - export TEST_RQG_OPTIONS="--mysqld=--sql-mode=NO_ENGINE_SUBSTITUTION --mysqld=--innodb-page-size=64K"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--server-id=222 --mysqld=--file-key-management --mysqld=--plugin-load-add=file_key_management --mysqld=--file-key-management-filename=$TOOLBOX_DIR/data/keys.txt --mysqld=--innodb-encrypt-tables --mysqld=--innodb-encrypt-log --mysqld=--innodb-encrypt-threads=4 --mysqld=--encrypt-tmp-disk-tables=1"
+  - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--server-id=222 --mysqld=--file-key-management --mysqld=--plugin-load-add=file_key_management --mysqld=--file-key-management-filename=$TOOLBOX_DIR/data/keys.txt --mysqld=--innodb-encrypt-tables --mysqld=--innodb-encrypt-log --mysqld=--innodb-encryption-threads=4 --mysqld=--encrypt-tmp-disk-tables=1"
   - . $SCRIPT_DIR/run_single_test.sh
 
 before_cache:

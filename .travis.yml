@@ -80,7 +80,7 @@ script:
   - export TEST_RQG_OPTIONS="--mysqld=--innodb-page-size=8K"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--mysqld=--sql-mode='' --mysqld=--innodb-page-size=64K"
+  - export TEST_RQG_OPTIONS="--mysqld=--sql-mode=NO_ENGINE_SUBSTITUTION --mysqld=--innodb-page-size=64K"
   - . $SCRIPT_DIR/run_single_test.sh
 
   - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 --mysqld=--log-bin --mysqld=--server-id=222 --mysqld=--file-key-management --mysqld=--plugin-load-add=file_key_management --mysqld=--file-key-management-filename=$TOOLBOX_DIR/data/keys.txt --mysqld=--innodb-encrypt-tables --mysqld=--innodb-encrypt-log --mysqld=--innodb-encrypt-threads=4 --mysqld=--encrypt-tmp-disk-tables=1"

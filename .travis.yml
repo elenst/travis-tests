@@ -40,7 +40,7 @@ env:
     
     - export TOOLBOX_DIR=$HOME/mariadb-toolbox
     - export TEST_DURATION=350
-    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --seed=time --reporters=Backtrace,ErrorLog,Deadlock --scenario=AclUpgrade --grammar=conf/mariadb/modules/acl.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=10 --mysqld=--lock-wait-timeout=5 --mysqld=--loose-innodb-lock-wait-timeout=3 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --filter=$TOOLBOX_DIR/travis/10.4-combo-filter.ff"
+    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --seed=time --reporters=Backtrace,ErrorLog,Deadlock --scenario=AclUpgrade --grammar=conf/mariadb/modules/acl.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=10 --mysqld=--lock-wait-timeout=5 --mysqld=--loose-innodb-lock-wait-timeout=3 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --filter=$TOOLBOX_DIR/travis/10.4-combo-filter.ff --basedir1=$HOME/old"
 
   matrix:
 
@@ -70,15 +70,19 @@ script:
 
   - export TEST_RQG_OPTIONS="--threads=1"
   - . $SCRIPT_DIR/run_single_test.sh
+  - grep "\[ERROR\]" $LOGDIR/trial.log
 
   - export TEST_RQG_OPTIONS="--threads=1 --mysqld=--plugin-load-add=auth_pam --mysqld=--plugin-load-add=auth_socket --mysqld=--plugin-load-add=auth_ed25519"
   - . $SCRIPT_DIR/run_single_test.sh
+  - grep "\[ERROR\]" $LOGDIR/trial.log
 
   - export TEST_RQG_OPTIONS="--threads=1 --views --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/sql_mode.yy"
   - . $SCRIPT_DIR/run_single_test.sh
+  - grep "\[ERROR\]" $LOGDIR/trial.log
 
-  - export TEST_RQG_OPTIONS="--threads=6 --views --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/locks.yy --mysqld=--plugin-load-add=auth_pam --mysqld=--plugin-load-add=auth_socket --mysqld=--plugin-load-add=auth_ed25519"
+  - export TEST_RQG_OPTIONS="--threads=1 --views --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/locks.yy --mysqld=--plugin-load-add=auth_pam --mysqld=--plugin-load-add=auth_socket --mysqld=--plugin-load-add=auth_ed25519"
   - . $SCRIPT_DIR/run_single_test.sh
+  - grep "\[ERROR\]" $LOGDIR/trial.log
 
 before_cache:
   - rm -rf $HOME/server/mysql-test

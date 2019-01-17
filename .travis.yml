@@ -72,7 +72,7 @@ script:
   - . $SCRIPT_DIR/run_single_test.sh
   - cat $LOGDIR/trial.log | grep -v 'Executor:'
 
-  - export TEST_RQG_OPTIONS="--threads=1 --mysqld=--plugin-load-add=auth_pam --mysqld=--plugin-load-add=auth_socket --mysqld=--plugin-load-add=auth_ed25519"
+  - export TEST_RQG_OPTIONS="--threads=1 --mysqld=--loose-plugin-load-add=auth_pam --mysqld=--loose-plugin-load-add=auth_socket --mysqld=--loose-plugin-load-add=auth_ed25519"
   - . $SCRIPT_DIR/run_single_test.sh
   - cat $LOGDIR/trial.log | grep -v 'Executor:'
 
@@ -80,7 +80,7 @@ script:
   - . $SCRIPT_DIR/run_single_test.sh
   - cat $LOGDIR/trial.log | grep -v 'Executor:'
 
-  - export TEST_RQG_OPTIONS="--threads=1 --views --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/locks.yy --mysqld=--plugin-load-add=auth_pam --mysqld=--plugin-load-add=auth_socket --mysqld=--plugin-load-add=auth_ed25519"
+  - export TEST_RQG_OPTIONS="--threads=1 --views --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/locks.yy --mysqld=--loose-plugin-load-add=auth_pam --mysqld=--loose-plugin-load-add=auth_socket --mysqld=--loose-plugin-load-add=auth_ed25519"
   - . $SCRIPT_DIR/run_single_test.sh
   - cat $LOGDIR/trial.log | grep -v 'Executor:'
 

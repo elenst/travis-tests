@@ -30,7 +30,7 @@ env:
     # - -export REBUILD_OLD_SERVER=yes if the build needs to be done even if there is cached one (rarely needed),
     #   otherwise keep commented
 
-    - export SERVER_BRANCH=10.3
+    - export SERVER_BRANCH=10.2
     - export RERUN_OLD_SERVER=yes
     #- export RQG_BRANCH=dev
     #- export REBUILD_OLD_SERVER=yes
@@ -102,10 +102,10 @@ script:
   # DML/DDL test flow
   # TODO: acl.yy temporarily disabled due to the number of problems
 
-  - export TEST_RQG_OPTIONS="--scenario=MariaBackupFull --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy"
+  - export TEST_RQG_OPTIONS="--scenario=MariaBackupFull --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--scenario=MariaBackupIncremental --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy"
+  - export TEST_RQG_OPTIONS="--scenario=MariaBackupIncremental --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy"
   - . $SCRIPT_DIR/run_single_test.sh
 
 before_cache:

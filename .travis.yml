@@ -100,11 +100,13 @@ script:
   # DML/DDL test flow
   # TODO: acl.yy temporarily disabled due to the number of problems
 
-  - export TEST_RQG_OPTIONS="--scenario=MariaBackupFull --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy"
-  - . $SCRIPT_DIR/run_single_test.sh
+# 10.1 cannot do MariaBackup with DDL (umbrella JIRA item is coming soon)
+#
+#  - export TEST_RQG_OPTIONS="--scenario=MariaBackupFull --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy"
+#  - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--scenario=MariaBackupIncremental --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy"
-  - . $SCRIPT_DIR/run_single_test.sh
+#  - export TEST_RQG_OPTIONS="--scenario=MariaBackupIncremental --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy"
+#  - . $SCRIPT_DIR/run_single_test.sh
 
 before_cache:
   - rm -rf $HOME/server/mysql-test

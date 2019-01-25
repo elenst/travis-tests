@@ -28,7 +28,7 @@ jobs:
   - script: |
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
       chmod u+x $(SCRIPT_DIR)/*
-  - task: ShellScript@1
+  - task: ShellScript@2
     inputs:
       scriptPath: $(SCRIPT_DIR)/setup_environment.sh
   - task: ShellScript@2

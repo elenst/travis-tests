@@ -8,7 +8,7 @@ variables:
   RERUN_OLD_SERVER: yes
 
   # Locations
-  TOOLBOX_DIR: $HOME/mariadb-toolbox
+  TOOLBOX_DIR: $(HOME)/mariadb-toolbox
   SCRIPT_DIR: $(TOOLBOX_DIR)/travis
 
   # Build options
@@ -26,16 +26,10 @@ jobs:
     parallel: 1
   steps:
   - script: |
-      echo "HOME: " $HOME
-      echo "(HOME): " $(HOME)
-      echo "TOOLBOX_DIR: " $TOOLBOX_DIR
-      echo "(TOOLBOX_DIR_: " $(TOOLBOX_DIR)
       cd $(HOME)
-      pwd
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
-      ls -l
       find $(HOME) -name mariadb-toolbox
-      $(SCRIPT_DIR)/export_and_clone.sh
+      . $(SCRIPT_DIR)/export_and_clone.sh
 
 - job: Build_server
   pool:

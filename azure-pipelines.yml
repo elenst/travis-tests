@@ -26,9 +26,8 @@ jobs:
   strategy:
     parallel: 1
   steps:
-  - script:
-    - git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
-    - . $(SCRIPT_DIR)/export_and_clone.sh
+  - script: git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
+  - script: $(SCRIPT_DIR)/export_and_clone.sh
 
 - job: Build server
   pool:
@@ -36,8 +35,7 @@ jobs:
   strategy:
     parallel: 1
   steps:
-  - script:
-    - . $SCRIPT_DIR/build_if_not_cached.sh
+  - script: $SCRIPT_DIR/build_if_not_cached.sh
 
 - job: Collect system info
   pool:
@@ -45,8 +43,7 @@ jobs:
   strategy:
     parallel: 1
   steps:
-  - script:
-    - . $SCRIPT_DIR/collect_system_info.sh
+  - script: $SCRIPT_DIR/collect_system_info.sh
 
 - job: Run tests
   pool:
@@ -60,6 +57,5 @@ jobs:
       information_schema:
         JOB_RQG_OPTIONS: "--grammar=conf/runtime/information_schema.yy"
   steps:
-  - script:
-    - . $SCRIPT_DIR/run_single_test.sh
+  - script: $SCRIPT_DIR/run_single_test.sh
     

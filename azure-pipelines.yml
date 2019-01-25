@@ -31,9 +31,9 @@ jobs:
       chmod u+x $(SCRIPT_DIR)/*
       SCRIPT_DIR=`echo $(SCRIPT_DIR)`
       TOOLBOX_DIR=`echo $(TOOLBOX_DIR)`
-      $(SCRIPT_DIR)/setup_environment.sh
-      $(SCRIPT_DIR)/clone_server.sh
-      $(SCRIPT_DIR)/build_if_not_cached.sh
+      . $(SCRIPT_DIR)/setup_environment.sh
+      . $(SCRIPT_DIR)/clone_server.sh
+      . $(SCRIPT_DIR)/build_if_not_cached.sh
   - task: PublishPipelineArtifact@0
     inputs:
       pathToPublish: $(BASEDIR)

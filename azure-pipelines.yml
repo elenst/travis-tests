@@ -28,8 +28,9 @@ jobs:
   - script: |
       cd $(HOME)
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
+      chmod u+x $(SCRIPT_DIR)/*
       find $(HOME) -name mariadb-toolbox
-      sh -c $(SCRIPT_DIR)/export_and_clone.sh
+      $(SCRIPT_DIR)/export_and_clone.sh
 
 - job: Build_server
   pool:

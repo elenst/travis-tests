@@ -27,6 +27,17 @@ jobs:
     parallel: 1
   steps:
   - script: |
+      sudo apt-get update
+      sudo apt-get install -y -q \
+        apt-utils build-essential cmake python-dev sudo git \
+        devscripts equivs libcurl4-openssl-dev \
+        ccache python3 python3-pip curl libssl-dev libzstd-dev \
+        libevent-dev dpatch gawk gdb libboost-dev libcrack2-dev \
+        libjudy-dev libnuma-dev libsnappy-dev libxml2-dev \
+        unixodbc-dev uuid-dev fakeroot iputils-ping \
+        libncurses5-dev libbison-dev
+    displayName: 'Install libraries'
+  - script: |
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
       chmod u+x $(SCRIPT_DIR)/*
       SCRIPT_DIR=`echo $(SCRIPT_DIR)`

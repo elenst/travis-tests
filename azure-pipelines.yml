@@ -28,13 +28,17 @@ jobs:
   - script: |
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
       chmod u+x $(SCRIPT_DIR)/*
-  - task: ShellScript@2
-    inputs:
-      scriptPath: $(SCRIPT_DIR)/setup_environment.sh
-  - task: ShellScript@2
-    inputs:
-      scriptPath: $(SCRIPT_DIR)/clone_server.sh
-
+      SCRIPT_DIR=`echo $(SCRIPT_DIR)`
+      TOOLBOX_DIR=`echo $(TOOLBOX_DIR)`
+      $(SCRIPT_DIR)/setup_environment.sh
+      $(SCRIPT_DIR)/clone_server.sh
+#  - task: ShellScript@2
+#    inputs:
+#      scriptPath: $(SCRIPT_DIR)/setup_environment.sh
+#  - task: ShellScript@2
+#    inputs:
+#      scriptPath: $(SCRIPT_DIR)/clone_server.sh
+#
 #  - script: |
 #      cd $(HOME)
 #      SCRIPT_DIR=`echo $(SCRIPT_DIR)`
@@ -45,6 +49,8 @@ jobs:
 #      $(SCRIPT_DIR)/clone_server.sh
 
 - job: Build_server
+  dependsOn: Clone_tools_and_server
+  condition: succeeded()
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:
@@ -52,15 +58,17 @@ jobs:
   steps:
   - script: $(SCRIPT_DIR)/build_if_not_cached.sh
 
-- job: Collect_system_info
-  pool:
-    vmImage: 'Ubuntu 16.04'
-  strategy:
-    parallel: 1
-  steps:
-  - script: $(SCRIPT_DIR)/collect_system_info.sh
+#- job: Collect_system_info
+#  pool:
+#    vmImage: 'Ubuntu 16.04'
+#  strategy:
+#    parallel: 1
+#  steps:
+#  - script: $(SCRIPT_DIR)/collect_system_info.sh
 
 - job: Run_tests
+  dependsOn: Build_server
+  condition: succeeded()
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:

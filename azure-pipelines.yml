@@ -20,7 +20,7 @@ variables:
   GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
 jobs:
-- job: Clone tools and server
+- job: Clone_tools_and_server
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:
@@ -29,7 +29,7 @@ jobs:
   - script: git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
   - script: $(SCRIPT_DIR)/export_and_clone.sh
 
-- job: Build server
+- job: Build_server
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:
@@ -37,7 +37,7 @@ jobs:
   steps:
   - script: $SCRIPT_DIR/build_if_not_cached.sh
 
-- job: Collect system info
+- job: Collect_system_info
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:
@@ -45,7 +45,7 @@ jobs:
   steps:
   - script: $SCRIPT_DIR/collect_system_info.sh
 
-- job: Run tests
+- job: Run_tests
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:

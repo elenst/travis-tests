@@ -10,6 +10,7 @@ variables:
   # Locations
   TOOLBOX_DIR: $(HOME)/mariadb-toolbox
   SCRIPT_DIR: $(TOOLBOX_DIR)/travis
+  GITHUB: "https://github.com/elenst/mariadb-toolbox"
 
   # Build options
   GLOBAL_CMAKE_OPTIONS: "-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
@@ -25,11 +26,11 @@ jobs:
   strategy:
     parallel: 1
   steps:
-    - script: |
-      git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
+    - script |
+      git clone https://github.com/elenst/mariadb-toolbox --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
       . $(SCRIPT_DIR)/export_and_clone.sh
 
-- job: Clone tools and server
+- job: Build server
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:

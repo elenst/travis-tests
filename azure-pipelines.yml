@@ -25,8 +25,9 @@ jobs:
   strategy:
     parallel: 1
   steps:
-    git clone https://github.com/elenst/mariadb-toolbox --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
-    $SCRIPT_DIR/export_and_clone.sh
+    - script: |
+      git clone https://github.com/elenst/mariadb-toolbox --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
+      $SCRIPT_DIR/export_and_clone.sh
 
 - job: Clone tools and server
   pool:
@@ -34,7 +35,8 @@ jobs:
   strategy:
     parallel: 1
   steps:
-    $SCRIPT_DIR/build_if_not_cached.sh
+    - script |
+      $SCRIPT_DIR/build_if_not_cached.sh
 
 - job: Collect system info
   pool:
@@ -42,18 +44,20 @@ jobs:
   strategy:
     parallel: 1
   steps:
-    $SCRIPT_DIR/collect_system_info.sh
+    - script |
+      $SCRIPT_DIR/collect_system_info.sh
 
 - job: Run tests
   pool:
     vmImage: 'Ubuntu 16.04'
-  matrix:
-    metadata_stability:
-      JOB_RQG_OPTIONS: "--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
-    performance_schema:
-      JOB_RQG_OPTIONS: "--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
-    information_schema:
-      JOB_RQG_OPTIONS: "--grammar=conf/runtime/information_schema.yy"
+  strategy:
+    matrix:
+      metadata_stability:
+        JOB_RQG_OPTIONS: "--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
+      performance_schema:
+        JOB_RQG_OPTIONS: "--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
+      information_schema:
+        JOB_RQG_OPTIONS: "--grammar=conf/runtime/information_schema.yy"
   steps:
   - script: |
       $SCRIPT_DIR/run_single_test.sh

@@ -31,21 +31,15 @@ jobs:
       chmod u+x $(SCRIPT_DIR)/*
       SCRIPT_DIR=`echo $(SCRIPT_DIR)`
       TOOLBOX_DIR=`echo $(TOOLBOX_DIR)`
+      travis_terminate() { exit 1; }
       . $(SCRIPT_DIR)/setup_environment.sh
       . $(SCRIPT_DIR)/clone_server.sh
       . $(SCRIPT_DIR)/build_if_not_cached.sh
+    displayName: 'Clone and build'
   - task: PublishPipelineArtifact@0
     inputs:
       pathToPublish: $(BASEDIR)
       artifactName: 'build'
-
-#- job: Collect_system_info
-#  pool:
-#    vmImage: 'Ubuntu 16.04'
-#  strategy:
-#    parallel: 1
-#  steps:
-#  - script: $(SCRIPT_DIR)/collect_system_info.sh
 
 - job: Run_tests
   dependsOn: Clone_and_build
@@ -66,4 +60,5 @@ jobs:
       artifactName: 'build'
       targetPath: $(BASEDIR)
   - script: $(SCRIPT_DIR)/run_single_test.sh
+    displayName: 'Test run'
     

@@ -18,6 +18,20 @@ variables:
   TEST_DURATION: 350
   GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
+script: |
+  git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
+  chmod u+x $(SCRIPT_DIR)/*
+
+steps:
+
+- task: ShellScript@1
+  inputs:
+    scriptPath: $(SCRIPT_DIR)/setup_environment.sh
+
+- task: ShellScript@2
+  inputs:
+    scriptPath: $(SCRIPT_DIR)/clone_server.sh
+
 jobs:
 - job: Clone_tools_and_server
   pool:
@@ -30,10 +44,9 @@ jobs:
       SCRIPT_DIR=`echo $(SCRIPT_DIR)`
       TOOLBOX_DIR=`echo $(TOOLBOX_DIR)`
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
-      chmod u+x $(SCRIPT_DIR)/*
-      find $(HOME) -name mariadb-toolbox
-      $(SCRIPT_DIR)/setup_environment.sh
-      $(SCRIPT_DIR)/clone_server.sh
+      #chmod u+x $(SCRIPT_DIR)/*
+#      $(SCRIPT_DIR)/setup_environment.sh
+#      $(SCRIPT_DIR)/clone_server.sh
 
 - job: Build_server
   pool:

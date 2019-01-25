@@ -1,6 +1,3 @@
-pool:
-  vmImage: 'Ubuntu 16.04'
-
 variables:
   # Branches
   SERVER_BRANCH: 10.4
@@ -23,6 +20,8 @@ variables:
 
 jobs:
 - job: Clone tools and server
+  pool:
+    vmImage: 'Ubuntu 16.04'
   strategy:
     parallel: 1
   steps:
@@ -30,18 +29,24 @@ jobs:
     $SCRIPT_DIR/export_and_clone.sh
 
 - job: Clone tools and server
+  pool:
+    vmImage: 'Ubuntu 16.04'
   strategy:
     parallel: 1
   steps:
     $SCRIPT_DIR/build_if_not_cached.sh
 
 - job: Collect system info
+  pool:
+    vmImage: 'Ubuntu 16.04'
   strategy:
     parallel: 1
   steps:
     $SCRIPT_DIR/collect_system_info.sh
 
 - job: Run tests
+  pool:
+    vmImage: 'Ubuntu 16.04'
   matrix:
     metadata_stability:
       JOB_RQG_OPTIONS: "--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"

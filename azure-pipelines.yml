@@ -10,6 +10,7 @@ variables:
   # Locations
   TOOLBOX_DIR: $(HOME)/mariadb-toolbox
   SCRIPT_DIR: $(TOOLBOX_DIR)/travis
+  BASEDIR: $(HOME)/server
 
   # Build options
   GLOBAL_CMAKE_OPTIONS: "-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
@@ -19,7 +20,7 @@ variables:
   GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
 jobs:
-- job: Clone_tools_and_server
+- job: Clone_and_build
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:
@@ -32,31 +33,11 @@ jobs:
       TOOLBOX_DIR=`echo $(TOOLBOX_DIR)`
       $(SCRIPT_DIR)/setup_environment.sh
       $(SCRIPT_DIR)/clone_server.sh
-#  - task: ShellScript@2
-#    inputs:
-#      scriptPath: $(SCRIPT_DIR)/setup_environment.sh
-#  - task: ShellScript@2
-#    inputs:
-#      scriptPath: $(SCRIPT_DIR)/clone_server.sh
-#
-#  - script: |
-#      cd $(HOME)
-#      SCRIPT_DIR=`echo $(SCRIPT_DIR)`
-#      TOOLBOX_DIR=`echo $(TOOLBOX_DIR)`
-#      git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
-#      chmod u+x $(SCRIPT_DIR)/*
-#      $(SCRIPT_DIR)/setup_environment.sh
-#      $(SCRIPT_DIR)/clone_server.sh
-
-- job: Build_server
-  dependsOn: Clone_tools_and_server
-  condition: succeeded()
-  pool:
-    vmImage: 'Ubuntu 16.04'
-  strategy:
-    parallel: 1
-  steps:
-  - script: $(SCRIPT_DIR)/build_if_not_cached.sh
+      $(SCRIPT_DIR)/build_if_not_cached.sh
+  - task: PublishPipelineArtifact@0
+    inputs:
+      pathToPublish: $(BASEDIR)
+      artifactName: 'build'
 
 #- job: Collect_system_info
 #  pool:
@@ -67,7 +48,7 @@ jobs:
 #  - script: $(SCRIPT_DIR)/collect_system_info.sh
 
 - job: Run_tests
-  dependsOn: Build_server
+  dependsOn: Clone_and_build
   condition: succeeded()
   pool:
     vmImage: 'Ubuntu 16.04'
@@ -80,5 +61,9 @@ jobs:
       information_schema:
         JOB_RQG_OPTIONS: "--grammar=conf/runtime/information_schema.yy"
   steps:
+  - task: DownloadPipelineArtifact@0
+    inputs:
+      artifactName: 'build'
+      targetPath: $(BASEDIR)
   - script: $(SCRIPT_DIR)/run_single_test.sh
     

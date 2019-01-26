@@ -65,6 +65,7 @@ jobs:
       echo $(RQG_BRANCH) `git log -1 --pretty="%h"` > $(LOGDIR)/rqg.version
       cd $(SRCDIR)
       echo $(SERVER_BRANCH) `git log -1 --pretty="%h"` > $(LOGDIR)/server.version
+      ls -l $(SCRIPT_DIR)/*
     displayName: 'Clone server and tools'
 
   # Build server
@@ -73,17 +74,17 @@ jobs:
       mkdir $(BASEDIR)
       mkdir $(HOME)/out-of-source
       cd $(HOME)/out-of-source
-      cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) $(TEST_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
-      make -j4
-      make install
+###      cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) $(TEST_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
+###      make -j4
+###      make install
     displayName: 'Build server'
 
   # Store cloned tools and built binaries
-  - task: PublishPipelineArtifact@0
-    inputs:
-      targetPath: $(BASEDIR)
-      artifactName: 'build'
-    displayName: 'Store build'
+###  - task: PublishPipelineArtifact@0
+###    inputs:
+###      targetPath: $(BASEDIR)
+###      artifactName: 'build'
+###    displayName: 'Store build'
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: '$(TOOLBOX_DIR)'
@@ -145,7 +146,9 @@ jobs:
 
   - script: |
       set -xo pipefail
+      ls -l $(SCRIPT_DIR)/*
       chmod u+x $(SCRIPT_DIR)/*
+      ls -l $(SCRIPT_DIR)/*
       cd $(RQG_HOME)
       perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log
 #      . $(SCRIPT_DIR)/collect_single_failure_info.sh

@@ -185,7 +185,7 @@ jobs:
   - script: |
       set -x
       sudo apt-get update
-      sudo apt-get install -y -q libdbi-perl libdbd-mysql-perl libsnappy1
+      sudo apt-get install -y -q libdbi-perl libdbd-mysql-perl libsnappy1v5
     displayName: 'Install runtime packages'
 
   - script: |

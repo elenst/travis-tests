@@ -80,11 +80,11 @@ jobs:
     displayName: 'Build server'
 
   # Store cloned tools and built binaries
-###  - task: PublishPipelineArtifact@0
-###    inputs:
-###      targetPath: $(BASEDIR)
-###      artifactName: 'build'
-###    displayName: 'Store build'
+  - task: PublishPipelineArtifact@0
+    inputs:
+      targetPath: $(BASEDIR)
+      artifactName: 'build'
+    displayName: 'Store build'
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: '$(TOOLBOX_DIR)'

@@ -111,5 +111,5 @@ jobs:
   - script: |
       chmod u+x $(SCRIPT_DIR)/*
       SCRIPT_DIR=`echo $(SCRIPT_DIR)`
-      $(SCRIPT_DIR)/run_single_test.sh
-    
+      . $(SCRIPT_DIR)/run_single_test.sh
+

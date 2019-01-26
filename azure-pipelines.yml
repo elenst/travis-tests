@@ -74,12 +74,21 @@ jobs:
       mkdir $(BASEDIR)
       mkdir $(HOME)/out-of-source
       cd $(HOME)/out-of-source
-###      cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) $(TEST_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
-###      make -j4
-###      make install
+      cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) $(TEST_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
+      make -j4
+      make install
     displayName: 'Build server'
 
   # Store cloned tools and built binaries
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: $(BASEDIR)
+      includeRootFolder: false
+      archiveType: 'tar'
+      tarCompression: 'gz'
+      archiveFile:  $(Build.ArtifactStagingDirectory)/build.tar.gz
+    displayName: 'Archive build'
+
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: $(BASEDIR)
@@ -136,12 +145,24 @@ jobs:
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'build'
-      targetPath: $(BASEDIR)
+      targetPath: $(Build.ArtifactStagingDirectory)
+    displayName: 'Restore build'
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'tools'
       targetPath: $(Build.ArtifactStagingDirectory)
     displayName: 'Restore tools'
+  - task: DownloadPipelineArtifact@0
+    inputs:
+      artifactName: 'tools'
+      targetPath: $(Build.ArtifactStagingDirectory)
+    displayName: 'Restore tools'
+
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/build.tar.gz'
+      destinationFolder: $(BASEDIR)
+    displayName: 'Extract build'
 
   - task: ExtractFiles@1
     inputs:
@@ -169,9 +190,6 @@ jobs:
 
   - script: |
       set -xo pipefail
-      ls -l $(TOOLBOX_DIR)/*
-      ls -l $(SCRIPT_DIR)/*
-      ls -l $(RQG_HOME)/*
       cd $(RQG_HOME)
       perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log
 #      . $(SCRIPT_DIR)/collect_single_failure_info.sh

@@ -102,12 +102,14 @@ jobs:
     inputs:
       artifactName: 'rqg'
       targetPath: $(RQG_HOME)
+    displayName: 'Restore RQG'
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'toolbox'
       targetPath: $(TOOLBOX_DIR)
+    displayName: 'Restore toolbox'
   - script: chmod u+x $(SCRIPT_DIR)/*
   # Run the tests
-  - script: $(SCRIPT_DIR)/run_single_test.sh
+  - script: . $(SCRIPT_DIR)/run_single_test.sh
     displayName: 'Test run'
     

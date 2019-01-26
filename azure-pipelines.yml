@@ -108,8 +108,8 @@ jobs:
       artifactName: 'toolbox'
       targetPath: $(TOOLBOX_DIR)
     displayName: 'Restore toolbox'
-  - script: chmod u+x $(SCRIPT_DIR)/*
-  # Run the tests
-  - script: . $(SCRIPT_DIR)/run_single_test.sh
-    displayName: 'Test run'
+  - script: |
+      chmod u+x $(SCRIPT_DIR)/*
+      SCRIPT_DIR=`echo $(SCRIPT_DIR)`
+      $(SCRIPT_DIR)/run_single_test.sh
     

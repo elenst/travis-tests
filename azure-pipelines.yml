@@ -93,10 +93,11 @@ jobs:
       artifactName: 'build'
       targetPath: $(Build.ArtifactStagingDirectory)
     displayName: 'Download build'
-  - task: PublishBuildArtifacts@1
+  - task: FtpUpload@1
     inputs:
-      pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-      artifactName: 'build' 
+      serverEndpoint: 'ftp.askmonty.org/private'
+      rootDirectory: '$(Build.ArtifactStagingDirectory)'
+      remoteDirectory: '/azure/'
     displayName: 'Upload build'
 
 #########
@@ -161,9 +162,6 @@ jobs:
     displayName: 'Run test'
 
   - script: |
-      for f in $(LOGDIR)/versions $(LOGDIR)/vardir/mysql.err $(LOGDIR)/vardir/boot.log ; do \
-        echo "######################################" \
-        cat $f \
-      done
+      for f in $(LOGDIR)/versions $(LOGDIR)/vardir/mysql.err $(LOGDIR)/vardir/boot.log ; do echo "######################################" ; cat $f ; done
     displayName: 'Collect failure info'
-    condition: failed()
+#    condition: failed()

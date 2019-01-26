@@ -142,8 +142,8 @@ jobs:
     displayName: 'Restore logdir'
 
   - script: |
-      apt-get update
-      ap-get install -y -q libdbi-perl libdbd-mysql-perl
+      sudo apt-get update
+      sudo ap-get install -y -q libdbi-perl libdbd-mysql-perl
     displayName: 'Install packages'
 
   - script: |

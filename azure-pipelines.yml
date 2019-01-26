@@ -83,7 +83,7 @@ jobs:
 
 #########
 - job: Run_tests
-  dependsOn: Clone_and_build
+  dependsOn: Prepare_server
   condition: succeeded()
   pool:
     vmImage: 'Ubuntu 16.04'

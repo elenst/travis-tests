@@ -95,9 +95,9 @@ jobs:
     displayName: 'Download build'
   - task: FtpUpload@1
     inputs:
-      serverEndpoint: 'ftp.askmonty.org/private'
+      serverEndpoint: 'ftp://ftp.askmonty.org'
       rootDirectory: '$(Build.ArtifactStagingDirectory)'
-      remoteDirectory: '/azure/'
+      remoteDirectory: '/private/azure/'
     displayName: 'Upload build'
 
 #########

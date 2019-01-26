@@ -89,6 +89,7 @@ jobs:
   - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: $(TOOLBOX_DIR)
+      includeRootFolder: false
       archiveType: 'tar'
       tarCompression: 'gz'
       archiveFile:  $(Build.ArtifactStagingDirectory)/toolbox.tar.gz
@@ -97,6 +98,7 @@ jobs:
   - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: $(RQG_HOME)
+      includeRootFolder: false
       archiveType: 'tar'
       tarCompression: 'gz'
       archiveFile:  $(Build.ArtifactStagingDirectory)/rqg.tar.gz
@@ -169,6 +171,7 @@ jobs:
       set -xo pipefail
       ls -l $(TOOLBOX_DIR)/*
       ls -l $(SCRIPT_DIR)/*
+      ls -l $(RQG_HOME)/*
       cd $(RQG_HOME)
       perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log
 #      . $(SCRIPT_DIR)/collect_single_failure_info.sh

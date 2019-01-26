@@ -12,6 +12,7 @@ variables:
   RQG_HOME: $(HOME)/rqg
   SCRIPT_DIR: $(TOOLBOX_DIR)/travis
   BASEDIR: $(HOME)/server
+  LOGDIR: $(HOME)/logs
 
   # Build options
   GLOBAL_CMAKE_OPTIONS: "-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
@@ -111,5 +112,6 @@ jobs:
   - script: |
       chmod u+x $(SCRIPT_DIR)/*
       SCRIPT_DIR=`echo $(SCRIPT_DIR)`
-      . $(SCRIPT_DIR)/run_single_test.sh
+      perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) > $(LOGDIR)/trial.log 2>&1
+      . $(SCRIPT_DIR)/collect_single_failure_info.sh
 

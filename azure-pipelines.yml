@@ -77,7 +77,7 @@ jobs:
 
   - task: PublishPipelineArtifact@0
     inputs:
-      targetPath: $(BASEDIR)
+      targetPath: $(Build.ArtifactStagingDirectory)
       artifactName: 'build'
     displayName: 'Store build'
 

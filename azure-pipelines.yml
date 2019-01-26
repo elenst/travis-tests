@@ -106,7 +106,7 @@ jobs:
     inputs:
       artifactName: 'toolbox'
       targetPath: $(TOOLBOX_DIR)
-
+  - script: chmod u+x $(SCRIPT_DIR)/*
   # Run the tests
   - script: $(SCRIPT_DIR)/run_single_test.sh
     displayName: 'Test run'

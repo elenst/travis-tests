@@ -79,6 +79,25 @@ jobs:
       artifactName: 'build'
     displayName: 'Store build'
 
+
+#########
+- job: Publish_binaries
+  dependsOn: Prepare_server
+  condition: succeeded()
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  steps:
+  - task: DownloadPipelineArtifact@0
+    inputs:
+      artifactName: 'build'
+      targetPath: $(Build.ArtifactStagingDirectory)
+    displayName: 'Download build'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+      artifactName: 'build' 
+    displayName: 'Upload build'
+
 #########
 - job: Run_tests
   dependsOn: Prepare_server

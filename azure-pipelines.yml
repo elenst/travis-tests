@@ -37,6 +37,7 @@ jobs:
         unixodbc-dev uuid-dev fakeroot iputils-ping \
         libncurses5-dev libbison-dev
     displayName: 'Install libraries'
+      
   - script: |
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
       chmod u+x $(SCRIPT_DIR)/*
@@ -51,6 +52,22 @@ jobs:
     inputs:
       pathToPublish: $(BASEDIR)
       artifactName: 'build'
+    displayName: 'Store build'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(BASEDIR)
+      artifactName: $(SERVER_BRANCH)
+    displayName: 'Publish build'
+  - task: PublishPipelineArtifact@0
+    inputs:
+      pathToPublish: $(TOOLBOX_DIR)
+      artifactName: 'toolbox'
+    displayName: 'Store toolbox'
+  - task: PublishPipelineArtifact@0
+    inputs:
+      pathToPublish: $(RQG_HOME)
+      artifactName: 'rqg'
+    displayName: 'Store RQG'
 
 - job: Run_tests
   dependsOn: Clone_and_build
@@ -70,6 +87,15 @@ jobs:
     inputs:
       artifactName: 'build'
       targetPath: $(BASEDIR)
+  - task: DownloadPipelineArtifact@0
+    inputs:
+      artifactName: 'rqg'
+      targetPath: $(RQG_HOME)
+  - task: DownloadPipelineArtifact@0
+    inputs:
+      artifactName: 'toolbox'
+      targetPath: $(TOOLBOX_DIR)
+
   - script: $(SCRIPT_DIR)/run_single_test.sh
     displayName: 'Test run'
     

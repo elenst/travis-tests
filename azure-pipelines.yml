@@ -1,8 +1,9 @@
 variables:
+
   # Branches
   SERVER_BRANCH: 10.4
   RQG_BRANCH: elenst-dev
-  TOOLBOX_BRANCH: ""
+  TOOLBOX_BRANCH: master
 
   # Build/run variations
   RERUN_OLD_SERVER: yes
@@ -13,13 +14,18 @@ variables:
   SCRIPT_DIR: $(TOOLBOX_DIR)/travis
   BASEDIR: $(HOME)/server
   LOGDIR: $(HOME)/logs
+  SRCDIR: $(HOME)/src
 
   # Build options
   GLOBAL_CMAKE_OPTIONS: "-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
+  JOB_CMAKE_OPTIONS: ""
+  TEST_CMAKE_OPTIONS: ""
 
   # Test options
   TEST_DURATION: 350
   GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+  JOB_RQG_OPTIONS: ""
+  TEST_RQG_OPTIONS: ""
 
 jobs:
 
@@ -33,6 +39,7 @@ jobs:
   # Libraries needed to build the server
   steps:
   - script: |
+      set -x
       sudo apt-get update
       sudo apt-get install -y -q \
         apt-utils build-essential cmake python-dev sudo git \
@@ -44,17 +51,31 @@ jobs:
         libncurses5-dev libbison-dev
     displayName: 'Install libraries'
       
-  # Clone, cmake, make, make install
+  # Clone server and tools
   - script: |
-      git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
+      set -x
+      mkdir $(LOGDIR)
+      git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 --branch=$(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
+      git clone "https://github.com/MariaDB/randgen" --depth=1 --branch=$(RQG_BRANCH) $RQG_HOME
+      git clone "https://github.com/MariaDB/server" --depth=1 --branch=$(SERVER_BRANCH) $SRCDIR
+      cd $(TOOLBOX_DIR)
       chmod u+x $(SCRIPT_DIR)/*
-      SCRIPT_DIR=`echo $(SCRIPT_DIR)`
-      TOOLBOX_DIR=`echo $(TOOLBOX_DIR)`
-      travis_terminate() { exit 1; }
-      . $(SCRIPT_DIR)/setup_environment.sh
-      . $(SCRIPT_DIR)/clone_server.sh
-###      . $(SCRIPT_DIR)/build_if_not_cached.sh
-    displayName: 'Clone and build'
+      echo $(TOOLBOX_BRANCH) `git log -1 --pretty="%h"` > $(LOGDIR)/toolbox.version
+      cd $(RQG_HOME)
+      echo $(RQG_BRANCH) `git log -1 --pretty="%h"` > $(LOGDIR)/rqg.version
+      cd $(SRCDIR)
+      echo $(SERVER_BRANCH) `git log -1 --pretty="%h"` > $(LOGDIR)/server.version
+    displayName: 'Clone server and tools'
+
+  # Build server
+  - script: |
+      set -x
+      mkdir $(BASEDIR)
+      mkdir $(HOME)/out-of-source
+      cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) $(TEST_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
+      make -j4
+      make install
+    displayName: 'Build server'
 
   # Store cloned tools and built binaries
 ###  - task: PublishPipelineArtifact@0
@@ -110,8 +131,8 @@ jobs:
       targetPath: $(TOOLBOX_DIR)
     displayName: 'Restore toolbox'
   - script: |
+      set -x
       chmod u+x $(SCRIPT_DIR)/*
-      SCRIPT_DIR=`echo $(SCRIPT_DIR)`
       perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) > $(LOGDIR)/trial.log 2>&1
-      . $(SCRIPT_DIR)/collect_single_failure_info.sh
+#      . $(SCRIPT_DIR)/collect_single_failure_info.sh
 

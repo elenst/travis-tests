@@ -143,9 +143,15 @@ jobs:
 
   - task: ExtractFiles@1
     inputs:
-      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/*.gz'
-      destinationFolder: $(HOME)
-    displayName: 'Extract tool'
+      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/toolbox.tar.gz'
+      destinationFolder: $(TOOLBOX_DIR)
+    displayName: 'Extract toolbox'
+
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/rqg.tar.gz'
+      destinationFolder: $(RQG_HOME)
+    displayName: 'Extract RQG'
 
   - task: DownloadPipelineArtifact@0
     inputs:

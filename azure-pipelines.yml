@@ -142,8 +142,9 @@ jobs:
     displayName: 'Restore logdir'
 
   - script: |
-      set -x
+      set -xo pipefail
       chmod u+x $(SCRIPT_DIR)/*
+      cd $(RQG_HOME)
       perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log
 #      . $(SCRIPT_DIR)/collect_single_failure_info.sh
 

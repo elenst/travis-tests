@@ -56,8 +56,8 @@ jobs:
       set -x
       mkdir $(LOGDIR)
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 --branch=$(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
-      git clone "https://github.com/MariaDB/randgen" --depth=1 --branch=$(RQG_BRANCH) $RQG_HOME
-      git clone "https://github.com/MariaDB/server" --depth=1 --branch=$(SERVER_BRANCH) $SRCDIR
+      git clone "https://github.com/MariaDB/randgen" --depth=1 --branch=$(RQG_BRANCH) $(RQG_HOME)
+      git clone "https://github.com/MariaDB/server" --depth=1 --branch=$(SERVER_BRANCH) $(SRCDIR)
       cd $(TOOLBOX_DIR)
       chmod u+x $(SCRIPT_DIR)/*
       echo $(TOOLBOX_BRANCH) `git log -1 --pretty="%h"` > $(LOGDIR)/toolbox.version

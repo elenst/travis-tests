@@ -87,12 +87,12 @@ jobs:
     vmImage: 'Ubuntu 16.04'
   strategy:
     matrix:
-      metadata_stability:
-        JOB_RQG_OPTIONS: "--grammar=conf/runtime/metadata_stability.yy --gendata=conf/runtime/metadata_stability.zz"
-      performance_schema:
-        JOB_RQG_OPTIONS: "--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
-      information_schema:
-        JOB_RQG_OPTIONS: "--grammar=conf/runtime/information_schema.yy"
+      'conf/runtime/metadata_stability.yy':
+        JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName) --gendata=conf/runtime/metadata_stability.zz"
+      'conf/runtime/performance_schema.yy':
+        JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName) --mysqld=--performance-schema"
+      'conf/runtime/information_schema.yy':
+        JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName)"
 
   steps:
 
@@ -135,8 +135,9 @@ jobs:
     displayName: 'Run test'
 
   - script: |
-      set -xo pipefail
-      cat $(LOGDIR)/vardir/boot.log
-      cat $(LOGDIR)/vardir/mysql.err
+      for f in $(LOGDIR)/versions $(LOGDIR)/vardir/mysql.err $(LOGDIR)/vardir/boot.log ; do \
+        echo "######################################" \
+        cat $f \
+      done
     displayName: 'Collect failure info'
     condition: failed()

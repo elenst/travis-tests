@@ -51,20 +51,21 @@ jobs:
       travis_terminate() { exit 1; }
       . $(SCRIPT_DIR)/setup_environment.sh
       . $(SCRIPT_DIR)/clone_server.sh
-      . $(SCRIPT_DIR)/build_if_not_cached.sh
+###      . $(SCRIPT_DIR)/build_if_not_cached.sh
     displayName: 'Clone and build'
 
   # Store cloned tools and built binaries
-  - task: PublishPipelineArtifact@0
-    inputs:
-      pathToPublish: $(BASEDIR)
-      artifactName: 'build'
-    displayName: 'Store build'
+###  - task: PublishPipelineArtifact@0
+###    inputs:
+###      pathToPublish: $(BASEDIR)
+###      artifactName: 'build'
+###    displayName: 'Store build'
 #  - task: PublishBuildArtifacts@1
 #    inputs:
 #      pathToPublish: $(BASEDIR)
 #      artifactName: $(SERVER_BRANCH)
 #    displayName: 'Publish build'
+  - script: ls -l $(TOOLBOX_DIR)/ $(RQG_HOME)/
   - task: PublishPipelineArtifact@0
     inputs:
       pathToPublish: $(TOOLBOX_DIR)

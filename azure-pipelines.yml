@@ -94,10 +94,10 @@ jobs:
 
   steps:
   # Restore cloned tools and built binaries
-  - task: DownloadPipelineArtifact@0
-    inputs:
-      artifactName: 'build'
-      targetPath: $(BASEDIR)
+###  - task: DownloadPipelineArtifact@0
+###    inputs:
+###      artifactName: 'build'
+###      targetPath: $(BASEDIR)
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'rqg'

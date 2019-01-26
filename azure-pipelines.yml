@@ -49,7 +49,7 @@ jobs:
         libjudy-dev libnuma-dev libsnappy-dev libxml2-dev \
         unixodbc-dev uuid-dev fakeroot iputils-ping \
         libncurses5-dev libbison-dev
-    displayName: 'Install packages'
+    displayName: 'Install packages for build'
       
   # Clone server and tools
   - script: |
@@ -142,9 +142,10 @@ jobs:
     displayName: 'Restore logdir'
 
   - script: |
+      set -x
       sudo apt-get update
-      sudo ap-get install -y -q libdbi-perl libdbd-mysql-perl
-    displayName: 'Install packages'
+      sudo apt-get install -y -q libdbi-perl libdbd-mysql-perl
+    displayName: 'Install runtime packages'
 
   - script: |
       set -xo pipefail

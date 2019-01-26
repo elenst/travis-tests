@@ -107,8 +107,10 @@ jobs:
   strategy:
     matrix:
       'conf/runtime/metadata_stability.yy':
-        - JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName) --gendata=conf/runtime/metadata_stability.zz"
-        - JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName)"
+        ms1:
+          JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName) --gendata=conf/runtime/metadata_stability.zz"
+        ms2:
+          JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName)"
       'conf/runtime/performance_schema.yy':
         JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName) --mysqld=--performance-schema"
       'conf/runtime/information_schema.yy':

@@ -69,12 +69,12 @@ jobs:
   - script: ls -l $(TOOLBOX_DIR)/ $(RQG_HOME)/
   - task: PublishPipelineArtifact@0
     inputs:
-      pathToPublish: '$(TOOLBOX_DIR)'
+      pathToPublish: '/home/vsts/mariadb-toolbox'
       artifactName: 'toolbox'
     displayName: 'Store toolbox'
   - task: PublishPipelineArtifact@0
     inputs:
-      pathToPublish: '$(RQG_HOME)'
+      pathToPublish: '/home/vsts/rqg'
       artifactName: 'rqg'
     displayName: 'Store RQG'
 
@@ -102,11 +102,11 @@ jobs:
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'rqg'
-      targetPath: $(RQG_HOME)
+      targetPath: '/home/vsts/rqg'
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'toolbox'
-      targetPath: $(TOOLBOX_DIR)
+      targetPath: '/home/vsts/mariadb-toolbox'
 
   # Run the tests
   - script: $(SCRIPT_DIR)/run_single_test.sh

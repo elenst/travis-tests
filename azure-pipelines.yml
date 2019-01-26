@@ -72,22 +72,18 @@ jobs:
       set -x
       mkdir $(BASEDIR)
       mkdir $(HOME)/out-of-source
-###      cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) $(TEST_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
-###      make -j4
-###      make install
+      cd $(HOME)/out-of-source
+      cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) $(TEST_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
+      make -j4
+      make install
     displayName: 'Build server'
 
   # Store cloned tools and built binaries
-###  - task: PublishPipelineArtifact@0
-###    inputs:
-###      pathToPublish: $(BASEDIR)
-###      artifactName: 'build'
-###    displayName: 'Store build'
-#  - task: PublishBuildArtifacts@1
-#    inputs:
-#      pathToPublish: $(BASEDIR)
-#      artifactName: $(SERVER_BRANCH)
-#    displayName: 'Publish build'
+  - task: PublishPipelineArtifact@0
+    inputs:
+      pathToPublish: $(BASEDIR)
+      artifactName: 'build'
+    displayName: 'Store build'
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: '$(TOOLBOX_DIR)'
@@ -121,10 +117,10 @@ jobs:
 
   steps:
   # Restore cloned tools and built binaries
-###  - task: DownloadPipelineArtifact@0
-###    inputs:
-###      artifactName: 'build'
-###      targetPath: $(BASEDIR)
+  - task: DownloadPipelineArtifact@0
+    inputs:
+      artifactName: 'build'
+      targetPath: $(BASEDIR)
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'rqg'

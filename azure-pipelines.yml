@@ -140,7 +140,7 @@ jobs:
       artifactName: 'logs'
       targetPath: $(LOGDIR)
     displayName: 'Restore logdir'
-  - task: DownloadPipelineArtifact@0
+
   - script: |
       set -x
       chmod u+x $(SCRIPT_DIR)/*

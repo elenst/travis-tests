@@ -72,9 +72,9 @@ jobs:
       set -x
       mkdir $(BASEDIR)
       mkdir $(HOME)/out-of-source
-      cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) $(TEST_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
-      make -j4
-      make install
+###      cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) $(TEST_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
+###      make -j4
+###      make install
     displayName: 'Build server'
 
   # Store cloned tools and built binaries
@@ -98,6 +98,11 @@ jobs:
       targetPath: '$(RQG_HOME)'
       artifactName: 'rqg'
     displayName: 'Store RQG'
+  - task: PublishPipelineArtifact@0
+    inputs:
+      targetPath: '$(LOGDIR)'
+      artifactName: 'logs'
+    displayName: 'Store logdir'
 
 #########
 - job: Run_tests
@@ -130,9 +135,15 @@ jobs:
       artifactName: 'toolbox'
       targetPath: $(TOOLBOX_DIR)
     displayName: 'Restore toolbox'
+  - task: DownloadPipelineArtifact@0
+    inputs:
+      artifactName: 'logs'
+      targetPath: $(LOGDIR)
+    displayName: 'Restore logdir'
+  - task: DownloadPipelineArtifact@0
   - script: |
       set -x
       chmod u+x $(SCRIPT_DIR)/*
-      perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) > $(LOGDIR)/trial.log 2>&1
+      perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log
 #      . $(SCRIPT_DIR)/collect_single_failure_info.sh
 

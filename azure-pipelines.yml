@@ -85,11 +85,22 @@ jobs:
       targetPath: $(BASEDIR)
       artifactName: 'build'
     displayName: 'Store build'
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: $(TOOLBOX_DIR)
+      archiveType: 'tar'
+      tarCompression: 'gz'
+      artifactName: 'toolbox'
+      archiveFile: $(TOOLBOX_DIR).tar.gz
+    displayName: 'Restore toolbox'
+
   - task: PublishPipelineArtifact@0
     inputs:
-      targetPath: '$(TOOLBOX_DIR)'
+      targetPath: $(TOOLBOX_DIR).tar.gz
       artifactName: 'toolbox'
     displayName: 'Store toolbox'
+
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: '$(RQG_HOME)'
@@ -127,11 +138,19 @@ jobs:
       artifactName: 'rqg'
       targetPath: $(RQG_HOME)
     displayName: 'Restore RQG'
+
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'toolbox'
-      targetPath: $(TOOLBOX_DIR)
+      targetPath: $(TOOLBOX_DIR).tar.gz
     displayName: 'Restore toolbox'
+
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: $(TOOLBOX_DIR).tar.gz
+      destinationFolder: $(TOOLBOX_DIR)
+    displayName: 'Extract toolbox'
+
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'logs'
@@ -146,8 +165,7 @@ jobs:
 
   - script: |
       set -xo pipefail
-      ls -l $(SCRIPT_DIR)/*
-      chmod u+x $(SCRIPT_DIR)/*
+      ls -l $(TOOLBOX_DIR)/*
       ls -l $(SCRIPT_DIR)/*
       cd $(RQG_HOME)
       perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log

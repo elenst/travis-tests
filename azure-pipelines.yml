@@ -23,14 +23,14 @@ variables:
 
   # Test options
   TEST_DURATION: 350
-  GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+  GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
   JOB_RQG_OPTIONS: ""
   TEST_RQG_OPTIONS: ""
 
 jobs:
 
 #########
-- job: Clone_and_build
+- job: Prepare_server
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:
@@ -51,35 +51,21 @@ jobs:
         libncurses5-dev libbison-dev
     displayName: 'Install packages for build'
       
-  # Clone server and tools
+  # Clone and build server
   - script: |
       set -x
-      mkdir $(LOGDIR)
-      git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 --branch=$(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
-      git clone "https://github.com/MariaDB/randgen" --depth=1 --branch=$(RQG_BRANCH) $(RQG_HOME)
       git clone "https://github.com/MariaDB/server" --depth=1 --branch=$(SERVER_BRANCH) $(SRCDIR)
-      cd $(TOOLBOX_DIR)
-      chmod u+x $(SCRIPT_DIR)/*
-      echo $(TOOLBOX_BRANCH) `git log -1 --pretty="%h"` > $(LOGDIR)/toolbox.version
-      cd $(RQG_HOME)
-      echo $(RQG_BRANCH) `git log -1 --pretty="%h"` > $(LOGDIR)/rqg.version
-      cd $(SRCDIR)
-      echo $(SERVER_BRANCH) `git log -1 --pretty="%h"` > $(LOGDIR)/server.version
-      ls -l $(SCRIPT_DIR)/*
-    displayName: 'Clone server and tools'
-
-  # Build server
-  - script: |
-      set -x
       mkdir $(BASEDIR)
       mkdir $(HOME)/out-of-source
       cd $(HOME)/out-of-source
       cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) $(TEST_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
       make -j4
       make install
+      cd $(SRCDIR)
+      echo $(SERVER_BRANCH) `git log -1 --pretty="%h"` > $(BASEDIR)/server.version
     displayName: 'Build server'
 
-  # Store cloned tools and built binaries
+  # Archive and store built binaries
   - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: $(BASEDIR)
@@ -94,36 +80,6 @@ jobs:
       targetPath: $(BASEDIR)
       artifactName: 'build'
     displayName: 'Store build'
-
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: $(TOOLBOX_DIR)
-      includeRootFolder: false
-      archiveType: 'tar'
-      tarCompression: 'gz'
-      archiveFile:  $(Build.ArtifactStagingDirectory)/toolbox.tar.gz
-    displayName: 'Archive toolbox'
-
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: $(RQG_HOME)
-      includeRootFolder: false
-      archiveType: 'tar'
-      tarCompression: 'gz'
-      archiveFile:  $(Build.ArtifactStagingDirectory)/rqg.tar.gz
-    displayName: 'Archive RQG'
-
-  - task: PublishPipelineArtifact@0
-    inputs:
-      targetPath: $(Build.ArtifactStagingDirectory)
-      artifactName: 'tools'
-    displayName: 'Store tools'
-
-  - task: PublishPipelineArtifact@0
-    inputs:
-      targetPath: '$(LOGDIR)'
-      artifactName: 'logs'
-    displayName: 'Store logdir'
 
 #########
 - job: Run_tests
@@ -141,46 +97,19 @@ jobs:
         JOB_RQG_OPTIONS: "--grammar=conf/runtime/information_schema.yy"
 
   steps:
-  # Restore cloned tools and built binaries
+
+  # Restore pre-built binaries
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'build'
       targetPath: $(Build.ArtifactStagingDirectory)
-    displayName: 'Restore build'
-  - task: DownloadPipelineArtifact@0
-    inputs:
-      artifactName: 'tools'
-      targetPath: $(Build.ArtifactStagingDirectory)
-    displayName: 'Restore tools'
-  - task: DownloadPipelineArtifact@0
-    inputs:
-      artifactName: 'tools'
-      targetPath: $(Build.ArtifactStagingDirectory)
-    displayName: 'Restore tools'
+    displayName: 'Download build'
 
   - task: ExtractFiles@1
     inputs:
       archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/build.tar.gz'
       destinationFolder: $(BASEDIR)
     displayName: 'Extract build'
-
-  - task: ExtractFiles@1
-    inputs:
-      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/toolbox.tar.gz'
-      destinationFolder: $(TOOLBOX_DIR)
-    displayName: 'Extract toolbox'
-
-  - task: ExtractFiles@1
-    inputs:
-      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/rqg.tar.gz'
-      destinationFolder: $(RQG_HOME)
-    displayName: 'Extract RQG'
-
-  - task: DownloadPipelineArtifact@0
-    inputs:
-      artifactName: 'logs'
-      targetPath: $(LOGDIR)
-    displayName: 'Restore logdir'
 
   - script: |
       set -x
@@ -189,10 +118,21 @@ jobs:
     displayName: 'Install runtime packages'
 
   - script: |
+      set -x
+      git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 --branch=$(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
+      git clone "https://github.com/MariaDB/randgen" --depth=1 --branch=$(RQG_BRANCH) $(RQG_HOME)
+      mkdir $(LOGDIR)
+      mv $(BASEDIR)/server.version $(LOGDIR)/versions
+      cd $(RQG_HOME)
+      echo "randgen:" $(RQG_BRANCH) `git log -1 --pretty="%h"` >> $(LOGDIR)/versions
+      cd $(TOOLBOX_DIR)
+      echo "mariadb-toolbox:" $(TOOLBOX_BRANCH) `git log -1 --pretty="%h"` >> $(LOGDIR)/versions
+    displayName: 'Clone tools and get versions'
+
+  - script: |
       set -xo pipefail
       cd $(RQG_HOME)
       perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log
-#      . $(SCRIPT_DIR)/collect_single_failure_info.sh
     displayName: 'Run test'
 
   - script: |
@@ -201,4 +141,3 @@ jobs:
       cat $(LOGDIR)/vardir/mysql.err
     displayName: 'Collect failure info'
     condition: failed()
-

@@ -5,9 +5,6 @@ variables:
   RQG_BRANCH: elenst-dev
   TOOLBOX_BRANCH: master
 
-  # Build/run variations
-  RERUN_OLD_SERVER: yes
-
   # Locations
   TOOLBOX_DIR: $(HOME)/mariadb-toolbox
   RQG_HOME: $(HOME)/rqg
@@ -16,14 +13,18 @@ variables:
   LOGDIR: $(HOME)/logs
   SRCDIR: $(HOME)/src
 
-  # Build options
+  # Global build options
   GLOBAL_CMAKE_OPTIONS: "-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
-  JOB_CMAKE_OPTIONS: ""
 
-  # Test options
+  # Global test options
   TEST_DURATION: 400
-  GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0 --filter=$(SCRIPT_DIR)/10.4-combo-filter.ff"
+  GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --filter=$(SCRIPT_DIR)/10.4-combo-filter.ff"
+  GLOBAL_MYSQLD_OPTIONS: "--mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+  
+  # Initialize JOB options (in case we forget to do it later)
+  JOB_CMAKE_OPTIONS: ""
   JOB_RQG_OPTIONS: ""
+  JOB_MYSQLD_OPTIONS: ""
 
 jobs:
 
@@ -99,22 +100,25 @@ jobs:
     displayName: 'Upload build'
 
 #########
-- job: Run_tests
+- job: Test
   dependsOn: Prepare_server
   condition: succeeded()
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:
     matrix:
-      'conf/runtime/metadata_stability.yy':
-        ms1:
-          JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName) --gendata=conf/runtime/metadata_stability.zz"
-        ms2:
-          JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName)"
-      'conf/runtime/performance_schema.yy':
-        JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName) --mysqld=--performance-schema"
-      'conf/runtime/information_schema.yy':
-        JOB_RQG_OPTIONS: "--grammar=$(Agent.JobName)"
+      'metadata_stability-InnoDB':
+        GRAMMAR: 'conf/runtime/metadata_stability.yy'
+        JOB_RQG_OPTIONS: "--gendata=conf/runtime/metadata_stability.zz"
+        JOB_MYSQLD_OPTIONS: ""
+      'performance_schema':
+        GRAMMAR: 'conf/runtime/performance_schema.yy'
+        JOB_RQG_OPTIONS: ""
+        JOB_MYSQLD_OPTIONS: "--mysqld=--performance-schema"
+      'information_schema':
+        GRAMMAR: 'conf/runtime/information_schema.yy'
+        JOB_RQG_OPTIONS: ""
+        JOB_MYSQLD_OPTIONS: ""
 
   steps:
 
@@ -153,7 +157,7 @@ jobs:
   - script: |
       set -xo pipefail
       cd $(RQG_HOME)
-      perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log
+      perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) --grammar=$(GRAMMAR) $(GLOBAL_MYSQLD_OPTIONS) $(JOB_MYSQLD_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log
     displayName: 'Run test'
 
   - script: |

@@ -20,11 +20,15 @@ variables:
   GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
 jobs:
+
+#########
 - job: Clone_and_build
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:
     parallel: 1
+
+  # Libraries needed to build the server
   steps:
   - script: |
       sudo apt-get update
@@ -38,6 +42,7 @@ jobs:
         libncurses5-dev libbison-dev
     displayName: 'Install libraries'
       
+  # Clone, cmake, make, make install
   - script: |
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 $(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
       chmod u+x $(SCRIPT_DIR)/*
@@ -48,16 +53,18 @@ jobs:
       . $(SCRIPT_DIR)/clone_server.sh
       . $(SCRIPT_DIR)/build_if_not_cached.sh
     displayName: 'Clone and build'
+
+  # Store cloned tools and built binaries
   - task: PublishPipelineArtifact@0
     inputs:
       pathToPublish: $(BASEDIR)
       artifactName: 'build'
     displayName: 'Store build'
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: $(BASEDIR)
-      artifactName: $(SERVER_BRANCH)
-    displayName: 'Publish build'
+#  - task: PublishBuildArtifacts@1
+#    inputs:
+#      pathToPublish: $(BASEDIR)
+#      artifactName: $(SERVER_BRANCH)
+#    displayName: 'Publish build'
   - task: PublishPipelineArtifact@0
     inputs:
       pathToPublish: $(TOOLBOX_DIR)
@@ -69,6 +76,7 @@ jobs:
       artifactName: 'rqg'
     displayName: 'Store RQG'
 
+#########
 - job: Run_tests
   dependsOn: Clone_and_build
   condition: succeeded()
@@ -82,7 +90,9 @@ jobs:
         JOB_RQG_OPTIONS: "--grammar=conf/runtime/performance_schema.yy --mysqld=--performance-schema"
       information_schema:
         JOB_RQG_OPTIONS: "--grammar=conf/runtime/information_schema.yy"
+
   steps:
+  # Restore cloned tools and built binaries
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'build'
@@ -96,6 +106,7 @@ jobs:
       artifactName: 'toolbox'
       targetPath: $(TOOLBOX_DIR)
 
+  # Run the tests
   - script: $(SCRIPT_DIR)/run_single_test.sh
     displayName: 'Test run'
     

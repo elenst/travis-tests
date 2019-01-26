@@ -93,11 +93,11 @@ jobs:
       tarCompression: 'gz'
       artifactName: 'toolbox'
       archiveFile: $(TOOLBOX_DIR).tar.gz
-    displayName: 'Restore toolbox'
+    displayName: 'Archive toolbox'
 
   - task: PublishPipelineArtifact@0
     inputs:
-      targetPath: $(TOOLBOX_DIR).tar.gz
+      targetPath: $(HOME).tar.gz
       artifactName: 'toolbox'
     displayName: 'Store toolbox'
 

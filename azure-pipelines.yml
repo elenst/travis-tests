@@ -150,7 +150,6 @@ jobs:
       perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) $(TEST_RQG_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log
 #      . $(SCRIPT_DIR)/collect_single_failure_info.sh
     displayName: 'Run test'
-    continueOnError: 'true'
 
   - script: |
       set -xo pipefail

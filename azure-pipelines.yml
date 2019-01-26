@@ -91,21 +91,23 @@ jobs:
       rootFolderOrFile: $(TOOLBOX_DIR)
       archiveType: 'tar'
       tarCompression: 'gz'
-      artifactName: 'toolbox'
-      archiveFile: $(TOOLBOX_DIR).tar.gz
+      archiveFile:  $(Build.ArtifactStagingDirectory)/toolbox.tar.gz
     displayName: 'Archive toolbox'
 
-  - task: PublishPipelineArtifact@0
+  - task: ArchiveFiles@2
     inputs:
-      targetPath: $(HOME).tar.gz
-      artifactName: 'toolbox'
-    displayName: 'Store toolbox'
+      rootFolderOrFile: $(RQG_HOME)
+      archiveType: 'tar'
+      tarCompression: 'gz'
+      archiveFile:  $(Build.ArtifactStagingDirectory)/rqg.tar.gz
+    displayName: 'Archive RQG'
 
   - task: PublishPipelineArtifact@0
     inputs:
-      targetPath: '$(RQG_HOME)'
-      artifactName: 'rqg'
-    displayName: 'Store RQG'
+      targetPath: $(Build.ArtifactStagingDirectory)
+      artifactName: 'tools'
+    displayName: 'Store tools'
+
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: '$(LOGDIR)'
@@ -135,21 +137,15 @@ jobs:
       targetPath: $(BASEDIR)
   - task: DownloadPipelineArtifact@0
     inputs:
-      artifactName: 'rqg'
-      targetPath: $(RQG_HOME)
-    displayName: 'Restore RQG'
-
-  - task: DownloadPipelineArtifact@0
-    inputs:
-      artifactName: 'toolbox'
-      targetPath: $(TOOLBOX_DIR).tar.gz
-    displayName: 'Restore toolbox'
+      artifactName: 'tools'
+      targetPath: $(Build.ArtifactStagingDirectory)
+    displayName: 'Restore tools'
 
   - task: ExtractFiles@1
     inputs:
-      archiveFilePatterns: $(TOOLBOX_DIR).tar.gz
-      destinationFolder: $(TOOLBOX_DIR)
-    displayName: 'Extract toolbox'
+      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/*.gz'
+      destinationFolder: $(HOME)
+    displayName: 'Extract tool'
 
   - task: DownloadPipelineArtifact@0
     inputs:

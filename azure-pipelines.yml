@@ -9,6 +9,7 @@ variables:
 
   # Locations
   TOOLBOX_DIR: $(HOME)/mariadb-toolbox
+  RQG_HOME: $(HOME)/rqg
   SCRIPT_DIR: $(TOOLBOX_DIR)/travis
   BASEDIR: $(HOME)/server
 
@@ -68,12 +69,12 @@ jobs:
   - script: ls -l $(TOOLBOX_DIR)/ $(RQG_HOME)/
   - task: PublishPipelineArtifact@0
     inputs:
-      pathToPublish: $(TOOLBOX_DIR)
+      pathToPublish: '$(TOOLBOX_DIR)'
       artifactName: 'toolbox'
     displayName: 'Store toolbox'
   - task: PublishPipelineArtifact@0
     inputs:
-      pathToPublish: $(RQG_HOME)
+      pathToPublish: '$(RQG_HOME)'
       artifactName: 'rqg'
     displayName: 'Store RQG'
 

@@ -79,7 +79,7 @@ jobs:
     displayName: 'Build server'
     name: build_server
 
-  - script: echo build_server.SERVER_REVISION: $(build_server.SERVER_REVISION)
+  - script: echo "build_server.SERVER_REVISION:" $(build_server.SERVER_REVISION)
 
   # Archive and store built binaries
   - task: ArchiveFiles@2

@@ -78,7 +78,7 @@ jobs:
       echo '##vso[task.setvariable variable=serverRevision;isOutput=true]$rev'
       echo $(SERVER_BRANCH) $(serverRevision) > $(BASEDIR)/server.version
       echo '##vso[task.setvariable variable=oldBuild;isOutput=true]false'
-    condition: and(succeededWithIssues(), eq(variables['oldBuild'], 'false'))
+    condition: and(succeeded(), eq(variables['oldBuild'], 'false'))
     displayName: 'Build server'
 
   # Archive and store built binaries

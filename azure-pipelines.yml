@@ -53,6 +53,7 @@ jobs:
     workingDirectory: $(Build.ArtifactStagingDirectory)
     continueOnError: true
     displayName: 'Check if the binaries exist'
+    name: get_binaries
 
   # Install libraries and build the server
   - script: |
@@ -78,12 +79,13 @@ jobs:
       echo '##vso[task.setvariable variable=serverRevision;isOutput=true]$rev'
       echo $(SERVER_BRANCH) $(serverRevision) > $(BASEDIR)/server.version
       echo '##vso[task.setvariable variable=oldBuild;isOutput=true]false'
-    condition: and(succeeded(), eq(variables['oldBuild'], 'false'))
+    condition: and(succeeded(), eq(variables['get_binaries.oldBuild'], 'false'))
     displayName: 'Build server'
+    name: build_server
 
   # Archive and store built binaries
   - task: ArchiveFiles@2
-    condition: and(succeeded(), eq(variables['oldBuild'], 'false'))
+    condition: and(succeeded(), eq(variables['build_server.oldBuild'], 'false'))
     inputs:
       rootFolderOrFile: $(BASEDIR)
       includeRootFolder: false
@@ -105,13 +107,15 @@ jobs:
   condition: succeeded()
   pool:
     vmImage: 'Ubuntu 16.04'
+  variables:
+    revision: $[ dependencies.Prepare_server.outputs['build_server.serverRevision' ]
   steps:
   - task: DownloadPipelineArtifact@0
     inputs:
       artifactName: 'build'
       targetPath: $(Build.ArtifactStagingDirectory)
     displayName: 'Download build'
-  - script: mv $(Build.ArtifactStagingDirectory)/build.tar.gz $(Build.ArtifactStagingDirectory)/build-$(SERVER_BRANCH)-$(serverRevision).tar.gz
+  - script: mv $(Build.ArtifactStagingDirectory)/build.tar.gz $(Build.ArtifactStagingDirectory)/build-$(SERVER_BRANCH)-$(revision).tar.gz
   - task: FtpUpload@1
     inputs:
       credentialsOption: 'inputs'

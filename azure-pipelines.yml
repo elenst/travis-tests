@@ -70,7 +70,9 @@ jobs:
       make install
       cd $(SRCDIR)
       rev=`git log -1 --pretty="%h"`
-      echo '##vso[task.setvariable variable=SERVER_REVISION;isOutput=true]$(rev)'
+      echo "Revision: $rev"
+      git log -1 --pretty="%h"
+      echo "##vso[task.setvariable variable=SERVER_REVISION;isOutput=true]$(rev)"
       echo $(SERVER_BRANCH) $(SERVER_REVISION) > $(BASEDIR)/server.version
       echo '##vso[task.setvariable variable=IS_OLD_BUILD;isOutput=true]false'
     condition: and(succeeded(), eq(variables['get_binaries.IS_OLD_BUILD'], 'false'))
@@ -213,12 +215,12 @@ jobs:
       tarCompression: 'gz'
       archiveFile:  $(Build.ArtifactStagingDirectory)/data-$(Build.BuildNumber)-$(Agent.jobName).tar.gz
     displayName: 'Archive test data'
-    condition: failed()
+    condition: always()
 
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: $(Build.ArtifactStagingDirectory)
       artifactName: 'data'
     displayName: 'Store test data'
-    condition: failed()
+    condition: always()
 

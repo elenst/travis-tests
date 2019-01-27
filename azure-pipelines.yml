@@ -111,17 +111,31 @@ jobs:
     vmImage: 'Ubuntu 16.04'
   strategy:
     matrix:
-      'metadata_stability-InnoDB':
+      'metadata_stability':
         GRAMMAR: 'conf/runtime/metadata_stability.yy'
         JOB_RQG_OPTIONS: "--gendata=conf/runtime/metadata_stability.zz"
         JOB_MYSQLD_OPTIONS: ""
       'performance_schema':
         GRAMMAR: 'conf/runtime/performance_schema.yy'
-        JOB_RQG_OPTIONS: ""
         JOB_MYSQLD_OPTIONS: "--mysqld=--performance-schema"
       'information_schema':
         GRAMMAR: 'conf/runtime/information_schema.yy'
         JOB_RQG_OPTIONS: ""
+        JOB_MYSQLD_OPTIONS: ""
+      'many_indexes-InnoDB':
+        GRAMMAR: 'conf/engines/many_indexes.yy'
+        JOB_RQG_OPTIONS: "--gendata=conf/engines/many_indexes.zz --engine=InnoDB"
+      'many_indexes-Aria':
+        GRAMMAR: 'conf/engines/many_indexes.yy'
+        JOB_RQG_OPTIONS: "--gendata=conf/engines/many_indexes.zz --engine=Aria"
+        JOB_MYSQLD_OPTIONS: ""
+      'engine_stress-InnoDB':
+        GRAMMAR: 'conf/engines/engine_stress.yy'
+        JOB_RQG_OPTIONS: "--gendata=conf/engines/engine_stress.zz --engine=InnoDB"
+        JOB_MYSQLD_OPTIONS: ""
+      'engine_stress-Aria':
+        GRAMMAR: 'conf/engines/engine_stress.yy'
+        JOB_RQG_OPTIONS: "--gendata=conf/engines/engine_stress.zz --engine=Aria"
         JOB_MYSQLD_OPTIONS: ""
 
   steps:
@@ -167,4 +181,4 @@ jobs:
   - script: |
       for f in $(LOGDIR)/versions $(LOGDIR)/vardir/mysql.err $(LOGDIR)/vardir/boot.log ; do echo "######################################" ; cat $f ; done
     displayName: 'Collect failure info'
-#    condition: failed()
+    condition: always()

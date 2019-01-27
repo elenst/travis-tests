@@ -73,11 +73,13 @@ jobs:
       echo "Revision: $rev"
       git log -1 --pretty="%h"
       echo "##vso[task.setvariable variable=SERVER_REVISION;isOutput=true]$rev"
-      echo $(SERVER_BRANCH) $(SERVER_REVISION) > $(BASEDIR)/server.version
+      echo $(SERVER_BRANCH) $rev > $(BASEDIR)/server.version
       echo '##vso[task.setvariable variable=IS_OLD_BUILD;isOutput=true]false'
     condition: and(succeeded(), eq(variables['get_binaries.IS_OLD_BUILD'], 'false'))
     displayName: 'Build server'
     name: build_server
+
+  - script: echo build_server.SERVER_REVISION: $(build_server.SERVER_REVISION)
 
   # Archive and store built binaries
   - task: ArchiveFiles@2
@@ -128,7 +130,7 @@ jobs:
   pool:
     vmImage: 'Ubuntu 16.04'
   variables:
-    SERVER_REVISION: $[ dependencies.Prepare_server.outputs['build_server.SERVER_REVISION' ]
+    SERVER_REVISION: $[ dependencies.Prepare_server.outputs['build_server.SERVER_REVISION' ] ]
   strategy:
     matrix:
       'metadata_stability':
@@ -215,12 +217,11 @@ jobs:
       tarCompression: 'gz'
       archiveFile:  $(Build.ArtifactStagingDirectory)/data-$(Build.BuildNumber)-$(Agent.jobName).tar.gz
     displayName: 'Archive test data'
-    condition: always()
+    condition: failed()
 
   - task: PublishPipelineArtifact@0
     inputs:
       targetPath: $(Build.ArtifactStagingDirectory)
       artifactName: 'data'
     displayName: 'Store test data'
-    condition: always()
-
+    condition: failed()

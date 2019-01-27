@@ -39,7 +39,6 @@ jobs:
 
   # Check if the server has already been built and stored
   - script: |
-      set -x
       REMOTE_REVISION=`wget -O - https://github.com/MariaDB/server/tree/10.3 | grep -A 2 "Latest commit$" | tail -n 1 | sed -e 's/ //g'`
       echo "Remote revision: $REMOTE_REVISION"
       wget -O - https://github.com/MariaDB/server/tree/10.3 | grep -A 2 "Latest commit$"
@@ -51,7 +50,6 @@ jobs:
 
   # Install libraries and build the server
   - script: |
-      set -x
       sudo apt-get update
       sudo apt-get install -y -q \
         apt-utils build-essential cmake python-dev sudo git \

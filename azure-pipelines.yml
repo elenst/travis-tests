@@ -37,8 +37,6 @@ jobs:
 
   steps:
 
-  - script: printenv
-
   # Check if the server has already been built and stored
   - script: |
       set -x
@@ -162,6 +160,8 @@ jobs:
         JOB_MYSQLD_OPTIONS: ""
 
   steps:
+
+  - script: printenv
 
   # Restore pre-built binaries
   - task: DownloadPipelineArtifact@0

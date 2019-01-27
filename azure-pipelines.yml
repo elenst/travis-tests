@@ -106,7 +106,7 @@ jobs:
       artifactName: 'build'
       targetPath: $(Build.ArtifactStagingDirectory)
     displayName: 'Download build'
-  - mv $(Build.ArtifactStagingDirectory)/build.tar.gz $(Build.ArtifactStagingDirectory)/build-$(SERVER_BRANCH)-$(serverRevision).tar.gz
+  - script: mv $(Build.ArtifactStagingDirectory)/build.tar.gz $(Build.ArtifactStagingDirectory)/build-$(SERVER_BRANCH)-$(serverRevision).tar.gz
   - task: FtpUpload@1
     inputs:
       credentialsOption: 'inputs'

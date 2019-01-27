@@ -44,7 +44,7 @@ jobs:
       echo "Remote revision: $REMOTE_REVISION"
       wget -O - https://github.com/MariaDB/server/tree/10.3 | grep -A 2 "Latest commit$"
       echo '##vso[task.setvariable variable=IS_OLD_BUILD;isOutput=true]false'
-      if wget ftp://ftp.askmonty.org/private/azure/build-$(SERVER_BRANCH)-$REMOTE_REVISION.tar.gz ; mv build-$(SERVER_BRANCH)-$REMOTE_REVISION.tar.gz build.tar.gz ; echo '##vso[task.setvariable variable=IS_OLD_BUILD;isOutput=true]true' ; fi
+      if wget ftp://ftp.askmonty.org/private/azure/build-$(SERVER_BRANCH)-$REMOTE_REVISION.tar.gz ; then mv build-$(SERVER_BRANCH)-$REMOTE_REVISION.tar.gz build.tar.gz ; echo '##vso[task.setvariable variable=IS_OLD_BUILD;isOutput=true]true' ; fi
     workingDirectory: $(Build.ArtifactStagingDirectory)
     displayName: 'Check if the binaries exist'
     name: get_binaries

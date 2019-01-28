@@ -246,8 +246,8 @@ jobs:
     displayName: 'Run test'
 
   - script: |
-      result_summary_dir=$(Build.ArtifactStagingDirectory)/result_summary.$(System.JobPositionInPhase)
-      result_details_dir=$(Build.ArtifactStagingDirectory)/logs.$(System.JobPositionInPhase)
+      result_summary_dir=$(Build.ArtifactStagingDirectory)/result_summary.$(Agent.jobName)
+      result_details_dir=$(Build.ArtifactStagingDirectory)/logs.$(Agent.jobName)
       mkdir $result_summary_dir
       mkdir $result_details_dir
       cp $(LOGDIR)/trial.log $result_summary_dir/
@@ -273,14 +273,14 @@ jobs:
 
   - task: PublishPipelineArtifact@0
     inputs:
-      targetPath: $(Build.ArtifactStagingDirectory)/result_summary.$(System.JobPositionInPhase)
+      targetPath: $(Build.ArtifactStagingDirectory)/result_summary.$(Agent.jobName)
       artifactName: summary-$(Agent.jobName)
     displayName: 'Store test result summary'
     condition: always()
 
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: $(Build.ArtifactStagingDirectory)/logs.$(System.JobPositionInPhase)
+      rootFolderOrFile: $(Build.ArtifactStagingDirectory)/logs.$(Agent.jobName)
       includeRootFolder: true
       archiveType: 'tar'
       tarCompression: 'gz'
@@ -290,7 +290,7 @@ jobs:
 
   - task: PublishPipelineArtifact@0
     inputs:
-      targetPath: $(Build.ArtifactStagingDirectory)/logs.$(System.JobPositionInPhase)
+      targetPath: $(Build.ArtifactStagingDirectory)/logs.$(Agent.jobName)
       artifactName: data-$(Agent.jobName)
     displayName: 'Store test data'
     condition: failed()
@@ -308,7 +308,7 @@ jobs:
   # Restore pre-built binaries
   - task: DownloadPipelineArtifact@0
     inputs:
-      artifactName: 'result_summary.*'
+      artifactName: 'summary-*'
       targetPath: $(Build.ArtifactStagingDirectory)
     displayName: 'Download test result summaries'
 
@@ -326,3 +326,6 @@ jobs:
         for f in $d/mysql*.err* ; do echo "################## $f ##################" ; cat $f | grep -v -f $(SCRIPT_DIR)/server_warnings.supp | grep -v "\[Note\]" | grep -v "^$" | cut -c 1-4096 ; done ; \
         echo "###########################################################" ; \
       done
+    displayName: 'Print summary'
+    condition: always()
+

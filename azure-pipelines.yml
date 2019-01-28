@@ -1,7 +1,7 @@
 variables:
 
   # Branches
-  SERVER_BRANCH: coalesce($(serverBranch),10.4)
+  SERVER_BRANCH: $[coalesce($(serverBranch),10.4)]
   RQG_BRANCH: elenst-dev
   TOOLBOX_BRANCH: master
 

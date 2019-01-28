@@ -194,6 +194,86 @@ jobs:
         GRAMMAR: 'conf/engines/engine_stress.yy'
         jobRqgOptions: "--gendata=conf/engines/engine_stress.zz --engine=Aria"
         jobMysqldOptions: ""
+      'engine_stress-MyISAM':
+        GRAMMAR: 'conf/engines/engine_stress.yy'
+        jobRqgOptions: "--gendata=conf/engines/engine_stress.zz --engine=MyISAM"
+        jobMysqldOptions: ""
+      'partitions-InnoDB':
+        GRAMMAR: 'conf/partitioning/partitions.yy'
+        jobRqgOptions: "--engine=InnoDB"
+        jobMysqldOptions: ""
+      'partition_pruning-InnoDB':
+        GRAMMAR: 'conf/partitioning/partition_pruning.yy'
+        jobRqgOptions: "--gendata=conf/partitioning/partition_pruning.zz --engine=InnoDB"
+        jobMysqldOptions: ""
+      'replication-InnoDB':
+        GRAMMAR: 'conf/replication/replication.yy'
+        jobRqgOptions: "--gendata=conf/replication/replication-5.1.zz --engine=InnoDB"
+        jobMysqldOptions: ""
+      'replication-ddl-InnoDB':
+        GRAMMAR: 'conf/replication/replication-ddl_sql.yy'
+        jobRqgOptions: "--gendata=conf/replication/replication-ddl_data.zz --engine=InnoDB"
+        jobMysqldOptions: ""
+      'replication-dml-InnoDB':
+        GRAMMAR: 'conf/replication/replication-dml_sql.yy'
+        jobRqgOptions: "--gendata=conf/replication/replication-dml_data.zz --engine=InnoDB"
+        jobMysqldOptions: ""
+      'connect_kill-InnoDB':
+        GRAMMAR: 'conf/runtime/connect_kill_sql.yy'
+        jobRqgOptions: "--gendata=conf/runtime/connect_kill_data.zz --engine=InnoDB"
+        jobMysqldOptions: ""
+      'WL5004-InnoDB':
+        GRAMMAR: 'conf/runtime/WL5004_sql.yy'
+        jobRqgOptions: "--gendata=conf/runtime/WL5004_data.zz --engine=InnoDB"
+        jobMysqldOptions: ""
+      'optimizer-InnoDB':
+        GRAMMAR: 'conf/mariadb/optimizer.yy'
+        jobRqgOptions: "--engine=InnoDB"
+        jobMysqldOptions: ""
+      'optimizer-Aria':
+        GRAMMAR: 'conf/mariadb/optimizer.yy'
+        jobRqgOptions: "--engine=Aria"
+        jobMysqldOptions: ""
+      'optimizer-MyISAM':
+        GRAMMAR: 'conf/mariadb/optimizer.yy'
+        jobRqgOptions: "--engine=MyISAM"
+        jobMysqldOptions: ""
+      'updateable_views-MyISAM':
+        GRAMMAR: 'conf/optimizer/updateable_views.yy'
+        jobRqgOptions: "--engine=MyISAM --skip-gendata"
+        jobMysqldOptions: "--mysqld=--init-file=$(RQG_HOME)/conf/optimizer/updateable_views.init --mysqld=--default-storage-engine=MyISAM"
+      'oltp-transactional-InnoDB':
+        GRAMMAR: 'conf/mariadb/oltp-transactional.yy'
+        jobRqgOptions: "--gendata=conf/mariadb/oltp.zz --engine=InnoDB"
+        jobMysqldOptions: ""
+      'oltp-transactional-Aria':
+        GRAMMAR: 'conf/mariadb/oltp-transactional.yy'
+        jobRqgOptions: "--gendata=conf/mariadb/oltp.zz --engine=Aria"
+        jobMysqldOptions: ""
+      'oltp-MyISAM':
+        GRAMMAR: 'conf/mariadb/oltp.yy'
+        jobRqgOptions: "--gendata=conf/mariadb/oltp.zz --engine=MyISAM"
+        jobMysqldOptions: ""
+      'functions':
+        GRAMMAR: 'conf/mariadb/functions.yy'
+        jobRqgOptions: ""
+        jobMysqldOptions: ""
+      'alter_online':
+        GRAMMAR: 'conf/runtime/alter_online.yy'
+        jobRqgOptions: "--gendata=conf/runtime/alter_online.zz"
+        jobMysqldOptions: ""
+      'full_text_search-InnoDB':
+        GRAMMAR: 'conf/engines/innodb/full_text_search.yy'
+        jobRqgOptions: "--gendata=conf/engines/innodb/full_text_search.zz --engine=InnoDB"
+        jobMysqldOptions: ""
+      'full_text_search-MyISAM':
+        GRAMMAR: 'conf/engines/innodb/full_text_search.yy'
+        jobRqgOptions: "--gendata=conf/engines/innodb/full_text_search.zz --engine=MyISAM"
+        jobMysqldOptions: ""
+      'full_text_search-Aria':
+        GRAMMAR: 'conf/engines/innodb/full_text_search.yy'
+        jobRqgOptions: "--gendata=conf/engines/innodb/full_text_search.zz --engine=Aria"
+        jobMysqldOptions: ""
 
   steps:
 
@@ -315,17 +395,22 @@ jobs:
   - script: |
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 --branch=$(toolboxBranch) $(TOOLBOX_DIR)
       for d in $(Build.ArtifactStagingDirectory)/* ; do \
-        echo "################## $d ##################" ; \
-        grep 'exited with exit status' $d/trial.log ; \
         echo ; \
-        grep -A 1 'Final command line' $d/trial.log ; \
-        echo ; \
-        cat $d/versions ; \
-        echo ; \
-        perl $(SCRIPT_DIR)/check_for_known_bugs.pl $d/mysql*.err* $d/stacktraces $d/trial.log \
-        echo ; \
-        for f in $d/mysql*.err* ; do echo "################## $f ##################" ; cat $f | grep -v -f $(SCRIPT_DIR)/server_warnings.supp | grep -v "\[Note\]" | grep -v "^$" | cut -c 1-4096 ; done ; \
-        echo "###########################################################" ; \
+        echo "####################################################################################################" ; \
+        echo "### $d" ; \
+        res=`grep 'exited with exit status' $d/trial.log | sed -e 's/.*exited with exit status STATUS_\([A-Z_]*\).*/\1/'` ; \
+        echo $res; \
+        if [ "$res" != "STATUS_OK" ] ; then \
+          echo ; \
+          cat $d/versions ; \
+          echo ; \
+          grep -A 1 'Final command line' $d/trial.log ; \
+          echo ; \
+          perl $(SCRIPT_DIR)/check_for_known_bugs.pl $d/mysql*.err* $d/stacktraces $d/trial.log \
+          echo ; \
+          for f in $d/mysql*.err* ; do echo "========== $f ==========" ; cat $f | grep -v -f $(SCRIPT_DIR)/server_warnings.supp | grep -v "\[Note\]" | grep -v "^$" | cut -c 1-4096 ; echo ; done ; \
+        fi ; \
+        echo "####################################################################################################" ; \
       done
     displayName: 'Print summary'
     condition: always()

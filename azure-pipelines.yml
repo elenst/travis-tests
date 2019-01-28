@@ -5,14 +5,6 @@ variables:
   defaultRqgBranch: elenst-dev
   toolboxBranch: master
 
-  # Global build options
-  GLOBAL_CMAKE_OPTIONS: "-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
-
-  # Global test options
-  TEST_DURATION: 400
-  GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --filter=$(SCRIPT_DIR)/10.4-combo-filter.ff"
-  GLOBAL_MYSQLD_OPTIONS: "--mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
-
   # Locations
   TOOLBOX_DIR: $(HOME)/mariadb-toolbox
   RQG_HOME: $(HOME)/rqg
@@ -21,10 +13,18 @@ variables:
   LOGDIR: $(HOME)/logs
   SRCDIR: $(HOME)/src
 
-  # Initialize JOB options (in case we forget to do it later)
-  JOB_CMAKE_OPTIONS: ""
-  JOB_RQG_OPTIONS: ""
-  JOB_MYSQLD_OPTIONS: ""
+  # Global build options (can be overridden by cmakeOptions; jobCmakeOptions are added at the end of the resulting line)
+  defaultCmakeOptions: "-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
+
+  # Global test options (can be overridden: defaultTestDuration by testDuration etc.; jobRqgOptions etc. are added at the end of the resulting line)
+  defaultTestDuration: 400
+  defaultRqgOptions: "--threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --filter=$(SCRIPT_DIR)/10.4-combo-filter.ff"
+  defaultMysqldOptions: "--mysqld=--log_output=FILE --mysqld=--loose-max-statement-time=20 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+
+  # JOB options can be defined later
+  jobCmakeOptions: ""
+  jobRqgOptions: ""
+  jobMysqldOptions: ""
 
 jobs:
 
@@ -39,8 +39,17 @@ jobs:
         server_branch=${SERVERBRANCH-$DEFAULTSERVERBRANCH}
         rqg_branch=${RQGBRANCH-$DEFAULTRQGBRANCH}
         toolbox_branch=${TOOLBOXBRANCH-$DEFAULTTOOLBOXBRANCH}
+        cmake_options=${CMAKEOPTIONS-$DEFAULTCMAKEOPTIONS}
+        test_duration=${TESTDURATION-$DEFAULTTESTDURATION}
+        rqg_options=${RQGOPTIONS-$DEFAULTRQGOPTIONS}
+        mysqld_options=${MYSQLDOPTIONS-$DEFAULTMYSQLDOPTIONS}
         echo "##vso[task.setvariable variable=serverBranch;isOutput=true]$server_branch"
         echo "##vso[task.setvariable variable=rqgBranch;isOutput=true]$rqg_branch"
+        echo "##vso[task.setvariable variable=toolboxBranch;isOutput=true]$toolbox_branch"
+        echo "##vso[task.setvariable variable=cmakeOptions;isOutput=true]$cmake_options"
+        echo "##vso[task.setvariable variable=testDuration;isOutput=true]$test_duration"
+        echo "##vso[task.setvariable variable=rqgOptions;isOutput=true]$rqg_options"
+        echo "##vso[task.setvariable variable=mysqldOptions;isOutput=true]$mysqld_options"
       name: setvars
 
 #########
@@ -53,16 +62,17 @@ jobs:
   condition: succeeded()
   variables:
     serverBranch: $[ dependencies.Set_vars.outputs['setvars.serverBranch' ] ]
+    cmakeOptions: $[ dependencies.Set_vars.outputs['setvars.cmakeOptions' ] ]
 
   steps:
 
   # Check if the server has already been built and stored
   - script: |
-      REMOTE_REVISION=`wget -O - https://github.com/MariaDB/server/tree/10.3 | grep -A 2 "Latest commit$" | tail -n 1 | sed -e 's/ //g'`
-      echo "Remote revision: $REMOTE_REVISION"
+      remote_revision=`wget -O - https://github.com/MariaDB/server/tree/10.3 | grep -A 2 "Latest commit$" | tail -n 1 | sed -e 's/ //g'`
+      echo "Remote revision: $remote_revision"
       wget -O - https://github.com/MariaDB/server/tree/10.3 | grep -A 2 "Latest commit$"
-      echo '##vso[task.setvariable variable=IS_OLD_BUILD;isOutput=true]false'
-      if wget ftp://ftp.askmonty.org/private/azure/build-$(serverBranch)-$REMOTE_REVISION.tar.gz ; then mv build-$(serverBranch)-$REMOTE_REVISION.tar.gz build.tar.gz ; echo '##vso[task.setvariable variable=IS_OLD_BUILD;isOutput=true]true' ; fi
+      echo '##vso[task.setvariable variable=isOldBuild;isOutput=true]false'
+      if wget ftp://ftp.askmonty.org/private/azure/build-$(serverBranch)-$remote_revision.tar.gz ; then mv build-$(serverBranch)-$remote_revision.tar.gz build.tar.gz ; echo '##vso[task.setvariable variable=isOldBuild;isOutput=true]true' ; fi
     workingDirectory: $(Build.ArtifactStagingDirectory)
     displayName: 'Check if the binaries exist'
     name: get_binaries
@@ -82,31 +92,29 @@ jobs:
       mkdir $(BASEDIR)
       mkdir $(HOME)/out-of-source
       cd $(HOME)/out-of-source
-      cmake $(SRCDIR) $(GLOBAL_CMAKE_OPTIONS) $(JOB_CMAKE_OPTIONS) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
+      cmake $(SRCDIR) $(cmakeOptions) $(jobCmakeOptions) -DCMAKE_INSTALL_PREFIX=$(BASEDIR)
       make -j4
       make install
       cd $(SRCDIR)
       rev=`git log -1 --pretty="%h"`
       echo "Revision: $rev"
       git log -1 --pretty="%h"
-      echo "##vso[task.setvariable variable=SERVER_REVISION;isOutput=true]$rev"
+      echo "##vso[task.setvariable variable=serverRevision;isOutput=true]$rev"
       echo $(serverBranch) $rev > $(BASEDIR)/server.version
-      echo '##vso[task.setvariable variable=IS_OLD_BUILD;isOutput=true]false'
-    condition: and(succeeded(), eq(variables['get_binaries.IS_OLD_BUILD'], 'false'))
+      echo '##vso[task.setvariable variable=isOldBuild;isOutput=true]false'
+    condition: and(succeeded(), eq(variables['get_binaries.isOldBuild'], 'false'))
     displayName: 'Build server'
     name: build_server
 
-  - script: echo "build_server.SERVER_REVISION:" $(build_server.SERVER_REVISION)
-
   # Archive and store built binaries
   - task: ArchiveFiles@2
-    condition: and(succeeded(), eq(variables['build_server.IS_OLD_BUILD'], 'false'))
+    condition: and(succeeded(), eq(variables['build_server.isOldBuild'], 'false'))
     inputs:
       rootFolderOrFile: $(BASEDIR)
       includeRootFolder: false
       archiveType: 'tar'
       tarCompression: 'gz'
-      archiveFile:  $(Build.ArtifactStagingDirectory)/build-$(serverBranch)-$(build_server.SERVER_REVISION).tar.gz
+      archiveFile:  $(Build.ArtifactStagingDirectory)/build-$(serverBranch)-$(build_server.serverRevision).tar.gz
     displayName: 'Archive build'
 
   - task: PublishPipelineArtifact@0
@@ -142,7 +150,9 @@ jobs:
 
 #########
 - job: Test
-  dependsOn: Prepare_server
+  dependsOn:
+  - Set_vars
+  - Prepare_server
   condition: succeeded()
   pool:
     vmImage: 'Ubuntu 16.04'
@@ -150,35 +160,40 @@ jobs:
     serverBranch: $[ dependencies.Set_vars.outputs['setvars.serverBranch' ] ]
     rqgBranch: $[ dependencies.Set_vars.outputs['setvars.rqgBranch' ] ]
     toolboxBranch: $[ dependencies.Set_vars.outputs['setvars.toolboxBranch' ] ]
-    SERVER_REVISION: $[ dependencies.Prepare_server.outputs['build_server.SERVER_REVISION' ] ]
+    testDuration: $[ dependencies.Set_vars.outputs['setvars.testDuration' ] ]
+    rqgOptions: $[ dependencies.Set_vars.outputs['setvars.rqgOptions' ] ]
+    mysqldOptions: $[ dependencies.Set_vars.outputs['setvars.mysqldOptions' ] ]
+
+    serverRevision: $[ dependencies.Prepare_server.outputs['build_server.serverRevision' ] ]
+
   strategy:
     matrix:
       'metadata_stability':
         GRAMMAR: 'conf/runtime/metadata_stability.yy'
-        JOB_RQG_OPTIONS: "--gendata=conf/runtime/metadata_stability.zz"
-        JOB_MYSQLD_OPTIONS: ""
+        jobRqgOptions: "--gendata=conf/runtime/metadata_stability.zz"
+        jobMysqldOptions: ""
       'performance_schema':
         GRAMMAR: 'conf/runtime/performance_schema.yy'
-        JOB_MYSQLD_OPTIONS: "--mysqld=--performance-schema"
+        jobMysqldOptions: "--mysqld=--performance-schema"
       'information_schema':
         GRAMMAR: 'conf/runtime/information_schema.yy'
-        JOB_RQG_OPTIONS: ""
-        JOB_MYSQLD_OPTIONS: ""
+        jobRqgOptions: ""
+        jobMysqldOptions: ""
       'many_indexes-InnoDB':
         GRAMMAR: 'conf/engines/many_indexes.yy'
-        JOB_RQG_OPTIONS: "--gendata=conf/engines/many_indexes.zz --engine=InnoDB"
+        jobRqgOptions: "--gendata=conf/engines/many_indexes.zz --engine=InnoDB"
       'many_indexes-Aria':
         GRAMMAR: 'conf/engines/many_indexes.yy'
-        JOB_RQG_OPTIONS: "--gendata=conf/engines/many_indexes.zz --engine=Aria"
-        JOB_MYSQLD_OPTIONS: ""
+        jobRqgOptions: "--gendata=conf/engines/many_indexes.zz --engine=Aria"
+        jobMysqldOptions: ""
       'engine_stress-InnoDB':
         GRAMMAR: 'conf/engines/engine_stress.yy'
-        JOB_RQG_OPTIONS: "--gendata=conf/engines/engine_stress.zz --engine=InnoDB"
-        JOB_MYSQLD_OPTIONS: ""
+        jobRqgOptions: "--gendata=conf/engines/engine_stress.zz --engine=InnoDB"
+        jobMysqldOptions: ""
       'engine_stress-Aria':
         GRAMMAR: 'conf/engines/engine_stress.yy'
-        JOB_RQG_OPTIONS: "--gendata=conf/engines/engine_stress.zz --engine=Aria"
-        JOB_MYSQLD_OPTIONS: ""
+        jobRqgOptions: "--gendata=conf/engines/engine_stress.zz --engine=Aria"
+        jobMysqldOptions: ""
 
   steps:
 
@@ -194,7 +209,7 @@ jobs:
 
   - task: ExtractFiles@1
     inputs:
-      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/build-$(serverBranch)-$(SERVER_REVISION).tar.gz'
+      archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/build-$(serverBranch)-$(serverRevision).tar.gz'
       destinationFolder: $(BASEDIR)
     displayName: 'Extract build'
 
@@ -220,7 +235,14 @@ jobs:
   - script: |
       set -xo pipefail
       cd $(RQG_HOME)
-      perl ./runall-new.pl --basedir=$(BASEDIR) --vardir=$(LOGDIR)/vardir $(GLOBAL_RQG_OPTIONS) $(JOB_RQG_OPTIONS) --grammar=$(GRAMMAR) $(GLOBAL_MYSQLD_OPTIONS) $(JOB_MYSQLD_OPTIONS) 2>&1 | tee $(LOGDIR)/trial.log
+      perl ./runall-new.pl \
+        --basedir=$(BASEDIR) \
+        --vardir=$(LOGDIR)/vardir \
+        --duration=$(testDuration) \
+        $(rqgOptions) $(jobRqgOptions) \
+        --grammar=$(GRAMMAR) \
+        $(mysqldOptions) $(jobMysqldOptions) \
+        2>&1 | tee $(LOGDIR)/trial.log
     displayName: 'Run test'
 
   - script: |

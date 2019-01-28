@@ -271,9 +271,9 @@ jobs:
     displayName: 'Collect failure info'
     condition: always()
 
-  - task: PublishPipelineArtifact@0
+  - task: PublishBuildArtifacts@1
     inputs:
-      targetPath: $(Build.ArtifactStagingDirectory)/result_summary.$(Agent.jobName)
+      pathtoPublish: $(Build.ArtifactStagingDirectory)/result_summary.$(Agent.jobName)
       artifactName: summary-$(Agent.jobName)
     displayName: 'Store test result summary'
     condition: always()
@@ -305,11 +305,12 @@ jobs:
 
   steps:
 
-  # Restore pre-built binaries
-  - task: DownloadPipelineArtifact@0
+  # Collect test summaries
+  - task: DownloadBuildArtifacts@0
     inputs:
-      artifactName: "summary-*"
-      targetPath: $(Build.ArtifactStagingDirectory)
+      downloadType: 'specific'
+      itemPattern: summary-*
+      downloadPath: $(Build.ArtifactStagingDirectory)
     displayName: 'Download test result summaries'
 
   - script: |

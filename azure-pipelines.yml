@@ -1,9 +1,17 @@
 variables:
 
-  # Branches
+  # Branches (these values can be overridden: defaultServerBranch by serverBranch etc.
   defaultServerBranch: 10.4
-  RQG_BRANCH: elenst-dev
-  TOOLBOX_BRANCH: master
+  defaultRqgBranch: elenst-dev
+  toolboxBranch: master
+
+  # Global build options
+  GLOBAL_CMAKE_OPTIONS: "-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
+
+  # Global test options
+  TEST_DURATION: 400
+  GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --filter=$(SCRIPT_DIR)/10.4-combo-filter.ff"
+  GLOBAL_MYSQLD_OPTIONS: "--mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
   # Locations
   TOOLBOX_DIR: $(HOME)/mariadb-toolbox
@@ -13,14 +21,6 @@ variables:
   LOGDIR: $(HOME)/logs
   SRCDIR: $(HOME)/src
 
-  # Global build options
-  GLOBAL_CMAKE_OPTIONS: "-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_OQGRAPH=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DPLUGIN_ROCKSDB=NO -DWITH_MARIABACKUP=OFF"
-
-  # Global test options
-  TEST_DURATION: 400
-  GLOBAL_RQG_OPTIONS: "--duration=$(TEST_DURATION) --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/modules/alter_table_columns.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy  --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/foreign_keys.yy -redefine=conf/mariadb/modules/locks.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/modules/acl.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --redefine=conf/mariadb/modules/locks-10.4-extra.yy --filter=$(SCRIPT_DIR)/10.4-combo-filter.ff"
-  GLOBAL_MYSQLD_OPTIONS: "--mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
-  
   # Initialize JOB options (in case we forget to do it later)
   JOB_CMAKE_OPTIONS: ""
   JOB_RQG_OPTIONS: ""
@@ -37,7 +37,10 @@ jobs:
   steps:
     - script: |
         server_branch=${SERVERBRANCH-$DEFAULTSERVERBRANCH}
+        rqg_branch=${RQGBRANCH-$DEFAULTRQGBRANCH}
+        toolbox_branch=${TOOLBOXBRANCH-$DEFAULTTOOLBOXBRANCH}
         echo "##vso[task.setvariable variable=serverBranch;isOutput=true]$server_branch"
+        echo "##vso[task.setvariable variable=rqgBranch;isOutput=true]$rqg_branch"
       name: setvars
 
 #########
@@ -144,8 +147,10 @@ jobs:
   pool:
     vmImage: 'Ubuntu 16.04'
   variables:
-    SERVER_REVISION: $[ dependencies.Prepare_server.outputs['build_server.SERVER_REVISION' ] ]
     serverBranch: $[ dependencies.Set_vars.outputs['setvars.serverBranch' ] ]
+    rqgBranch: $[ dependencies.Set_vars.outputs['setvars.rqgBranch' ] ]
+    toolboxBranch: $[ dependencies.Set_vars.outputs['setvars.toolboxBranch' ] ]
+    SERVER_REVISION: $[ dependencies.Prepare_server.outputs['build_server.SERVER_REVISION' ] ]
   strategy:
     matrix:
       'metadata_stability':
@@ -202,14 +207,14 @@ jobs:
   - script: |
       set -x
       echo "Agent.JobName: " $(Agent.JobName)
-      git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 --branch=$(TOOLBOX_BRANCH) $(TOOLBOX_DIR)
-      git clone "https://github.com/MariaDB/randgen" --depth=1 --branch=$(RQG_BRANCH) $(RQG_HOME)
+      git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 --branch=$(toolboxBranch) $(TOOLBOX_DIR)
+      git clone "https://github.com/MariaDB/randgen" --depth=1 --branch=$(rqgBranch) $(RQG_HOME)
       mkdir $(LOGDIR)
       mv $(BASEDIR)/server.version $(LOGDIR)/versions
       cd $(RQG_HOME)
       rqg_rev=`git log -1 --pretty="%h"`
       cd $(TOOLBOX_DIR)
-      echo "randgen: $rqg_rev mariadb-toolbox:" $(TOOLBOX_BRANCH) `git log -1 --pretty="%h"` >> $(LOGDIR)/versions
+      echo "$(rqgBranch) $rqg_rev mariadb-toolbox:" $(toolboxBranch) `git log -1 --pretty="%h"` >> $(LOGDIR)/versions
     displayName: 'Clone tools and get versions'
 
   - script: |

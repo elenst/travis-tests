@@ -221,7 +221,6 @@ jobs:
 
   - script: |
       set -x
-      echo "Agent.JobName: " $(Agent.JobName)
       git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 --branch=$(toolboxBranch) $(TOOLBOX_DIR)
       git clone "https://github.com/MariaDB/randgen" --depth=1 --branch=$(rqgBranch) $(RQG_HOME)
       mkdir $(LOGDIR)
@@ -309,11 +308,12 @@ jobs:
   - task: DownloadBuildArtifacts@0
     inputs:
       downloadType: 'specific'
-      itemPattern: summary-*
+      itemPattern: summary-*/**/*
       downloadPath: $(Build.ArtifactStagingDirectory)
     displayName: 'Download test result summaries'
 
   - script: |
+      git clone "https://github.com/elenst/mariadb-toolbox" --depth=1 --branch=$(toolboxBranch) $(TOOLBOX_DIR)
       for d in $(Build.ArtifactStagingDirectory)/* ; do \
         echo "################## $d ##################" ; \
         grep 'exited with exit status' $d/trial.log ; \

@@ -308,7 +308,7 @@ jobs:
   # Restore pre-built binaries
   - task: DownloadPipelineArtifact@0
     inputs:
-      artifactName: 'summary-*'
+      artifactName: "summary-*"
       targetPath: $(Build.ArtifactStagingDirectory)
     displayName: 'Download test result summaries'
 

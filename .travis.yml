@@ -74,6 +74,10 @@ env:
     - TYPE=crash         ENCRYPTION=turn_on,off  OLD=mysql-5.6                        PAGE_SIZE=small
     - TYPE=undo          ENCRYPTION=turn_on      OLD=mysql-5.6                        PAGE_SIZE=small
     - TYPE=undo                                  OLD=mysql-5.6                        PAGE_SIZE=small
+    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=small
+    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=small
+    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=small
+    - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=small
 
     # Downgrade to 10.1.20 is not expected to work, because even upgrade from it is not fully supported
     # Downgrade to 10.1.21 was experimentally proven not to work with big page sizes

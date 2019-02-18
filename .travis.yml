@@ -31,7 +31,7 @@ env:
     # - -export REBUILD_OLD_SERVER=yes if the build needs to be done even if there is cached one (rarely needed),
     #   otherwise keep commented
 
-    - export SERVER_BRANCH=10.3
+    - export SERVER_BRANCH=10.4
     - export RERUN_OLD_SERVER=yes
     #- export RQG_BRANCH=elenst-dev
     #- export REBUILD_OLD_SERVER=yes

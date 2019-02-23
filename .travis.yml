@@ -99,10 +99,10 @@ env:
     - TYPE=undo          ENCRYPTION=turn_on      OLD=mysql-5.6                        PAGE_SIZE=small
     - TYPE=undo                                  OLD=mysql-5.6                        PAGE_SIZE=small
 
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=small
-    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=small
-    - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=small
+    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=16K
+#    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=16K
+    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=16K
+    - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=16K
 
     - TYPE=downgrade        ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=downgrade                                OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all

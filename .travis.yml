@@ -32,6 +32,7 @@ env:
     #   otherwise keep commented
 
     - export SERVER_BRANCH=bb-10.4-MDEV-12026
+    - export SERVER_REVISION=6546ea181f44328638b69dc935018531359c079e
     - export RERUN_OLD_SERVER=yes
     #- export RQG_BRANCH=elenst-dev
     #- export REBUILD_OLD_SERVER=yes
@@ -96,20 +97,20 @@ env:
     - TYPE=undo          ENCRYPTION=turn_on      OLD=10.0.18                          PAGE_SIZE=small
     - TYPE=undo                                  OLD=10.0.18                          PAGE_SIZE=small
 
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=mysql-5.7                        PAGE_SIZE=all
-    #- TYPE=crash         ENCRYPTION=turn_on,off  OLD=mysql-5.7                        PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=turn_on  OLD=mysql-5.7                        PAGE_SIZE=all
-    - TYPE=undo                              OLD=mysql-5.7                        PAGE_SIZE=all
-
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=mysql-5.6                        PAGE_SIZE=small
-    #- TYPE=crash         ENCRYPTION=turn_on,off  OLD=mysql-5.6                        PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=mysql-5.6                        PAGE_SIZE=small
-    - TYPE=undo                                  OLD=mysql-5.6                        PAGE_SIZE=small
-
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=small
-    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=small
-    - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=small
+#    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=mysql-5.7                        PAGE_SIZE=all
+#    #- TYPE=crash         ENCRYPTION=turn_on,off  OLD=mysql-5.7                        PAGE_SIZE=all
+#    - TYPE=undo          ENCRYPTION=turn_on  OLD=mysql-5.7                        PAGE_SIZE=all
+#    - TYPE=undo                              OLD=mysql-5.7                        PAGE_SIZE=all
+#
+#    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=mysql-5.6                        PAGE_SIZE=small
+#    #- TYPE=crash         ENCRYPTION=turn_on,off  OLD=mysql-5.6                        PAGE_SIZE=small
+#    - TYPE=undo          ENCRYPTION=turn_on      OLD=mysql-5.6                        PAGE_SIZE=small
+#    - TYPE=undo                                  OLD=mysql-5.6                        PAGE_SIZE=small
+#
+#    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=small
+#    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=small
+#    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=small
+#    - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=small
 
 install:
 

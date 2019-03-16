@@ -1,7 +1,7 @@
 language: cpp
-dist: trusty
+dist: xenial
 compiler: gcc
-sudo: enabled
+sudo: true
 
 cache:
   apt: true
@@ -23,105 +23,62 @@ env:
   global:
 
     #### Notes:
-    # - SERVER_BRANCH and RQG_BRANCH can be redefined in travis settings, currently only globally (for all branches),
-    #   by SERVER_BRANCH_OVERRIDE and RQG_BRANCH_OVERRIDE correspondingly.
-    # - if RQG_BRANCH_OVERRIDE and RQG_BRANCH are not defined, a default one chosen by the cloning script will be used.
-    # - export RERUN_OLD_SERVER=yes if tests should be run always, regardless whether they were run on the same revision or not,
-    #   otherwise keep commented
-    # - -export REBUILD_OLD_SERVER=yes if the build needs to be done even if there is cached one (rarely needed),
+    # - SERVER_BRANCH can be redefined in travis settings as 10_3_INNODB_UPGRADE_SERVER_BRANCH
+    # - It can be further overridden by the global SERVER_BRANCH_OVERRIDE (legacy)
+    # - export RERUN_OLD_SERVER=yes if tests should be run always, 
+    #   regardless whether they were run on the same revision or not, otherwise keep commented
+    # - export REBUILD_OLD_SERVER=yes if the build needs to be done even if there is cached one (rarely needed),
     #   otherwise keep commented
 
-    - export SERVER_BRANCH=10.3
+    - export SERVER_BRANCH=${10_3_INNODB_UPGRADE_SERVER_BRANCH:-10.3}
     - export RERUN_OLD_SERVER=yes
-    #- export RQG_BRANCH=elenst-dev
+    - export RQG_BRANCH=elenst-dev
+    - export TOOLBOX_BRANCH=master
     #- export REBUILD_OLD_SERVER=yes
+    - export OLD_DATA_LOCATION="ftp://perro.askmonty.org/public/innodb_upgrade_data"
+    
+    - export TOOLBOX_DIR=$HOME/mariadb-toolbox
 
     - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 
   matrix:
 
-    - TYPE=recovery      ENCRYPTION=on                     COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=recovery                                        COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=undo-recovery ENCRYPTION=on                     COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo-recovery                                   COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo-recovery ENCRYPTION=on                     COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=undo-recovery                                   COMPRESSION=zlib       PAGE_SIZE=all
+    - TYPE=normal  
+      ENCRYPTION="turn_on off"
+      OLD=10.0
+      PAGE_SIZE="4K 8K 16K"
+      
+    - TYPE=crash
+      ENCRYPTION="turn_on off"
+      OLD=10.0
+      PAGE_SIZE="4K 8K 16K"
+      
+    - TYPE=undo
+      ENCRYPTION="turn_on off"
+      OLD=10.0
+      PAGE_SIZE="4K 8K 16K"
 
-    - TYPE=normal        ENCRYPTION=on       OLD=10.3      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                            OLD=10.3      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=crash         ENCRYPTION=on       OLD=10.3      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=crash                             OLD=10.3      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on       OLD=10.3      COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo                              OLD=10.3      COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on       OLD=10.3      COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=undo                              OLD=10.3      COMPRESSION=zlib       PAGE_SIZE=all
-
-    - TYPE=normal        ENCRYPTION=on       OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                            OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=crash         ENCRYPTION=on       OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=crash                             OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on       OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo                              OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on       OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=undo                              OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=normal        ENCRYPTION=on       OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                            OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=crash         ENCRYPTION=on       OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=crash                             OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on       OLD=10.2.6    COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo                              OLD=10.2.6    COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on       OLD=10.2.6    COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=undo                              OLD=10.2.6    COMPRESSION=zlib       PAGE_SIZE=all
-
-    - TYPE=normal        ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                                OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-    #- TYPE=crash         ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-    #- TYPE=crash                                 OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo                                  OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=undo                                  OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=normal        ENCRYPTION=on           OLD=10.1.13   COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                                OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
-    #- TYPE=crash         ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none,zlib  PAGE_SIZE=all
-    #- TYPE=crash                                 OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo                                  OLD=10.1.22   COMPRESSION=none       PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=on           OLD=10.1.22   COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=undo                                  OLD=10.1.22   COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=10.0                             PAGE_SIZE=small
-    #- TYPE=crash         ENCRYPTION=turn_on,off  OLD=10.0                             PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=10.0                             PAGE_SIZE=small
-    - TYPE=undo                                  OLD=10.0                             PAGE_SIZE=small
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=10.0.14                          PAGE_SIZE=small
-    #- TYPE=crash         ENCRYPTION=turn_on,off  OLD=10.0.14                          PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=10.0.18                          PAGE_SIZE=small
-    - TYPE=undo                                  OLD=10.0.18                          PAGE_SIZE=small
-
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=mysql-5.7                        PAGE_SIZE=all
-    #- TYPE=crash         ENCRYPTION=turn_on,off  OLD=mysql-5.7                        PAGE_SIZE=all
-    - TYPE=undo          ENCRYPTION=turn_on  OLD=mysql-5.7                        PAGE_SIZE=all
-    - TYPE=undo                              OLD=mysql-5.7                        PAGE_SIZE=all
-
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=mysql-5.6                        PAGE_SIZE=small
-    #- TYPE=crash         ENCRYPTION=turn_on,off  OLD=mysql-5.6                        PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=mysql-5.6                        PAGE_SIZE=small
-    - TYPE=undo                                  OLD=mysql-5.6                        PAGE_SIZE=small
-
-    - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=16K
-#    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=16K
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=16K
-    - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=16K
+    - TYPE=normal  
+      ENCRYPTION="turn_on off"
+      OLD=10.0.10
+      PAGE_SIZE="4K 8K 16K"
+      
+    - TYPE=crash
+      ENCRYPTION="turn_on off"
+      OLD=10.0.10
+      PAGE_SIZE="4K 8K 16K"
+      
+    - TYPE=undo
+      ENCRYPTION="turn_on off"
+      OLD=10.0.10
+      PAGE_SIZE="4K 8K 16K"
 
 install:
 
-  - export TOOLBOX_DIR=$HOME/mariadb-toolbox
-  - if [ -n "$TOOLBOX_BRANCH" ] ; then TOOLBOX_BRANCH="--branch $TOOLBOX_BRANCH" ; fi
-  - git clone https://github.com/elenst/mariadb-toolbox --depth=1 $TOOLBOX_BRANCH $TOOLBOX_DIR
-  - . $TOOLBOX_DIR/travis/export_and_clone.sh
+  - git clone https://github.com/elenst/mariadb-toolbox --depth=1 --branch=$TOOLBOX_BRANCH $TOOLBOX_DIR
+  - . $TOOLBOX_DIR/travis/setup_environment.sh
+  - . $SCRIPT_DIR/clone_server.sh
   - . $SCRIPT_DIR/build_if_not_cached.sh
-
-  - . $SCRIPT_DIR/get_old_version.sh $OLD
 
 before_script:
   - . $SCRIPT_DIR/collect_system_info.sh
@@ -129,15 +86,12 @@ before_script:
 
 script:
 
-  # Dry run will just create a list of combinations, then piped works will re-format it into proper command lines, and run.sh will run them
-  - cd $RQG_HOME
-  - perl $RQG_HOME/combinations.pl --new --config=$SCRIPT_DIR/travis_combinations.cc --run-all-combinations-once --force --workdir=$LOGDIR --dry-run | grep perl | sed -e 's/.*\(perl .*\)/\1/g' | perl -e '$num=0; while(<>) {$num++; print; print "\nTRIAL=$num TRIAL_LOG=$ENV{LOGDIR}/trial${num}.log VARDIR=$ENV{LOGDIR}/current1_1 . $ENV{SCRIPT_DIR}/collect_single_failure_info.sh\n\n";}' > $HOME/run.sh
-  - . $HOME/run.sh
+  . $SCRIPT_DIR/innodb_static_upgrade_test.sh
 
-  - cd $HOME
+  #- cd $HOME
   #- perl $TRAVIS_BUILD_DIR/scripts/parse_upgrade_logs.pl --mode=jira --nowarnings $LOGDIR/trial*
-  - perl $SCRIPT_DIR/parse_upgrade_logs.pl --mode=kb --nowarnings $LOGDIR/trial*
-  - perl $SCRIPT_DIR/parse_upgrade_logs.pl --mode=text --nowarnings $LOGDIR/trial*
+  #- perl $SCRIPT_DIR/parse_upgrade_logs.pl --mode=kb --nowarnings $LOGDIR/trial*
+  #- perl $SCRIPT_DIR/parse_upgrade_logs.pl --mode=text --nowarnings $LOGDIR/trial*
 
 before_cache:
   - rm -rf $HOME/server/mysql-test

@@ -43,35 +43,35 @@ env:
 
   matrix:
 
-    - TYPE=normal  
-      ENCRYPTION="turn_on off"
+    - TYPEs=normal  
       OLD=10.0
-      PAGE_SIZE="4K 8K 16K"
+      ENCRYPTIONs="turn_on off"
+      PAGE_SIZEs="4K 8K 16K"
       
     - TYPE=crash
-      ENCRYPTION="turn_on off"
       OLD=10.0
-      PAGE_SIZE="4K 8K 16K"
+      ENCRYPTIONs="turn_on off"
+      PAGE_SIZEs="4K 8K 16K"
       
     - TYPE=undo
-      ENCRYPTION="turn_on off"
       OLD=10.0
-      PAGE_SIZE="4K 8K 16K"
+      ENCRYPTIONs="turn_on off"
+      PAGE_SIZEs="4K 8K 16K"
 
     - TYPE=normal  
-      ENCRYPTION="turn_on off"
       OLD=10.0.10
-      PAGE_SIZE="4K 8K 16K"
+      ENCRYPTIONs="turn_on off"
+      PAGE_SIZEs="4K 8K 16K"
       
     - TYPE=crash
-      ENCRYPTION="turn_on off"
       OLD=10.0.10
-      PAGE_SIZE="4K 8K 16K"
+      ENCRYPTIONs="turn_on off"
+      PAGE_SIZEs="4K 8K 16K"
       
     - TYPE=undo
-      ENCRYPTION="turn_on off"
       OLD=10.0.10
-      PAGE_SIZE="4K 8K 16K"
+      ENCRYPTIONs="turn_on off"
+      PAGE_SIZEs="4K 8K 16K"
 
 install:
 
@@ -86,7 +86,7 @@ before_script:
 
 script:
 
-  . $SCRIPT_DIR/innodb_static_upgrade_test.sh
+  - . $SCRIPT_DIR/innodb_static_upgrade_test.sh
 
   #- cd $HOME
   #- perl $TRAVIS_BUILD_DIR/scripts/parse_upgrade_logs.pl --mode=jira --nowarnings $LOGDIR/trial*

@@ -90,39 +90,75 @@ env:
       COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
-    - TYPEs=normal  
+    - TYPEs=normal
       OLD=10.0
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
-      
+
+    - TYPEs=normal
+      OLD=10.0
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
+      NEW_ENCRYPTIONs="off on"
+      PAGE_SIZEs="4K 8K 16K"
+
     - TYPE=crash
       OLD=10.0
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
+      NEW_ENCRYPTIONs="off on"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPE=crash
+      OLD=10.0
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
     - TYPE=undo
       OLD=10.0
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
+      NEW_ENCRYPTIONs="off on"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPE=undo
+      OLD=10.0
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
+      NEW_ENCRYPTIONs="off on"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPE=normal
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
     - TYPE=normal  
       OLD=10.0.10
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
       
     - TYPE=crash
       OLD=10.0.10
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
-      
+
+    - TYPE=crash
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
+      NEW_ENCRYPTIONs="off on"
+      PAGE_SIZEs="4K 8K 16K"
+
     - TYPE=undo
       OLD=10.0.10
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
+      ENCRYPTIONs="turn_on off"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPE=undo
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
       ENCRYPTIONs="turn_on off"
       PAGE_SIZEs="4K 8K 16K"
 
@@ -140,6 +176,7 @@ before_script:
 script:
 
   - . $SCRIPT_DIR/innodb_static_upgrade_test.sh
+  - perl $SCRIPT_DIR/parse_upgrade_logs.pl --mode=text --nowarnings $LOGDIR/vardir*/trial*
 
   #- cd $HOME
   #- perl $TRAVIS_BUILD_DIR/scripts/parse_upgrade_logs.pl --mode=jira --nowarnings $LOGDIR/trial*

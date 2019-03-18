@@ -51,73 +51,78 @@ env:
 
     - TYPEs=normal
       OLD=10.2
-      OLD_FILE_FORMATs="Antelope Barracuda"
-      ENCRYPTIONs="on off"
-      COMPRESSIONs="zlib"
+      OLD_FILE_FORMATs="Barracuda"
+      ENCRYPTIONs="on off" COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPE=crash
       OLD=10.2
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on off"
       COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPE=undo
       OLD=10.2
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on off"
       COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPEs=normal
       OLD=10.2.6
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on off"
       COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPE=crash
       OLD=10.2.6
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on off"
       COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPE=undo
       OLD=10.2.6
-      OLD_FILE_FORMATs="Antelope Barracuda"
+      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on off"
       COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPEs=normal  
       OLD=10.0
-      ENCRYPTIONs="turn_on off"
+      OLD_FILE_FORMATs="Antelope Barracuda"
+      NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
       
     - TYPE=crash
       OLD=10.0
-      ENCRYPTIONs="turn_on off"
+      OLD_FILE_FORMATs="Antelope Barracuda"
+      NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
     - TYPE=undo
       OLD=10.0
-      ENCRYPTIONs="turn_on off"
+      OLD_FILE_FORMATs="Antelope Barracuda"
+      NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
     - TYPE=normal  
       OLD=10.0.10
-      ENCRYPTIONs="turn_on off"
+      OLD_FILE_FORMATs="Antelope Barracuda"
+      NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
       
     - TYPE=crash
       OLD=10.0.10
-      ENCRYPTIONs="turn_on off"
+      OLD_FILE_FORMATs="Antelope Barracuda"
+      NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
       
     - TYPE=undo
       OLD=10.0.10
+      OLD_FILE_FORMATs="Antelope Barracuda"
       ENCRYPTIONs="turn_on off"
       PAGE_SIZEs="4K 8K 16K"
 

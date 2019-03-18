@@ -43,6 +43,27 @@ env:
 
   matrix:
 
+# Having OLD_XX and NEW_XX indicates all combinations, e.g.
+# OLD_COMPRESSIONS="none zlib" NEW_COMPRESSIONS="none zlib"
+# would end up in 4 tests: none=>none, none=>zlib, zlib=>none, zlib=>zlib
+# Having only XX indicates that the value remains intact, e.g.
+# COMPRESSIONS="none zlib" would end up in 2 tests: non=>none, zlib=>zlib
+
+    - TYPEs=normal
+      OLD=10.2.6
+      ENCRYPTIONs="on off"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
+    - TYPE=crash
+      OLD=10.2.6
+      ENCRYPTIONs="on off"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
+    - TYPE=undo
+      OLD=10.2.6
+      ENCRYPTIONs="on off"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
     - TYPEs=normal  
       OLD=10.0
       ENCRYPTIONs="turn_on off"
@@ -52,7 +73,7 @@ env:
       OLD=10.0
       ENCRYPTIONs="turn_on off"
       PAGE_SIZEs="4K 8K 16K"
-      
+
     - TYPE=undo
       OLD=10.0
       ENCRYPTIONs="turn_on off"

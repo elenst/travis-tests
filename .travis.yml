@@ -55,14 +55,14 @@ env:
       ENCRYPTIONs="on off" COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
-    - TYPE=crash
+    - TYPEs=crash
       OLD=10.2
       OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on off"
       COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
-    - TYPE=undo
+    - TYPEs=undo
       OLD=10.2
       OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on off"
@@ -76,14 +76,14 @@ env:
       COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
-    - TYPE=crash
+    - TYPEs=crash
       OLD=10.2.6
       OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on off"
       COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
-    - TYPE=undo
+    - TYPEs=undo
       OLD=10.2.6
       OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on off"
@@ -102,64 +102,64 @@ env:
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
-    - TYPE=crash
+    - TYPEs=crash
       OLD=10.0
       OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
-    - TYPE=crash
+    - TYPEs=crash
       OLD=10.0
       OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
-    - TYPE=undo
+    - TYPEs=undo
       OLD=10.0
       OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
-    - TYPE=undo
+    - TYPEs=undo
       OLD=10.0
       OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
-    - TYPE=normal
+    - TYPEs=normal
       OLD=10.0.10
       OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
-    - TYPE=normal  
+    - TYPEs=normal
       OLD=10.0.10
       OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
       
-    - TYPE=crash
+    - TYPEs=crash
       OLD=10.0.10
       OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
-    - TYPE=crash
+    - TYPEs=crash
       OLD=10.0.10
       OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
       NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
-    - TYPE=undo
+    - TYPEs=undo
       OLD=10.0.10
       OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="builtin"
-      ENCRYPTIONs="turn_on off"
+      NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
-    - TYPE=undo
+    - TYPEs=undo
       OLD=10.0.10
       OLD_FILE_FORMATs="Antelope Barracuda" OLD_INNODBs="plugin"
-      ENCRYPTIONs="turn_on off"
+      NEW_ENCRYPTIONs="off on"
       PAGE_SIZEs="4K 8K 16K"
 
 install:

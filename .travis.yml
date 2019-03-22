@@ -23,23 +23,18 @@ env:
   global:
 
     #### Notes:
-    # - SERVER_BRANCH can be redefined in travis settings as 10_3_INNODB_UPGRADE_SERVER_BRANCH
+    # - SERVER_BRANCH can be redefined in travis settings as INNODB_UPGRADE_SERVER_BRANCH_10_3
     # - It can be further overridden by the global SERVER_BRANCH_OVERRIDE (legacy)
-    # - export RERUN_OLD_SERVER=yes if tests should be run always, 
-    #   regardless whether they were run on the same revision or not, otherwise keep commented
-    # - export REBUILD_OLD_SERVER=yes if the build needs to be done even if there is cached one (rarely needed),
-    #   otherwise keep commented
 
     - export SERVER_BRANCH=${INNODB_UPGRADE_SERVER_BRANCH_10_3:-10.3}
-    - export RERUN_OLD_SERVER=yes
     - export RQG_BRANCH=elenst-dev
     - export TOOLBOX_BRANCH=master
     #- export REBUILD_OLD_SERVER=yes
     - export OLD_DATA_LOCATION="ftp://perro.askmonty.org/public/innodb_upgrade_data"
-    
+    - export BINTAR_TYPE=kvm-asan
     - export TOOLBOX_DIR=$HOME/mariadb-toolbox
 
-    - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
+#    - export GLOBAL_CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DPLUGIN_SPHINX=NO -DPLUGIN_TOKUDB=NO -DPLUGIN_ROCKSDB=NO -DPLUGIN_MROONGA=NO -DPLUGIN_FEDERATED=NO -DPLUGIN_FEDERATEDX=NO -DPLUGIN_CONNECT=NO -DPLUGIN_SPIDER=NO -DWITH_MARIABACKUP=OFF"
 
 # Having OLD_XX and NEW_XX indicates all combinations, e.g.
 # OLD_COMPRESSIONS="none zlib" NEW_COMPRESSIONS="none zlib"
@@ -48,6 +43,68 @@ env:
 # COMPRESSIONS="none zlib" would end up in 2 tests: non=>none, zlib=>zlib
 
   matrix:
+
+# Upgrade from 10.3 (the latest, or at least the latest for which we have the data)
+# 60 combinations:
+# - types: normal / crash / undo
+# - compression: none / zlib (same on both servers)
+# - encryption: on / off (same on both servers)
+# - page sizes: 4 / 8 / 16 / 32 / 64 (same on both servers)
+# - InnoDB file formats: Barracuda (on the old server) and default on the new server
+# 15 combinations in each entry
+
+    - TYPEs="normal crash undo"
+      OLD=10.3
+      OLD_FILE_FORMATs="Barracuda"
+      ENCRYPTIONs="off" COMPRESSIONs="none"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
+    - TYPEs="normal crash undo"
+      OLD=10.3
+      OLD_FILE_FORMATs="Barracuda"
+      ENCRYPTIONs="off" COMPRESSIONs="zlib"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
+    - TYPEs="normal crash undo"
+      OLD=10.3
+      OLD_FILE_FORMATs="Barracuda"
+      ENCRYPTIONs="on" COMPRESSIONs="none"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
+    - TYPEs="normal crash undo"
+      OLD=10.3
+      OLD_FILE_FORMATs="Barracuda"
+      ENCRYPTIONs="on" COMPRESSIONs="zlib"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
+# Upgrade from 10.3.7 (first 10.3 GA)
+# 60 combinations, same as for 10.3 latest.
+# 15 combinations in each entry
+
+    - TYPEs="normal crash undo"
+      OLD=10.3.7
+      OLD_FILE_FORMATs="Barracuda"
+      ENCRYPTIONs="off" COMPRESSIONs="none"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
+    - TYPEs="normal crash undo"
+      OLD=10.3.7
+      OLD_FILE_FORMATs="Barracuda"
+      ENCRYPTIONs="off" COMPRESSIONs="zlib"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
+    - TYPEs="normal crash undo"
+      OLD=10.3.7
+      OLD_FILE_FORMATs="Barracuda"
+      ENCRYPTIONs="on" COMPRESSIONs="none"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
+    - TYPEs="normal crash undo"
+      OLD=10.3.7
+      OLD_FILE_FORMATs="Barracuda"
+      ENCRYPTIONs="on" COMPRESSIONs="zlib"
+      PAGE_SIZEs="4K 8K 16K 32K 64K"
+
 
 # Upgrade from 10.2 (the latest, or at least the latest for which we have the data)
 # 60 combinations:
@@ -434,8 +491,9 @@ install:
 
   - git clone https://github.com/elenst/mariadb-toolbox --depth=1 --branch=$TOOLBOX_BRANCH $TOOLBOX_DIR
   - . $TOOLBOX_DIR/travis/setup_environment.sh
-  - . $SCRIPT_DIR/clone_server.sh
-  - . $SCRIPT_DIR/build_if_not_cached.sh
+#  - . $SCRIPT_DIR/clone_server.sh
+#  - . $SCRIPT_DIR/build_if_not_cached.sh
+  - . $SCRIPT_DIR/get_latest_bintar.sh $SERVER_BRANCH $BINTAR_TYPE
 
 before_script:
   - . $SCRIPT_DIR/collect_system_info.sh

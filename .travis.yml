@@ -50,30 +50,26 @@ env:
 # - compression: none / zlib (same on both servers)
 # - encryption: on / off (same on both servers)
 # - page sizes: 4 / 8 / 16 / 32 / 64 (same on both servers)
-# - InnoDB file formats: Barracuda (on the old server) and default on the new server
+# - InnoDB file formats: default
 # 15 combinations in each entry
 
     - TYPEs="normal crash undo"
       OLD=10.3
-      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="off" COMPRESSIONs="none"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPEs="normal crash undo"
       OLD=10.3
-      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="off" COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPEs="normal crash undo"
       OLD=10.3
-      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on" COMPRESSIONs="none"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPEs="normal crash undo"
       OLD=10.3
-      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on" COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
@@ -83,25 +79,21 @@ env:
 
     - TYPEs="normal crash undo"
       OLD=10.3.7
-      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="off" COMPRESSIONs="none"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPEs="normal crash undo"
       OLD=10.3.7
-      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="off" COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPEs="normal crash undo"
       OLD=10.3.7
-      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on" COMPRESSIONs="none"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 
     - TYPEs="normal crash undo"
       OLD=10.3.7
-      OLD_FILE_FORMATs="Barracuda"
       ENCRYPTIONs="on" COMPRESSIONs="zlib"
       PAGE_SIZEs="4K 8K 16K 32K 64K"
 

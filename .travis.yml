@@ -17,6 +17,7 @@ addons:
       - gdb
       - libnuma1
       - libdbd-mysql-perl
+      - libsnappy-dev
 
 env:
 

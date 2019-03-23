@@ -27,6 +27,7 @@ env:
     # - SERVER_BRANCH can be redefined in travis settings as INNODB_UPGRADE_SERVER_BRANCH_10_3
     # - It can be further overridden by the global SERVER_BRANCH_OVERRIDE (legacy)
 
+    - export START_TIME=`date "+%s"`
     - export SERVER_BRANCH=${INNODB_UPGRADE_SERVER_BRANCH_10_3:-10.3}
     - export RQG_BRANCH=elenst-dev
     - export TOOLBOX_BRANCH=master

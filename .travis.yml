@@ -187,117 +187,6 @@ env:
       ENCRYPTIONs="off on" COMPRESSIONs="none zlib"
       PAGE_SIZEs="64K"
 
-# Upgrade from 10.0 (the latest, or at least the latest for which we have the data)
-# 96 combinations:
-# - types: normal / undo; CRASH UPGRADE to 10.3 IS NOT SUPPORTED
-# - InnoDB variation: builtin / plugin on the old server, default on the new server
-# - compression: N/A on the old server, none / zlib on the new server
-# - encryption: N/A on the old server, on / off on the new server
-# - page sizes: 4 / 8 / 16 (same on both servers)
-# - InnoDB file formats: Barracuda /Antelope on the old server and default on the new server
-# 12 combinations in each entry
-
-    - TYPEs="normal undo"
-      OLD=10.0
-      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0
-      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0
-      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0
-      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0
-      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0
-      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0
-      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0
-      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
-      PAGE_SIZEs="4K 8K 16K"
-
-# Upgrade from 10.0.10 (first 10.0 GA)
-# 96 combinations, same as for 10.0 latest
-# CRASH UPGRADE to 10.3 IS NOT SUPPORTED
-# 12 combinations in each entry
-
-    - TYPEs="normal undo"
-      OLD=10.0.10
-      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0.10
-      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0.10
-      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0.10
-      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0.10
-      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0.10
-      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0.10
-      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
-      PAGE_SIZEs="4K 8K 16K"
-
-    - TYPEs="normal undo"
-      OLD=10.0.10
-      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin"
-      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
-      PAGE_SIZEs="4K 8K 16K"
-
 # Upgrade from 10.1 (the latest, or at least the latest for which we have the data)
 # 160 combinations:
 # - types: normal / undo; CRASH UPGRADE to 10.3 IS NOT SUPPORTED
@@ -520,6 +409,117 @@ env:
       OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin builtin"
       COMPRESSIONs="zlib" ENCRYPTIONs="off"
       PAGE_SIZEs="32K 64K"
+
+# Upgrade from 10.0 (the latest, or at least the latest for which we have the data)
+# 96 combinations:
+# - types: normal / undo; CRASH UPGRADE to 10.3 IS NOT SUPPORTED
+# - InnoDB variation: builtin / plugin on the old server, default on the new server
+# - compression: N/A on the old server, none / zlib on the new server
+# - encryption: N/A on the old server, on / off on the new server
+# - page sizes: 4 / 8 / 16 (same on both servers)
+# - InnoDB file formats: Barracuda /Antelope on the old server and default on the new server
+# 12 combinations in each entry
+
+    - TYPEs="normal undo"
+      OLD=10.0
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
+      PAGE_SIZEs="4K 8K 16K"
+
+# Upgrade from 10.0.10 (first 10.0 GA)
+# 96 combinations, same as for 10.0 latest
+# CRASH UPGRADE to 10.3 IS NOT SUPPORTED
+# 12 combinations in each entry
+
+    - TYPEs="normal undo"
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off"
+      PAGE_SIZEs="4K 8K 16K"
+
+    - TYPEs="normal undo"
+      OLD=10.0.10
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
+      PAGE_SIZEs="4K 8K 16K"
 
 install:
 

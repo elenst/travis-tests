@@ -521,6 +521,102 @@ env:
       NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="on"
       PAGE_SIZEs="4K 8K 16K"
 
+# Upgrade from 5.5 (the latest, or at least the latest for which we have the data)
+# 64 combinations:
+# - types: normal / crash(?) CANNOT CREATE UNDO DATASETS on 5.5
+# - InnoDB variation: builtin / plugin on the old server, default on the new server
+# - compression: N/A on the old server, none / zlib on the new server
+# - encryption: N/A on the old server, on / off on the new server
+# - page size: default (same on both servers)
+# - InnoDB file formats: Barracuda /Antelope on the old server and default on the new server
+# - file_per_table: on / off on the old server, default on the new server
+# 8 combinations in each entry
+
+    - TYPEs="normal crash"
+      OLD=5.5
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin" OLD_FILE_PER_TABLEs="off"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin" OLD_FILE_PER_TABLEs="on"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin" OLD_FILE_PER_TABLEs="off"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin" OLD_FILE_PER_TABLEs="on"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin" OLD_FILE_PER_TABLEs="off"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin" OLD_FILE_PER_TABLEs="on"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin" OLD_FILE_PER_TABLEs="off"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin" OLD_FILE_PER_TABLEs="on"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+# Upgrade from 5.5.23 (first 5.5 GA)
+# 64 combinations, same as for 5.5 latest.
+# CANNOT CREATE UNDO DATASETS on 5.5
+# 8 combinations in each entry
+
+    - TYPEs="normal crash"
+      OLD=5.5.23
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin" OLD_FILE_PER_TABLEs="off"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5.23
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="builtin" OLD_FILE_PER_TABLEs="on"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5.23
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin" OLD_FILE_PER_TABLEs="off"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5.23
+      OLD_FILE_FORMATs="Antelope" OLD_INNODBs="plugin" OLD_FILE_PER_TABLEs="on"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5.23
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin" OLD_FILE_PER_TABLEs="off"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5.23
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="builtin" OLD_FILE_PER_TABLEs="on"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5.23
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin" OLD_FILE_PER_TABLEs="off"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
+    - TYPEs="normal crash"
+      OLD=5.5.23
+      OLD_FILE_FORMATs="Barracuda" OLD_INNODBs="plugin" OLD_FILE_PER_TABLEs="on"
+      NEW_COMPRESSIONs="none zlib" NEW_ENCRYPTIONs="off on"
+
 install:
 
   - git clone https://github.com/elenst/mariadb-toolbox --depth=1 --branch=$TOOLBOX_BRANCH $TOOLBOX_DIR

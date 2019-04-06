@@ -39,7 +39,7 @@ env:
 
     - export TEST_DURATION=350
     # MDEV-18003: --redefine=conf/mariadb/modules/acl.yy
-    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
+    - export GLOBAL_RQG_OPTIONS="--duration=$TEST_DURATION --threads=6 --seed=time --reporters=Backtrace,ErrorLog,Deadlock --validators=TransformerNoComparator --views --filter=conf/mariadb/10.4-combo-filter.ff --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/instant_add.yy --redefine=conf/mariadb/sp.yy --redefine=conf/mariadb/bulk_insert.yy --redefine=conf/mariadb/modules/admin.yy --redefine=conf/mariadb/modules/userstat.yy --redefine=conf/mariadb/modules/sql_mode.yy --redefine=conf/mariadb/versioning.yy --redefine=conf/mariadb/sequences.yy --mysqld=--log_output=FILE --mysqld=--max-statement-time=30 --mysqld=--lock-wait-timeout=10 --mysqld=--loose-innodb-lock-wait-timeout=5 --mysqld=--loose-debug_assert_on_not_freed_memory=0"
 
 
   matrix:
@@ -112,16 +112,16 @@ before_script:
 
 script:
 
-  - export TEST_RQG_OPTIONS="--transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --filter=$SCRIPT_DIR/10.4-combo-filter.ff"
+  - export TEST_RQG_OPTIONS="--transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --filter=$SCRIPT_DIR/10.4-combo-filter.ff"
+  - export TEST_RQG_OPTIONS="--skip-gendata --gendata-advanced --vcols --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--ps-protocol --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView --filter=$SCRIPT_DIR/10.4-combo-filter.ff"
+  - export TEST_RQG_OPTIONS="--ps-protocol --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 $JOB_RQG_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --redefine=conf/mariadb/general-workarounds.yy --filter=$SCRIPT_DIR/10.4-combo-filter.ff"
+  - export TEST_RQG_OPTIONS="--mysqld=--log_bin_trust_function_creators=1 $JOB_RQG_OPTIONS --mysqld=--log-bin --transformers=ExecuteAsIntersect,ExecuteAsExcept,ExecuteAsCTE,ExecuteAsExecuteImmediate,ExecuteAsDeleteReturning,ExecuteAsInsertSelect,ExecuteAsUnion,ExecuteAsUpdateDelete,ExecuteAsView,ExecuteAsPreparedTwice --redefine=conf/mariadb/general-workarounds.yy"
   - . $SCRIPT_DIR/run_single_test.sh
 
 before_cache:

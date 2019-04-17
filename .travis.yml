@@ -45,8 +45,10 @@ env:
     - TYPE=undo-recovery                                   COMPRESSION=none       PAGE_SIZE=all
     - TYPE=undo-recovery ENCRYPTION=on                     COMPRESSION=zlib       PAGE_SIZE=all
 
-    - TYPE=normal        ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                                OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+    - TYPE=normal        ENCRYPTION=on           OLD=10.2      COMPRESSION=none   PAGE_SIZE=all
+    - TYPE=normal        ENCRYPTION=on           OLD=10.2      COMPRESSION=zlib   PAGE_SIZE=all
+    - TYPE=normal                                OLD=10.2      COMPRESSION=none   PAGE_SIZE=all
+    - TYPE=normal                                OLD=10.2      COMPRESSION=zlib   PAGE_SIZE=all
     - TYPE=crash         ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=crash                                 OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=undo          ENCRYPTION=on           OLD=10.2      COMPRESSION=none       PAGE_SIZE=all

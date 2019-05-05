@@ -47,16 +47,20 @@ env:
     - TYPE=undo-recovery ENCRYPTION=on                     COMPRESSION=zlib       PAGE_SIZE=all
     - TYPE=undo-recovery                                   COMPRESSION=zlib       PAGE_SIZE=all
 
-    - TYPE=normal        ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                                OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+    - TYPE=normal        ENCRYPTION=on           OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=normal        ENCRYPTION=on           OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
+    - TYPE=normal                                OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=normal                                OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
     - TYPE=crash         ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=crash                                 OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=undo          ENCRYPTION=on           OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
     - TYPE=undo                                  OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
     - TYPE=undo          ENCRYPTION=on           OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
     - TYPE=undo                                  OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=normal        ENCRYPTION=on           OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                                OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
+    - TYPE=normal        ENCRYPTION=on           OLD=10.2.6    COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=normal        ENCRYPTION=on           OLD=10.2.6    COMPRESSION=zlib       PAGE_SIZE=all
+    - TYPE=normal                                OLD=10.2.6    COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=normal                                OLD=10.2.6    COMPRESSION=zlib       PAGE_SIZE=all
     - TYPE=crash         ENCRYPTION=on           OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=crash                                 OLD=10.2.6    COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=undo          ENCRYPTION=on           OLD=10.2.6    COMPRESSION=none       PAGE_SIZE=all
@@ -64,16 +68,20 @@ env:
     - TYPE=undo          ENCRYPTION=on           OLD=10.2.6    COMPRESSION=zlib       PAGE_SIZE=all
     - TYPE=undo                                  OLD=10.2.6    COMPRESSION=zlib       PAGE_SIZE=all
 
-    - TYPE=normal        ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                                OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
+    - TYPE=normal        ENCRYPTION=on           OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=normal        ENCRYPTION=on           OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
+    - TYPE=normal                                OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=normal                                OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
     # - TYPE=crash         ENCRYPTION=on           OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
     # - TYPE=crash                                 OLD=10.1      COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
     - TYPE=undo                                  OLD=10.1      COMPRESSION=none       PAGE_SIZE=all
     - TYPE=undo          ENCRYPTION=on           OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
     - TYPE=undo                                  OLD=10.1      COMPRESSION=zlib       PAGE_SIZE=all
-    - TYPE=normal        ENCRYPTION=on           OLD=10.1.13   COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=normal                                OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
+    - TYPE=normal        ENCRYPTION=on           OLD=10.1.13   COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=normal        ENCRYPTION=on           OLD=10.1.13   COMPRESSION=zlib       PAGE_SIZE=all
+    - TYPE=normal                                OLD=10.1.10   COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=normal                                OLD=10.1.10   COMPRESSION=zlib       PAGE_SIZE=all
     # - TYPE=crash         ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none,zlib  PAGE_SIZE=all
     # - TYPE=crash                                 OLD=10.1.10   COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=undo          ENCRYPTION=on           OLD=10.1.22   COMPRESSION=none       PAGE_SIZE=all
@@ -104,12 +112,16 @@ env:
     - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=16K
     - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=16K
 
-    - TYPE=downgrade        ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=downgrade                                OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
+    - TYPE=downgrade        ENCRYPTION=on           OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=downgrade        ENCRYPTION=on           OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
+    - TYPE=downgrade                                OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=downgrade                                OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all
     - TYPE=crash-downgrade  ENCRYPTION=on           OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=crash-downgrade                          OLD=10.2      COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=downgrade        ENCRYPTION=on           OLD=10.2.13   COMPRESSION=none,zlib  PAGE_SIZE=all
-    - TYPE=downgrade                                OLD=10.2.13   COMPRESSION=none,zlib  PAGE_SIZE=all
+    - TYPE=downgrade        ENCRYPTION=on           OLD=10.2.13   COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=downgrade        ENCRYPTION=on           OLD=10.2.13   COMPRESSION=zlib       PAGE_SIZE=all
+    - TYPE=downgrade                                OLD=10.2.13   COMPRESSION=none       PAGE_SIZE=all
+    - TYPE=downgrade                                OLD=10.2.13   COMPRESSION=zlib       PAGE_SIZE=all
     - TYPE=crash-downgrade  ENCRYPTION=on           OLD=10.2.19   COMPRESSION=none,zlib  PAGE_SIZE=all
     - TYPE=crash-downgrade                          OLD=10.2.19   COMPRESSION=none,zlib  PAGE_SIZE=all
 

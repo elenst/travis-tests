@@ -95,13 +95,14 @@ script:
   - export TEST_RQG_OPTIONS="--scenario=MariaBackupFull"
   - . $SCRIPT_DIR/run_single_test.sh
 
-  - export TEST_RQG_OPTIONS="--scenario=MariaBackupIncremental"
-  - . $SCRIPT_DIR/run_single_test.sh
+# Incremental backup is skipped due to MDEV-18602
+#  - export TEST_RQG_OPTIONS="--scenario=MariaBackupIncremental"
+#  - . $SCRIPT_DIR/run_single_test.sh
 
   # DML/DDL test flow
   # TODO: acl.yy temporarily disabled due to the number of problems
 
-# 10.1 cannot do MariaBackup with DDL (umbrella JIRA item is coming soon)
+# 10.1 cannot do MariaBackup with DDL (umbrella JIRA MDEV-18324)
 #
 #  - export TEST_RQG_OPTIONS="--scenario=MariaBackupFull --redefine=conf/mariadb/alter_table.yy --redefine=conf/mariadb/modules/admin.yy"
 #  - . $SCRIPT_DIR/run_single_test.sh

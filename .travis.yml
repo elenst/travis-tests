@@ -82,7 +82,8 @@ env:
     - TYPE=undo                                  OLD=10.0                         PAGE_SIZE=small
 
     - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5                         PAGE_SIZE=16K
-    - TYPE=undo                                  OLD=5.5                         PAGE_SIZE=16K
+# 5.5 hangs upon restart with innodb-force-recovery
+#    - TYPE=undo                                  OLD=5.5                         PAGE_SIZE=16K
 
 install:
 

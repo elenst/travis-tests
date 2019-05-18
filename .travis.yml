@@ -109,8 +109,9 @@ env:
 
     - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=16K
 #    - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=16K
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=16K
-    - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=16K
+# 5.5 hangs upon restart with innodb-force-recovery
+#    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=16K
+#    - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=16K
 
     - TYPE=downgrade        ENCRYPTION=on           OLD=10.2      COMPRESSION=none       PAGE_SIZE=all
     - TYPE=downgrade        ENCRYPTION=on           OLD=10.2      COMPRESSION=zlib       PAGE_SIZE=all

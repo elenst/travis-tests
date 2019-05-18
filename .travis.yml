@@ -110,8 +110,9 @@ env:
 
     - TYPE=normal        ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=small
     - TYPE=crash         ENCRYPTION=turn_on,off  OLD=5.5                              PAGE_SIZE=small
-    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=small
-    - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=small
+# 5.5 hangs upon restart with innodb-force-recovery
+#    - TYPE=undo          ENCRYPTION=turn_on      OLD=5.5                              PAGE_SIZE=small
+#    - TYPE=undo                                  OLD=5.5                              PAGE_SIZE=small
 
 install:
 
